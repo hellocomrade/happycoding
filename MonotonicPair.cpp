@@ -13,7 +13,7 @@ class CompareFun
 	    return p1.first < p2.first;
 	}
 }comparePairs;
-//Nlog(N)
+//O(NlogN)
 int solutionMonotonicPair2(vector<int>& A)
 {
     int len = A.size();
@@ -38,6 +38,7 @@ int solutionMonotonicPair2(vector<int>& A)
     }
     return maxIdxDistSofar;
 }
+//O(N)
 int solutionMonotonicPair1(vector<int>& A)
 {
     int len = A.size();
