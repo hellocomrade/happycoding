@@ -7,9 +7,9 @@
 using namespace std;
 
 //skyline algorithm
-//the intutive solution for minimizing the use of block is to merge shorter
+//the intutive solution for minimizing the member of block is to merge shorter
 //blocks together as long as they can form a base for taller buildings
-//we use a stack to track the starting point of these bases and pop the last one up
+//we use a stack to track the starting point of these bases and pop the most recent one
 //if the next building is shorter than the base, which means this base ends
 //here (reach its rightmost location)
 int solutionStoneWall(vector<int>& H)
