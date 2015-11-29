@@ -15,13 +15,15 @@ int solutionMinAbsSumOfTwo(vector<int>& A)
     //make two iterators, one from left and the other from right,
     //since all elements in the array are in nondescending order, we could move one iterator toward the center on each step depending on
     //the result of A[left]+A[right]. Therefore, we can find min in O(N). This is more intuitive if we use the following as example
-    //[-3,-1,3,2]. 
+    //[-4,-3,-1,3,3]. 
     int left=0, right=len-1, min=INT_MAX, tmp;
     while(left<=right)
     {
 	tmp=A[left]+A[right];
 	min=std::min(min,abs(tmp));
-	tmp<=0?++left:--right;
+	if(0 == tmp)
+	    break;
+	tmp<0?++left:--right;
     }
     return min;
 }
