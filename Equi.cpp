@@ -20,7 +20,7 @@ int solutionEqui(vector<int> &A) {
     long long sum = prefixsum[len];
     for (int i = 1; i<len+1; ++i)
 	if (prefixsum[i-1] == sum - prefixsum[i])
-		return i-1;
+	    return i-1;
     return -1;
 }
 void testEqui()
