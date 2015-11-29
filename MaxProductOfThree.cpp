@@ -9,7 +9,7 @@ using namespace std;
 int solutionMaxProductOfThree(vector<int> &A)
 {
     int size = A.size();
-    assert(size);
+    assert(size>2);
     //sort's default less behavior is fine, it just makes more sense to me
     //to use greater here, so I can have a A[0] * A[1] * A[2]
     sort(A.begin(), A.end(), std::greater<int>());
