@@ -4,6 +4,7 @@
 #include <vector>
 #include <iostream>
 
+using namespace std;
 //yes, stl list has size(), but we just pretend we don't know that
 //so we can practice the "faster runner/slow runner" trick
 bool isListPalindrome(list<int> &lst)
