@@ -28,8 +28,10 @@ vector<T> PreOrderBinaryTreeTraversalIterative(const TreeNode<T>* node)
 	vec.push_back(currentNode->GetValue());
 	if(nullptr != currentNode->Right())
 	    stk.push(currentNode->Right());
-	if(nullptr != currentNode->Left())
-	    stk.push(currentNode->Left());
+	//if(nullptr != currentNode->Left())
+	//    stk.push(currentNode->Left());
+	//no need for pushing the left child on stack
+	currentNode = currentNode->Left();
     }
     return vec;
 }
