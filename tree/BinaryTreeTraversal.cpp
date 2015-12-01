@@ -98,6 +98,10 @@ vector<T> PostOrderBinaryTreeTraversalIterative(const TreeNode<T>* node)
 	    stk.pop();
 	    vec.push_back(currentNode->GetValue());
 	    lastNode = currentNode;
+	    //set currentNode will stop most left diving during next loop since all left
+	    //childs have been visited if we reach here. A null currentNode will trigger
+	    //retrieving the elem from the stack, which is the parent of the node we just
+	    //visited.
 	    currentNode = nullptr;
 	}
 	else
