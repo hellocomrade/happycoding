@@ -51,6 +51,7 @@ vector<T> InOrderBinaryTreeTraversalIterative(const TreeNode<T>* node)
     vector<T> vec;
     stack<const TreeNode<T>*> stk;
     const TreeNode<T>* currentNode = node;
+    //head node can't be pushed onto stack before the loop
     while(true)
     {
 	while(nullptr != currentNode)
@@ -83,6 +84,7 @@ vector<T> PostOrderBinaryTreeTraversalIterative(const TreeNode<T>* node)
     stack<const TreeNode<T>*> stk;
     const TreeNode<T>* currentNode = node;
     const TreeNode<T>* lastNode = nullptr;
+    //head node can't be pushed onto stack before the loop
     while(true)
     {
 	while(nullptr != currentNode)
