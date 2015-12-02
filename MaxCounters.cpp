@@ -26,6 +26,10 @@ using namespace std;
  *    operations don't come continuously. Say lastmax = 2, in vec, the max value at this point is
  *    2. If the next operation is increase, then we guarantee max will be (lastmax + 1). So max
  *    will be larger than lastmax in this scenario.
+ *
+ *    CORRECTION: in fact, I was wrong! If we leave max as it is every time we assign lastmax, it should
+ *     		  be all rigt and it makes the logic a little bit easier to understand.
+ *
  * 4. At last, for all elements in vec that are smaller than lastmax, we own them a compensation
  *    operation.
  */
@@ -40,8 +44,9 @@ vector<int> solutionMaxCounter(int N, vector<int> &A) {
 	assert(i > 0);
 	if (i == N + 1)
 	{
- 	    lastmax = std::max(lastmax, max);
-	    max = 0;
+	    lastmax = max;
+ 	    //lastmax = std::max(lastmax, max);
+	    //max = 0;
 	}
 	else
 	{
