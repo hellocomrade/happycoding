@@ -7,6 +7,9 @@
 
 using namespace std;
 
+/*
+ * Naive solution
+ */
 int solutionMinAvgTwoSlice(vector<int> &A)
 {
     int len = A.size() - 1;
