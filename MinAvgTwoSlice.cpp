@@ -12,19 +12,22 @@ using namespace std;
  *
  * Since we deal with average here, at least a pair of elements should be examined each step
  * From the example it gives, it's an easy observation that the ith and (i+1)th should be checked
- * on each step. In [4,2,2], [2,2] has a smaller avg than [4,2]; However, it's also possible that
+ * on each step. For example,[4,2,2], [2,2] has a smaller avg than [4,2]; However, it's also possible that
  * 3 continuous elements could have an even lower avg, say [-8,-4,-10]. I don't have an example on top
- * of my head to qualify tree elements min avg with all positive numbers.
+ * of my head to qualify three elements min avg with all positive numbers.
  *
- * So, based upon the observation above, we will loop the array start from 1 (assuming we take A[0] and A[1]
- * as the starting value already) and end at len-2. On each step, both i and i+1 th elements will be checked:
+ * So, based upon the observations above, we will loop the array starting from 1 (assuming we take A[0] and A[1]
+ * as the init value for sum and base for min avg already) and loop ends at len-2. 
+ * On each step, both i and i+1 th elements will be checked:
  *
  * 1. If (A[i]+A[i+1])/2.0 is smaller than the previous avg min; If yes, reset startidx to i and update avg min.
  * 2. If current sum plus A[i] and then divided by the number of elements is smaller than previous avg min;
- *    if yes, update avg min.
+ *    if yes, update the sum and try to update avg min only if sum/cnt is less than avg min so far.
  * 3  If neither of above is satisfied, we have found the min avg end at index i-1, reset current sum to max value
- *    and then move i backward 1 to i-1, also reset number count to 1;
- * 4. According to the above 3 steps, we now can update the avg min so far and start index of current avg-min sequence 
+ *    and then move i backward 1 to i-1, also reset number count to 1; Decrease index i by 1 is necessary, or you
+ *    will not get the correct answer for the case like  [-3, -5, -8, -4, -10]. Without i-1, you will pick [-4,-10],
+ *    instead of [-8,-4,-10]. 
+ * 4. According to the result from above 3 steps, we now can safely update the avg min so far and start index of current avg-min sequence 
  */
 int solutionMinAvgTwoSlice(vector<int> &A)
 {
