@@ -1,3 +1,7 @@
+#include <cassert>
+
+using namespace std;
+
 int solutionFrogJmp(int X, int Y, int D) {
     assert(X>0);
     assert(D>0);
