@@ -1,6 +1,7 @@
 //https://codility.com/demo/results/trainingDZUZXX-SPQ/
 #include <cassert>
 #include <vector>
+#include <iostream>
 
 using namespace std:
 
