@@ -17,7 +17,3 @@ void testBitwiseMacro()
     for(i = 0; i < len; ++i)
 	printf("Expect 0:%d\n",test(arr[i]));
 }
-void main(void)
-{
-    testBitwiseMacro();
-}

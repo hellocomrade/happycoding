@@ -1,6 +1,6 @@
 #include <limits.h>
 
-#define N 1e10 //the max int the bitvec can hold
+#define N 1e20 //the max int the bitvec can hold
 #define INT_CAPACITY 32//sizeof(int)*CHAR_BIT, each int type can hold up to 32 values since it has 32 bits
 #define SHIFT 5       //right shift 5 means dividing by 32
 #define MASK 0x1f     //mask for getting the reminder of dividing 32, which is the relative index inside a int (0 -- 31)
