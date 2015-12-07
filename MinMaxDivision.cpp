@@ -31,7 +31,7 @@ int solutionMinMaxDivision(int K, int M, vector<int> &A) {
     long long low = *std::max_element(A.begin(), A.end());
     long long m, sum;
     int partition;
-    while (low < high)
+    while (low <= high)
     {
 	m = low + (high - low) / 2;
 	partition = 1;
@@ -47,9 +47,9 @@ int solutionMinMaxDivision(int K, int M, vector<int> &A) {
 	    }
 	}
 	if (partition <= K)
-	    high = m;
+	    high = m - 1;
 	else
-	    low = m+1;
+	    low = m + 1;
     }
     return (int)low;
 }
