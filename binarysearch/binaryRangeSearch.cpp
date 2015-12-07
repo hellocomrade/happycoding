@@ -61,4 +61,12 @@ void testBinaryRangeSearch()
     cout << "Expect (2, 3): (" << ret.first << ", " << ret.second << ")" << endl;
     ret = binaryRangeSearch(vec3, 7);
     cout << "Expect (5, 6): (" << ret.first << ", " << ret.second << ")" << endl;
+    
+    vector<int> vec4({ 0,10 });
+    ret = binaryRangeSearch(vec4, -1);
+    cout << "Expect (-1, 0): (" << ret.first << ", " << ret.second << ")" << endl;
+    ret = binaryRangeSearch(vec4, 5);
+    cout << "Expect (0, 1): (" << ret.first << ", " << ret.second << ")" << endl;
+    ret = binaryRangeSearch(vec4, 100);
+    cout << "Expect (1, -1): (" << ret.first << ", " << ret.second << ")" << endl;
 }
