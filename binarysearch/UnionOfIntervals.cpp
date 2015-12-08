@@ -1,6 +1,5 @@
 //https://community.topcoder.com/stat?c=problem_statement&pm=4823&rd=8074
 //https://community.topcoder.com/tc?module=Static&d1=match_editorials&d2=srm277
-#include "stdafx.h"
 #include <cassert>
 #include <vector>
 #include <queue>
