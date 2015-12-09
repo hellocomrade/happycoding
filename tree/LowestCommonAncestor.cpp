@@ -8,6 +8,12 @@ using namespace std;
 
 /*
  * Let's assume that a and b exist in the binary tree
+ *
+ * Iterative search is based upon a post order depth first traversal
+ *
+ * Use two pointers, hasA and hasB, to track the branch that has a or b discovered from bottom to the root of the tree
+ *
+ * The visted node who has both hasA and hasB pointed to is the LCA
  */
 template<typename T>
 const TreeNode<T>* lowestCommonAncestorBinaryTreeIterative(const TreeNode<T> *node, const T &a, const T &b)
@@ -32,13 +38,14 @@ const TreeNode<T>* lowestCommonAncestorBinaryTreeIterative(const TreeNode<T> *no
 	{
 	    if (a == curNode->GetValue())
 		hasA = curNode;
+	    else if (hasA != nullptr && (curNode->Left() == hasA || curNode->Right() == hasA))
+                hasA = curNode;
 	    if (b == curNode->GetValue())
 		hasB = curNode;
-	    if (hasA != nullptr && (curNode->Left() == hasA || curNode->Right() == hasA))
-		hasA = curNode;
-	    if (hasB != nullptr && (curNode->Left() == hasB || curNode->Right() == hasB))
+	    else if (hasB != nullptr && (curNode->Left() == hasB || curNode->Right() == hasB))
 		hasB = curNode;
-	    if (hasA != nullptr && hasB != nullptr && curNode == hasA && curNode == hasB)
+	    //if both hasA and hasB have been pointed to curNode, then it's the LCA
+	    if (curNode == hasA && curNode == hasB)
 		break;
 	    lastNode = curNode;
 	    curNode = nullptr;
