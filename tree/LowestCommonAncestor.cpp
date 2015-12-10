@@ -3,6 +3,9 @@
 #include <stack>
 #include <iostream>
 #include "tree.h"
+#include <cstdio>
+#include <climits>
+#include "btree.h"
 
 using namespace std;
 
@@ -59,7 +62,7 @@ const TreeNode<T>* lowestCommonAncestorBinaryTreeIterative(const TreeNode<T> *no
     }
     return curNode;
 }
-void testLCA()
+void testLowestCommonAncestorBinaryTreeIterative()
 {
     TreeNode<char> a('A', nullptr, nullptr);
     TreeNode<char> c('C', nullptr, nullptr);
@@ -88,4 +91,62 @@ void testLCA()
     const TreeNode<char>* ancestor7 = lowestCommonAncestorBinaryTreeIterative<char>(&a, 'A', 'A');
     cout << "Expect A: " << ancestor7->GetValue() << endl;
 }
+const int missing = INT_MIN;
+/*
+ * Recursive version of LCA
+ * Recursively check left and right subtrees, find lca only if:
+ * 1. both a and b are found in left and right children
+ * 2. find a or b in either left or right child, the current node has b or a
+ * If neither of above is satisfied, report missing to upper stream
+ */
+static int lca(BinaryTreeNode *root,int a,int b)
+{
+    int l, r;
+    if(root)
+    {
+	l=lca(root->left,a,b);
+	r=lca(root->right,a,b);
+	if (a == l&&b == r){
+	    printf("Found lca for (%d,%d) with value:%d\n", a, b, root->data);
+	    return missing;
+	}
+	else if (root->data == a)
+	{
+	    if (l == b || r == b)
+	    {
+		printf("Found lca for (%d,%d) with value:%d\n", a, b, root->data);
+		return missing;
+	    }
+	    else
+	        return a;
+	}
+	else if (root->data == b)
+	{
+	    if (l == a || r == a)
+	    {
+	        printf("Found lca for (%d,%d) with value:%d\n", a, b, root->data);
+		return missing;
+	    }
+	    else
+	        return b;
+	}
+	if (l > missing)return l;
+	else if (r > missing)return r;
+	else return missing;
+    }
+    return missing;
+}
 
+void testlca()
+{
+    int arr[] = { 1, 2, 3, 4, 5, 6, 7 };
+    BinaryTreeNode *root = buildBTreeFromArrayBFT(arr, sizeof(arr) / sizeof(int));
+    lca(root, 4, 6);
+    lca(root, 4, 5);
+    lca(root, 2, 4);//2 is the immediate parent of 4, so the lca=2
+    lca(root, 4, 3);
+    lca(root, 5, 7);
+    lca(root, 3, 2);
+    lca(root, 5, 6);
+    lca(root, 3, 7);
+}
