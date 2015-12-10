@@ -27,8 +27,8 @@ const TreeNode<T>* lowestCommonAncestorBinaryTreeIterative(const TreeNode<T> *no
     {
 	while (nullptr != curNode)
 	{
-		stk.push(curNode);
-		curNode = curNode->Left();
+	    stk.push(curNode);
+	    curNode = curNode->Left();
 	}
 	if (true == stk.empty())
 	    break;
