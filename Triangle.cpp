@@ -24,28 +24,31 @@ Observations:
 */
 int solutionTriangle(vector<int> &A)
 {
-	int len = A.size();
-	if (len < 3)
-		return 0;
-	len -= 2;
-	sort(A.begin(), A.end());
-	for (int i = 0; i < len; ++i)
-	{
-		//if (A[i] > 0 && (long long)A[i] + (long long)A[i + 1] > A[i + 2] && (long long)A[i + 2] + (long long)A[i] > A[i + 1])
-		if (A[i] > 0 && A[i] > A[i + 2] - A[i + 1])
-			return 1;
-	}
+    int len = A.size();
+    //Again, check if len < 3 is unnecessary. However, this safeguard might be good to have
+    //simply because this will make your code pass some boudnary case test during a code
+    //testing even though your main alogrithm is completely wrong
+    if (len < 3)
 	return 0;
+    len -= 2;
+    sort(A.begin(), A.end());
+    for (int i = 0; i < len; ++i)
+    {
+	//if (A[i] > 0 && (long long)A[i] + (long long)A[i + 1] > A[i + 2] && (long long)A[i + 2] + (long long)A[i] > A[i + 1])
+	if (A[i] > 0 && A[i] > A[i + 2] - A[i + 1])
+	    return 1;
+    }
+    return 0;
 }
 void testTriangle()
 {
-	cout << "Expect 1: " << solutionTriangle(vector<int>({ 10 ,2, 5, 1, 8, 20 })) << endl;
-	cout << "Expect 0: " << solutionTriangle(vector<int>({ 10, 50, 5, 1 })) << endl;
-	cout << "Expect 0: " << solutionTriangle(vector<int>({})) << endl;
-	cout << "Expect 0: " << solutionTriangle(vector<int>({ 10 })) << endl;
-	cout << "Expect 0: " << solutionTriangle(vector<int>({ 10, 50 })) << endl;
-	cout << "Expect 1: " << solutionTriangle(vector<int>({ 2147483647, 2147483645, 2147483646 })) << endl;
-	cout << "Expect 0: " << solutionTriangle(vector<int>({ -1, 5, 6 })) << endl;
-	cout << "Expect 0: " << solutionTriangle(vector<int>({ 0, 5, 6 })) << endl;
-	cout << "Expect 1: " << solutionTriangle(vector<int>({ -1, 5, 6, 7 })) << endl;
+    cout << "Expect 1: " << solutionTriangle(vector<int>({ 10 ,2, 5, 1, 8, 20 })) << endl;
+    cout << "Expect 0: " << solutionTriangle(vector<int>({ 10, 50, 5, 1 })) << endl;
+    cout << "Expect 0: " << solutionTriangle(vector<int>({})) << endl;
+    cout << "Expect 0: " << solutionTriangle(vector<int>({ 10 })) << endl;
+    cout << "Expect 0: " << solutionTriangle(vector<int>({ 10, 50 })) << endl;
+    cout << "Expect 1: " << solutionTriangle(vector<int>({ 2147483647, 2147483645, 2147483646 })) << endl;
+    cout << "Expect 0: " << solutionTriangle(vector<int>({ -1, 5, 6 })) << endl;
+    cout << "Expect 0: " << solutionTriangle(vector<int>({ 0, 5, 6 })) << endl;
+    cout << "Expect 1: " << solutionTriangle(vector<int>({ -1, 5, 6, 7 })) << endl;
 }
