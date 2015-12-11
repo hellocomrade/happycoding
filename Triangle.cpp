@@ -4,7 +4,6 @@
 #include <iostream>
 
 using namespace std;
-
 /*
 Observations:
 1. Only ask to return if such a triple exists, no need to find every possible triple;
