@@ -14,7 +14,6 @@ Counting back to 0 by the end means a valid nesting? No! For example:
 ")(", you will have to examine the count inside the loop. So anytime there is a negative count, return
 immediately with 0
 */
-*/
 int solutionNesting(const string &S)
 {
 	if (true == S.empty())return 1;
