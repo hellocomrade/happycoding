@@ -8,10 +8,10 @@ using namespace std;
 /*
 https://codility.com/demo/results/trainingFRFNNW-BDF/
 Observations:
-1. In order to simplify the problem, we have to define a offensive side and definsive side. So we can
-deal with two sides differently;
+1. In order to simplify the problem, we have to define an offensive side and a definsive side. So we can
+approach two sides differently;
 2. Assuming downstream is the attacking side, and poor upstream salmons have to pass through all greedy
-fishes. As long as salmons can pass the last remaining attackers (with the smallest possible index),
+fishes if they are big enough. As long as salmons can pass the last remaining attacker (with the smallest possible index),
 it's free to go;
 3. See the following sequences:
 A: 5, 8, 4, 5, 6
@@ -30,6 +30,13 @@ on top of the stack.
 4. Originally, I have a stack for upstream salmons as well. After I submitted the code, I realize it's
 unnecessary since this stack is only pushed and never poped, in other words, we can simply replace it
 with a counter.
+5. In the description, it says "we say that two fish P and Q meet each other when P < Q, B[P] = 1 and B[Q] = 0".
+However, in the approach we propose, there is no check for P < Q at all. Why? Since we scan the array
+from 0 to N-1, the attackers with smaller indexes will be pushed onto stack before they could meet any salmon
+swiming upstream. In other words, when they meet, we could guarantee the attackers staying on the stack all have
+a smaller index than the counterpart. On ther other hand, if we reach a salmon and the attacker stack is empty,
+it means there is no attackers all the way upstream. There is either no attacker by luck or attackers have been
+eliminated already.
 */
 int solutionFish(vector<int> &A, vector<int> &B)
 {
