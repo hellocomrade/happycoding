@@ -1,6 +1,7 @@
 #include <cassert>
 #include <vector>
 #include <unordered_map>
+#include <algorithm>
 #include <iostream>
 
 using namespace std;
@@ -27,7 +28,7 @@ counter.insert(std::make_pair(A[i], 1));
 or
 counter.insert(std::pair<int, int>(A[i], 1));
 */
-int solutionEquiLeader(vector<int> &A)
+int solutionEquiLeader1(vector<int> &A)
 {
 	int len = A.size();
 	assert(len > 0);
@@ -63,6 +64,46 @@ int solutionEquiLeader(vector<int> &A)
 			++count;
 	}
 	return count;
+}
+/*
+Observation:
+If the equileader exists, it's the majority in both sub-sequence, therefore, it's also the leader of the
+entire sequence. So, we could say: equileader exists at index i if and only if the equileader is the leader
+of the sequence.
+The solution is simple: find the leader and its total count first, then scan the sequence to count
+the number of leader end at index i, so the remaining will have (total_count - count) leaders. At each step,
+check if count > (i+1)/2 and (total_count-count)>(len-i-1)/2, aka if the leader is the majority in the
+subsequences split at index i (i belongs to the first sub)
+*/
+int solutionEquiLeader(vector<int> &A)
+{
+	int len = A.size();
+	assert(len > 0);
+	int count = 0, cnt = 0, total = 0, leader;
+	for (int i = 0; i < len; ++i)
+	{
+		if (0 == count)
+			leader = A[i];
+		if (A[i] == leader)
+			++count;
+		else
+			--count;
+	}
+	count = 0;
+	total = std::count(A.begin(), A.end(), leader);
+	if (total > len / 2)
+	{
+		for (int i = 0; i < len; ++i)
+		{
+			if (leader == A[i])
+				++cnt;
+			if (cnt >(i + 1) / 2 && (total - cnt) > (len - i - 1) / 2)
+				++count;
+		}
+		return count;
+	}
+	else
+		return 0;
 }
 void tesetEquiLeader()
 {
