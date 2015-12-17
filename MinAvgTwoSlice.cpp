@@ -20,10 +20,10 @@ using namespace std;
  * as the init value for sum and base for min avg already) and loop ends at len-2. 
  * On each step, both i and i+1 th elements will be checked:
  *
- * 1. If (A[i]+A[i+1])/2.0 is smaller than the previous avg min; If yes, reset startidx to i and update avg min.
- * 2. If current sum plus A[i] and then divided by the number of elements is smaller than previous avg min;
- *    if yes, update the sum and try to update avg min only if sum/cnt is less than avg min so far.
- * 3  If neither of above is satisfied, we have found the min avg end at index i-1, reset current sum to max value
+ * 1. Whether (A[i]+A[i+1])/2.0 is smaller than the previous avg min; If yes, reset startidx to i and update avg min.
+ * 2. Whether current minendhere (min dividend actually) plus A[i] and then divided by the number of elements is smaller than previous avg min;
+ *    if yes, update the minendhere and try to update avg min only if sum/cnt is less than avg min so far.
+ * 3  Whether neither of above is satisfied, we have found the min avg end at index i-1, reset current sum to max value
  *    and then move i backward 1 to i-1, also reset number count to 1; Decrease index i by 1 is necessary, or you
  *    will not get the correct answer for the case like  [-3, -5, -8, -4, -10]. Without i-1, you will pick [-4,-10],
  *    instead of [-8,-4,-10]. 
@@ -40,7 +40,7 @@ int solutionMinAvgTwoSlice(vector<int> &A)
     for (int i = 1; i<len; ++i)
     {
 	tmp = (A[i] + A[i + 1]) / 2.0;
-	tmp1 = (minendhere + A[i + 1]) / (cnt + 1);
+	tmp1 = (minendhere == std::numeric_limits<double>::max())?std::numeric_limits<double>::max():(minendhere + A[i + 1]) / (cnt + 1);
 	if (tmp < tmp1 && tmp < minendhere / cnt)
 	{
 	    minendhere = (A[i] + A[i + 1]);
