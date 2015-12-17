@@ -48,7 +48,8 @@ that it is sufficient to find the coins with an odd number of divisors.
 We know that almost every number has a symmetric divisor (apart from divisors of the
 form square root of n). Thus, every number of the form k^2 has an odd number of divisors. There are
 exactly square root of n such numbers between 1 and n. Finding the value of square root takes logarithmic
-time (or constant time if we use operations on floating point numbers).*/
+time (or constant time if we use operations on floating point numbers).
+*/
 int solutionReversingCoins(int N)
 {
 	assert(N > 0);
