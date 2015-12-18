@@ -5,7 +5,7 @@
 
 using namespace std;
 
-int solutionPeaks(vector<int> &A)
+int solutionPeaks1(vector<int> &A)
 {
 	int len = A.size();
 	assert(len > 0);
@@ -39,6 +39,45 @@ int solutionPeaks(vector<int> &A)
 				}
 				if (num - d == len)
 					return len / d;
+			}
+			++d;
+		}
+	}
+	return 0;
+}
+
+int solutionPeaks(vector<int> &A)
+{
+	int len = A.size();
+	assert(len > 0);
+	int i = 1, d, j, len1, cnt;
+	vector<int> peaks;
+	while (i < len - 1)
+	{
+		if (A[i] > A[i - 1] && A[i] > A[i + 1])
+			peaks.push_back(i);
+		++i;
+	}
+	len1 = peaks.size();
+	if (len1 > 0)
+	{
+		d = peaks[0];
+		while (d <= len)
+		{
+			if (0 == len % d)
+			{
+				j = -1;
+				cnt = 0;
+				for (int k : peaks)
+				{
+					if (k / d != j)
+					{
+						++cnt;
+						j = k / d;
+					}
+				}
+				if (cnt == len / d)
+					return cnt;
 			}
 			++d;
 		}
