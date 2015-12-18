@@ -39,6 +39,27 @@ int binarySearchNoGreaterThan(vector<T> &A, T k)
   	low = len;
     return low;
 }
+//Add a plain version
+template<typename T>
+int binarySearchNoGreaterThan1(vector<T> &A, T k)
+{
+	int len = A.size();
+	int result = len;
+	assert(len > 0);
+	int m, low = 0, high = len - 1;
+	while (low <= high)
+	{
+		m = low + (high - low) / 2;
+		if (k <= A[m])
+		{
+			result = m;
+			high = m - 1;
+		}
+		else
+			low = m + 1;
+	}
+	return result;
+}
 void testBinarySearchNoGreaterThan()
 {
     vector<int> vec1({ 3, 6, 1, 5, -2, 8, 10 });
