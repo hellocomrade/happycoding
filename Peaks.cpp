@@ -65,7 +65,7 @@ int solutionPeaks1(vector<int> &A)
 	return 0;
 }
 
-int solutionPeaks(vector<int> &A)
+int solutionPeaks2(vector<int> &A)
 {
 	int len = A.size();
 	assert(len > 0);
@@ -107,6 +107,51 @@ int solutionPeaks(vector<int> &A)
 			}
 			++d;
 		}
+	}
+	return 0;
+}
+int solutionPeaks(vector<int> &A)
+{
+	int len = A.size();
+	assert(len > 0);
+	int i = 1, d = 2, lastPeakIdx = 0, cnt;
+	vector<int> lastPeaks(len, 0);
+	//instead of check indexes for peaks, we store the last peak at each index for the sequence.
+	//This is like memorization. Given an index in [0, len-1], we can tell the index of the last peak
+	//in the sequence. We use 0 as the missing value since peak can't exist at 0 or len - 1. 
+	while (i < len)
+	{
+		//The following line helps to save couple lines of code. We assign lastPeaks[i] with the value
+		//at i-1 regardless what the actually value should be at i. Then we check if i has a peak.
+		//If so, we update the value at i. By doing so, we don't have a temp value for the lastPeakIndex
+		//and also, no need for an else branch.
+		lastPeaks[i] = lastPeaks[i - 1];
+		if ((i + 1) < len && A[i] > A[i - 1] && A[i] > A[i + 1])
+			lastPeaks[i] = i;
+		++i;
+	}
+	while (d <= len)
+	{
+		if (0 == len % d)
+		{
+			lastPeakIdx = 0;
+			cnt = 0;
+			for (i = d; i <= len; i += d)
+			{
+				//if there is no peak (lastpeakidx == 0) or peak index doesn't change
+				//after we move to the next interval by +d, break and move on.
+				if (lastPeaks[i - 1] == lastPeakIdx)
+					break;
+				else
+				{
+					lastPeakIdx = lastPeaks[i - 1];
+					++cnt;
+				}
+			}
+			if (cnt == len / d)
+				return cnt;
+		}
+		++d;
 	}
 	return 0;
 }
