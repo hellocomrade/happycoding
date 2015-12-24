@@ -11,17 +11,17 @@ and column are set to 0.
 
 For example:
 
-1, 2			1, 0
-3, 0	-->		0, 0
+1, 2	     1, 0
+3, 0	-->  0, 0
 
 1, 0, 2, 3     0, 0, 0, 0
 2, 4, 1, 5 --> 0, 0, 1, 5
-0, 2, 3, 5		0, 0, 0, 0
+0, 2, 3, 5     0, 0, 0, 0
 
-1, 2, 3, 4		 1, 2, 0, 4
+1, 2, 3, 4	1, 2, 0, 4
 2, 2, 0, 4  --> 0, 0, 0, 0
-3, 2, 3, 4		 3, 2, 0, 4
-4, 2, 3 ,4		 4, 2, 0, 4
+3, 2, 3, 4	3, 2, 0, 4
+4, 2, 3 ,4	4, 2, 0, 4
 
 Observation:
 If you simply scan the matrix and whenever meets a zero at [i,j] then clear out the row i and column j,
@@ -47,10 +47,10 @@ The overall time complexity is O(M*N) and space complexity is O(1)
 
 Here is an example:
 
-k=0
-1, 0, 2, 3     0, 0, 2, 3		0, 0, 0, 0
+k=1	       k=0
+1, 0, 2, 3     0, 0, 2, 3      0, 0, 0, 0
 2, 4, 1, 5 --> 2, 4, 1, 5 -->  0, 0, 1, 5
-0, 2, 3, 5		0, 2, 3, 5		0, 0, 0, 0
+0, 2, 3, 5     0, 2, 3, 5      0, 0, 0, 0
 */
 void matrixZeroOut(vector<vector<int> > &A)
 {
