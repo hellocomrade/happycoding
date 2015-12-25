@@ -25,3 +25,5 @@ using ListNode = struct _listnode<T>;
 
 template<typename T>
 ListNode<T>* BuildListFromArray(T *arr, size_t len);
+template<typename T>
+void CleanupList(ListNode<T> *phead);
