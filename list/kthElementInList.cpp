@@ -27,6 +27,12 @@ are sure that there are less than k elements in the list. missing_value is retur
 	b. If si has not reached the end, now we simply increase both fi and si at the same time in
 	a new loop until si reaches the end of the list.
 
+	note: in our setup though, item a will never happen, since STL's end() is one position behind
+		  the last element of the list. Also, we assume k is 0-based index counting from the tail.
+		  So, in the following solution, if si == ei, the k must be an invalid index for the list.
+		  If k happens to be len-1, then by the end of the first loop, si is equal to the last element
+		  of the list, not end()
+
 time complexity: O(N)
 space complexity: O(1)
 */
