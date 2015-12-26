@@ -58,27 +58,65 @@ ListNode<T>* positionOfLoop1(ListNode<T> *phead)
 }
 /*
 Observation:
-1. When slower and faster pointers meet at pos that is k to the starting point of the loop. If we move
+1. If there is no leading elements, simply a circle, the slower and faster pointers always meet at the
+   starting point of the loop (the head of this list in this case).
+2. Once the slower pointer is on the starting pointer of the loop, it never takes more than a circle for
+   the faster pointer to catch up.
+3. When slower and faster pointers meet at pos that is k to the starting point of the loop. If we move
    one pointer back to the head of the list and let both pointers running at 1 pace per step, they will
    eventually meet at the starting point of the loop.
-2. If there is no leading elements, simply a circle, the slower and faster pointers always meet at the 
-   starting point of the loop (the head of this list in this case).
-3. Once the slower pointer is on the starting pointer of the loop, it never takes more than a circle for
-   the faster pointer to catch up.
+
 Prove: 
 Assuming there are m leading elements before the starting point of the loop, the loop itself has N elements.
 When the slow pointer reaches the starting point of the loop after k moves, the faster pointer has moved
-2k steps, therefore, it's k step inside the loop. It's possible the faster pionter has been looping for a while,
-so the actually relative position from the starting of the loop is k%N. We simplify it as K coze we only care
-the relative distance from this moment.
+2k steps, therefore, it's k step inside the loop. 
 
-Well, they are in a loop, we have to define this way: the faster pointer is N-K steps behild the slower pointer.
-When they meet in the loop, let's say the slower one has moved x steps, then the faster one has moved 2x steps.
-Actually if we consider this from a different angle, faster pointer moved N-K steps first to get to the starting
-point of the loop, then x steps to catch up the slower one. So N-K is actually equal to x.
+Let's assume the starting point of the loop with index 1, N=6
 
-Therefore, the they will meet N-K steps after the starting point and they are K step away from looping back to the 
-starting point.
+1 -> 2 -> 3 -> 4 ->5 ->6 ->1
+
+Say when slower pointer reaches 1 (at the head of the list above), faster one is at 3. If we start to track
+on both pointers:
+
+Slower one: 1 -> 2 -> 3 -> 4 -> [5] -> 6 -> 1
+Faster one: 3 -> 5 -> 1 -> 3 -> [5] -> 1 -> 3
+
+Whenever you see they have the same index at a particular step, they meet! For our case, they will meet at index
+5.
+
+Let's examine it from a slightly different aspect:
+
+Slower one (1 per step): 1 -> 2 -> 3 -> 4 -> [5] -> 6 -> 1
+Faster one (2 per step): 3 -> 5 -> 7 -> 9 -> [11] -> 13 -> 15
+								   7%6  9%6   11%6   13%6  15%6
+								    1   3     5
+For faster pointer, if the continuous counting number is greater than the number of loop (6, in this case). We will
+do modulo against 6. We will still get 1, 3 ,5, which are as same as the index since the index starting from 1 at the
+beginning of the loop.
+
+By having the above observation, we could get the following expression:
+
+(k + 2*x) % N = x
+
+x is the number of moves the slower pointer made after it reaches the starting point of the loop. During the same period,
+the faster pointer will move 2*x steps. Given k as the initial index (base count), the current count when they meet will be:
+
+(k + 2*x)
+
+Since we have known that the slower one never makes more than a circle for faster one to catch up (O. 2), we will have:
+
+(k + 2*x) % N = x
+
+Given C as a constant, we could have:
+
+(k + 2*x) = C*N + x --> x = C*N - k
+
+Since both x  and k is no greater than N, C is no greater than 2. C is equal to 2 if and only if k is equal to N.
+
+So we could safely simplify the above to: x = N - k
+
+Now, we have proved that when two pointers meet first time on the loop, they are N - (N - k) = k away from the starting point
+of the loop.
 */
 template<typename T>
 ListNode<T>* positionOfLoop(ListNode<T> *phead)
