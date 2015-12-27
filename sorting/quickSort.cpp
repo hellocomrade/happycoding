@@ -47,6 +47,9 @@ fall into a infinite loop forever. Of course, we could do ++l, --h after swap, b
 break from the whole loop by now, so we also have to move this check to the top of the loop, before two while loops.
 
 Using do while can free us from this complication, at least to me, I think it's simpler.
+
+Why we have l <= high in the first while condition but no such check for h in the second while condition?
+There is no way for h to be less than low because 'A[h] > p' implies that h will stop at low (p=A[low])
 */
 #define COMBINED
 const int SORT_BOUNDARY = 6;
