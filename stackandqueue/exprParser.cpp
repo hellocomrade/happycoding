@@ -16,7 +16,9 @@ unordered_map<string, std::pair<int, int> > ExprParser::operatorLst = unordered_
 	{ "max", std::make_pair(3, 2) },
 	{ "abs", std::make_pair(3, 1) }
 });
-
+/*
+check all parentheses to make sure they are properly nested
+*/
 bool ExprParser::sanityCheck(const string &S)
 {
 	if (S.size() == 0)return false;
@@ -30,6 +32,17 @@ bool ExprParser::sanityCheck(const string &S)
 	}
 	return 0 == count;
 }
+/*
+Other than the standard operators's symbols, such as +-, all other tokens could take more than 1 character.
+Therefor, a token will only be examined if we meet a standard operator. A pointer is used to track the
+last starting point after the previous token was examined. So when a standard operator is met, the characters
+between the last point and current are considered as an operand token. So we push the operand token first,
+then the operator token onto the queue.
+
+The only exception is the function. When we see a '(', we need to check if the characters between two pointers is a function name first.
+
+When ps reaches the end of the string, the last token needs to be picked up outside the loop.
+*/
 void ExprParser::parse(const string &S)
 {
 	if (false == sanityCheck(S))return;
@@ -59,6 +72,24 @@ void ExprParser::parse(const string &S)
 	if (lps != ps)
 		tokenQ.push(ExprToken(string(lps)));
 }
+/*
+shunting yard algorithm
+create a stack for operators
+take the head of the token queue:
+1. If it's an operand, push it to the final result;
+2. If it's a ')' and the operator stack is not empty, pop the operators from the stack and push them
+   to the final result. We stop only if the stack is empty or we meet a '(' or we meet a function token.
+   If it's a function token, we need to push its token onto the final result before break.
+3. If it's a delimiter, for example ',', and the operator stack is not empty, pop the operators from the stack
+   and push them to the final result. We stop only if the stack if empty or we meet a function token since
+   ',' is meant to be used inside function, for example 'max(a, b)'.
+4. If it's a '(' or function call token, we put it on the operator stack and move on.
+5. For all other standard operators we meet, we compare its priority with the operators on the stack.
+   If any operator on the stack has a higher priority, we pop it and push it to the final result. In the end,
+   we push the operator we just pop from the queue to the stack.
+
+At last, we push all operators remaining on the stack to the final result.
+*/
 string ExprParser::RPN()
 {
 	string empty = "";
