@@ -25,7 +25,7 @@ vector<bool> sieve(int N)
 	vector<bool> primes(N + 1, true);
 	primes[0] = primes[1] = false;
 	int i = 2, k;
-	while (i * i < N)
+	while (i * i <= N)
 	{
 		if (true == primes[i])
 		{
