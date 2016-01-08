@@ -1,4 +1,4 @@
-//https://codility.com/programmers/task/genomic_range_query`
+//https://codility.com/demo/results/trainingM9TEHW-A9W/
 #include <cassert>
 #include <string>
 #include <vector>
