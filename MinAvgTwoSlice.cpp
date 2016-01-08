@@ -66,6 +66,33 @@ int solutionMinAvgTwoSlice(vector<int> &A)
     }
     return minidx;
 }
+/*
+https://codility.com/demo/results/trainingY2VXYP-3Y7/
+A better solution:
+It can be proved the min average slices come from either 2-elements-slice or 3-elements-slice.
+So, we really simply the problem to find a continuous subsequence with either 2 or 3 elements having the min average.
+This can be done in O(N) time and O(1) space.
+*/
+int solutionMinAvgTwoSlice1(vector<int> &A) {
+    int len=A.size();
+    assert(len>1);
+    int i=0, idx=0;
+    double avg=numeric_limits<double>::max(), tmp;
+    while(i+2<len)
+    {
+        tmp=std::min((A[i]+A[i+1])/2.0, (A[i]+A[i+1]+A[i+2])/3.0);
+        if(tmp<avg)
+        {
+            idx=i;
+            avg=tmp;
+        }
+        ++i;
+    }
+    tmp=(A[len-1]+A[len-2])/2.0;
+    if(tmp<avg)
+        idx=i;
+    return idx;
+}
 void testMinAvgTwoSlice()
 {
     cout << "Expect 1: " << solutionMinAvgTwoSlice(vector<int>({ 4, 2, 2, 5, 1, 5, 8 })) << endl;
