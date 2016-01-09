@@ -18,6 +18,7 @@ vector<int> solutionGenomicRangeQuery(string &S, vector<int> &P, vector<int> &Q)
     int strLen = S.length();
     //memorize the next index(dist) value of A,C,G,T at 1st, 2nd, 3rd and 4th rows
     //so we will know if P.startIndex is at this position, how far can we see a A,C,G,T
+    vector<vector<int> > memorization;
     memorization.push_back(vector<int>(0, 0));//dummy array for avoiding minus 1 inside [], less messy looking
     memorization.push_back(vector<int>(strLen, -1));
     memorization.push_back(vector<int>(strLen, -1));
