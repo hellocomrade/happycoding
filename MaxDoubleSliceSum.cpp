@@ -1,5 +1,6 @@
 //https://codility.com/programmers/task/max_double_slice_sum
 /*
+https://codility.com/demo/results/trainingZE4RTY-39H/
 I failed this one coz I failed to recognize an implicit condition...
 I was puzzled by the array with all negative numbers, such as [-2,-1,-4,-5,-10].
 I thought the max is -1 if we take (0,2,3).

@@ -1,6 +1,6 @@
 //https://codility.com/programmers/task/max_slice_sum
 #include <cassert>
-#include <climits>
+#include <limits>
 #include <vector>
 #include <algorithm>
 #include <iostream>
@@ -8,12 +8,12 @@
 using namespace std;
 
 //classic max sub array
-int solutionMaxSliceSum(vector<int> &A) {
+int solutionMaxSliceSum1(vector<int> &A) {
     int len = A.size();
     assert(len > 0);
     //integer overflow is possible, long long is the safe choice since it's guaranteed to be 8 bytes
     //long, however, could still be 4 bytes on Windows even it's x64 
-    long long maxhere = 0, maxsofar = INT_MIN, tmp;
+	long long maxhere = 0, maxsofar = numeric_limits<long long>::min(), tmp;
     for (int i : A)
     {
 	tmp = maxhere + i;
@@ -22,6 +22,17 @@ int solutionMaxSliceSum(vector<int> &A) {
 	maxhere = std::max(0ll, tmp);
     }
     return static_cast<int>(maxsofar);
+}
+int solutionMaxSliceSum(vector<int> &A) {
+	int len = A.size();
+	assert(len > 0);
+	long long maxhere = 0, maxsofar = numeric_limits<long long>::min();
+	for (int i : A)
+	{
+		maxhere = std::max((long long)i, maxhere + (long long)i);
+		maxsofar = std::max(maxsofar, maxhere);
+	}
+	return static_cast<int>(maxsofar);
 }
 void testMaxSliceSum()
 {
