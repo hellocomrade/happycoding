@@ -110,6 +110,37 @@ int solutionPeaks2(vector<int> &A)
 	}
 	return 0;
 }
+int solutionPeaks3(vector<int> &A) {
+	int len = A.size();
+	if (len<3)return 0;
+	int d = 2, itor;
+	vector<int> lastPeak(len, len);
+	for (int i = 1; i<len - 1; ++i)
+	{
+		lastPeak[i] = lastPeak[i - 1];
+		if (A[i]>A[i - 1] && A[i]>A[i + 1])
+			lastPeak[i] = i;
+	}
+	lastPeak[len - 1] = lastPeak[len - 2];
+	while (d <= len)
+	{
+		if (0 == len%d)
+		{
+			itor = d;//each group has d elements
+			//the lastpeak at the last index in the current group should be no greater than the last index
+			//in the current group but also greater than the last index in the last group
+			while (itor <= len&&lastPeak[itor - 1]<itor&&lastPeak[itor - 1]>itor - d - 1)
+				itor += d;
+			//If proposed d goes through, we should expect itor==len+d
+			//return immediately once we have a match coz we are looking for the max number of group and the
+			//first match of len/d is guaranteed to be the one (d starts from 2)
+			if (itor>len)
+				return len / d;
+		}
+		++d;
+	}
+	return 0;
+}
 int solutionPeaks(vector<int> &A)
 {
 	int len = A.size();
