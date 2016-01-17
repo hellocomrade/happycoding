@@ -23,6 +23,11 @@ C.
 
 if both A and B meet the above requirement, they must have the identical prime divisors.
 */
+static int gcd(int a, int b)
+{
+	if (a % b == 0)return b;
+	else return gcd(b, a % b);
+}
 int solutionCommonPrimeDivisors(vector<int> &A, vector<int> &B)
 {
 	int len = A.size();
