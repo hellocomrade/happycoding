@@ -82,25 +82,16 @@ int hashTabPut(struct _hash_table *table, const char * const key, size_t keysize
 	{
 		struct _hash_node *pnode = createNode(key, keysize, data, datasize);
 		++table->size;
-		if (NULL == curr)/*either we have reached the end of the list or there is currently no node in the bucket yet*/
+		/*either the key is less than the key in the first element or there is currently no node in the bucket yet*/
+		if (prev == curr)
 		{
-			if (NULL == prev)/*no node in this bucket yet*/
-				table->bucks[h] = pnode;
-			else
-				prev->next = pnode;
+			table->bucks[h] = pnode;
+			pnode->next = curr;
 		}
 		else
 		{
-			if (curr == prev)/*key in pnode is smaller than the first node in the list*/
-			{
-				pnode->next = curr;
-				table->bucks[h] = pnode;
-			}
-			else
-			{
-				prev->next = pnode;
-				pnode->next = curr;
-			}
+			prev->next = pnode;
+			pnode->next = curr;
 		}
 	}
 	return 0;
