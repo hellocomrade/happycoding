@@ -66,6 +66,7 @@ int hashTabPut(struct _hash_table *table, const char * const key, size_t keysize
 	uint64_t h = hash(key);
 	struct _hash_node *prev = table->bucks[h], *curr = table->bucks[h];
 	int ret;
+	//the nodes in one bucket will be linked in a non-decreasing order
 	while (NULL != curr && (ret = strcmp(curr->key, key)) < 0)
 	{
 		prev = curr;
