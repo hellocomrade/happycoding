@@ -8,4 +8,5 @@ int bitvec[(int)(N / INT_CAPACITY + 1)]; // if the max value is 65, 65/32=2, plu
 #define set(i) (bitvec[(i)>>SHIFT]|=1<<((i)&MASK)) //first dividing the number i by 32 to find the base index, then the offset is defined as the reminder part of i/32, we then move 1 over to the offset based upon the base index, a OR is applied to assign the bit
 #define clr(i) (bitvec[(i)>>SHIFT]&=~(1<<((i)&MASK))) // move 1 to the offset, then flip all bits, which will leave the bit we look for to zero. When we do the bitwise and, all other bits will remain unchanged, only the bit with 0 will be cleared
 #define test(i) (0!=(bitvec[(i)>>SHIFT]&(1<<((i)&MASK))))//move 1 to the offset and and with the value of the integer. If the specific bit is set, the result will be non-zero
- 
+
+void testSwapbitsOddEven();
