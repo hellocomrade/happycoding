@@ -5,6 +5,8 @@
 
 using namespace std;
 /*
+https://community.topcoder.com/stat?c=problem_statement&pm=3970&rd=7993
+
 This is NOT fully tested or verified yet, so you should NOT trust it.
 
 Apply binary search on low and high in double format. No need to worry infinite loop by m+1 or m-1
