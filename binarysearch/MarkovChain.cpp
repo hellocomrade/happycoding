@@ -163,3 +163,4 @@ void testMarkovChain()
 {
 	MarkovChain::populateText("of the people, by the people, for the people");
 	MarkovChain::generator();
+}
