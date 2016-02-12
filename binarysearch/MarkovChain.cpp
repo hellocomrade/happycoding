@@ -48,22 +48,18 @@ namespace MarkovChain
 		//cast in C, brutal
 		const char **q = (const char**)b;
 		/*
-		In the following for loop, we will actually change the content of a and b: ++*p, ++*q.
-		These changes should be reset when we are done. Otherwise, odd result will show up after sort.
+		In the following for loop, we could actually change the content of a and b, if we do ++*p, ++*q.
+		So, we have to copy the content of *p, *q (address of elements in inputChars) onto local variables, which
+		allocate their memory from stack.
 		*/
 		const char *p1 = *p;
 		const char *q1 = *q;
-		for (; **p == **q; ++*p, ++*q)
-			if (0 == **p && 0 == --n)
+		for (; *p1 == *q1; ++p1, ++q1)
+			if (0 == *p1 && 0 == --n)
 			{
-				*p = p1;
-				*q = q1;
 				return 0;
 			}
-		int rt = **p - **q;
-		*p = p1;
-		*q = q1;
-		return rt;
+		return *p1 - *q1;
 	}
 	void printFirstKWords(const char *words, int k)
 	{
