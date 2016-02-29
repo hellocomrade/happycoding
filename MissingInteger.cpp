@@ -21,7 +21,9 @@ between [1, N] (only at most N-1 count left). This can be proved easily by negat
 If N+1 exists and all integers between [1,N] are also not missing, then we have total N+1 elements,
 which is against the truth that there are only N elements.
 3. So, we actually only need to watch positive integers from 1 up to N+1. The statement above should prove
-all boundary conditions.
+all boundary conditions. If N+1 exists in the sequence, missing value is between [1, N]. If N+1 doesn't exist,
+the missing minimum positive integer is at most N+1. Either way, we don't need more than N+1 elements to track
+the sequence.
 */
 int solutionMissingInteger(vector<int> &A) {
 	int len = A.size() + 1;
