@@ -62,7 +62,6 @@ OK, we now have a solution!
 One thing I overlooked is: we have a possibility for integer overflow here. Since N <= 100000, if we do
 N*(N+1)/2, it will be an overflow for integer! So, use long long to cover the rear.
 */
-*/
 int solutionCountDistinctSlices(int M, vector<int> &A)
 {
 	int len = A.size();
