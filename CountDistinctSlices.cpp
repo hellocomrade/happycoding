@@ -90,6 +90,39 @@ int solutionCountDistinctSlices(int M, vector<int> &A)
 	count += (j - i)*(j - i + 1) / 2;
 	return (int)std::min(count, 1000000000ll);
 }
+/*
+https://codility.com/demo/results/trainingHP9BHQ-E87/
+https://codility.com/demo/results/training8BZMBM-AQ8/
+
+I said the hashtable is the only option, I was wrong. You can actually just use a vector since
+M is given up front. It makes the code look cleaner. While, for unordered_map declarations, you could
+use keyword "auto" to make it shorter as well if using c++11 or newer.
+*/
+int solutionCountDistinctSlices1(int M, vector<int> &A)
+{
+	int len = A.size(), lasti = 0;
+	long long count = 0, i = 0, offset = 0;
+	vector<int> memo = vector<int>(M + 1, -1);
+	for (i = 0; i < len; ++i)
+	{
+		if (memo[A[i]] < lasti)
+			memo[A[i]] = i;
+		else
+		{
+			offset = i - memo[A[i]] - 1;
+			/*
+			The actual number of unique elements we count here is (i - 1 - lasti) + 1. i is the index
+			of the current element that is a duplicate to the one at memo[A[i]], there comes (i - 1)
+			as the index from the last unique elements in this run.
+			*/
+			count += (i - lasti + 1) * (i - lasti) / 2 - (offset + 1) * offset / 2;
+			if (count > 1000000000ll)return 1e9;
+			lasti = memo[A[i]] + 1;
+			memo[A[i]] = i;
+		}
+	}
+	return std::min(1000000000LL, count + (i - lasti + 1) * (i - lasti) / 2);
+}
 void testCountDistinctSlices()
 {
 	cout << "Expect 11: " << solutionCountDistinctSlices(4, vector<int>({ 3, 4, 3, 4, 3, 4 })) << endl;
