@@ -85,6 +85,41 @@ int solutionMinMaxDivision1(int K, int M, vector<int> &A) {
     }
     return msum;
 }
+//https://codility.com/demo/results/trainingZ9QRHF-2MD/
+int solutionMinMaxDivision2(int K, int M, vector<int> &A) {
+    int len = A.size();
+    long long h = std::accumulate(A.begin(), A.end(), 0LL);
+    long long l = *std::max_element(A.begin(), A.end());
+    long long sum, m, maxSumPerRun, minMaxSum = h;
+    int cnt;
+    while(l <= h)
+    {
+        m = l + (h - l) / 2;
+        sum = maxSumPerRun = 0LL;
+        cnt = 0;
+        for(int i = 0; i < len; ++i)
+        {
+            if(sum + A[i] <= m)
+                sum += A[i];
+            else
+            {
+                ++cnt;
+                maxSumPerRun = std::max(sum, maxSumPerRun);
+                sum = A[i];
+            }
+        }
+        ++cnt;
+        maxSumPerRun = std::max(sum, maxSumPerRun);
+        if(cnt <= K)
+        {
+            h = m - 1;
+            minMaxSum = std::min(minMaxSum, maxSumPerRun);
+        }
+        else
+            l = m + 1;
+    }
+    return minMaxSum;
+}
 void testMinMaxDivision()
 {
     cout << "Expect 6: " << solutionMinMaxDivision(3, 5, vector<int>({ 2, 1, 5, 1, 2, 2, 2 })) << endl;
