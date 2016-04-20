@@ -85,7 +85,7 @@ expand allPerformance tests
 Once again, I failed to consider integer overflow. I simply checked my codes: well, there is no arithmetic operation,
 So, I am safe, which is not true, since ABS(INT_MIN) is not a valid integer anymore...
 */
-int solutionAbsDistinct1(vector<int> &A)
+int solutionAbsDistinct1(const vector<int> &A)
 {
 	int len = A.size();
 	assert(len > 0);
@@ -133,7 +133,7 @@ We also have to keep tracking the last compared abs value, so duplicate on both 
 This is a pretty intuitive approach, the only real trick is abs(int_min), which is not a valid integer anymore.
 abs(-2147483648),0x80000000
 */
-int solutionAbsDistinct(vector<int> &A)
+int solutionAbsDistinct(const vector<int> &A)
 {
 	int len = A.size();
 	assert(len > 0);

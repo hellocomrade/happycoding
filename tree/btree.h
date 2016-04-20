@@ -1,5 +1,6 @@
 #pragma once
 extern "C" {
+#include <stdlib.h>
 typedef struct __binarytreenode
 {
 	struct __binarytreenode *left;

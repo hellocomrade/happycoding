@@ -1,3 +1,7 @@
+#include <cassert>
+#include <vector>
+#include <iostream>
+using namespace std;
 //https://codility.com/programmers/task/max_double_slice_sum
 /*
 https://codility.com/demo/results/trainingZE4RTY-39H/
@@ -15,7 +19,7 @@ compare maxFromLeft[i - 1] + maxFromRight[i + 1]. No need to think where the lef
 boundaries are since they are embeded insode maxFromLeft and maxFromRight.
 If you fallen into the thought to do so, you would fail...
 */
-int solutionMaxDoubleSliceSum(vector<int>& A)
+int solutionMaxDoubleSliceSum(const vector<int>& A)
 {
     int len = A.size();
     assert(len>2);

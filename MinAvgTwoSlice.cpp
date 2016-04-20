@@ -29,7 +29,7 @@ using namespace std;
  *    instead of [-8,-4,-10]. 
  * 4. According to the result from above 3 steps, we now can safely update the avg min so far and start index of current avg-min sequence 
  */
-int solutionMinAvgTwoSlice(vector<int> &A)
+int solutionMinAvgTwoSlice(const vector<int> &A)
 {
     int len = A.size() - 1;
     assert(len>0);
@@ -73,7 +73,7 @@ It can be proved the min average slices come from either 2-elements-slice or 3-e
 So, we really simply the problem to find a continuous subsequence with either 2 or 3 elements having the min average.
 This can be done in O(N) time and O(1) space.
 */
-int solutionMinAvgTwoSlice1(vector<int> &A) {
+int solutionMinAvgTwoSlice1(const vector<int> &A) {
     int len=A.size();
     assert(len>1);
     int i=0, idx=0;

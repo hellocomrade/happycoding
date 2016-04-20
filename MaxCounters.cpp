@@ -33,7 +33,7 @@ using namespace std;
  * 4. At last, for all elements in vec that are smaller than lastmax, we own them a compensation
  *    operation.
  */
-vector<int> solutionMaxCounter(int N, vector<int> &A) {
+vector<int> solutionMaxCounter(int N, const vector<int> &A) {
     int len = A.size();
     assert(len > 0);
     assert(N > 0);

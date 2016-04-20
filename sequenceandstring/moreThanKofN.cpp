@@ -23,7 +23,7 @@ is more than k.
 
 The overall time complexity O(kN)
 */
-vector<int> moreThanKofN(vector<int> &A, int k)
+vector<int> moreThanKofN(const vector<int> &A, int k)
 {
 	int len = A.size();
 	assert(len > 0);

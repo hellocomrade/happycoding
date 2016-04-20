@@ -19,7 +19,7 @@ overlapped. However, this trick will not work for [0,3], [2,5], [2, 8], [4,10]!
 event is found. If a nonoverlapping event is found at index i, we shall reset tracking[i] to -1 to stop the
 propagation.
 */
-int solutionMaxNonoverlappingSegments(vector<int> &A, vector<int> &B)
+int solutionMaxNonoverlappingSegments(const vector<int> &A, const vector<int> &B)
 {
 	int len1 = A.size();
 	if (0 == len1)return 0;

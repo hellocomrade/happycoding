@@ -28,7 +28,7 @@ which is the moves we made on the left side (on way trip), we will replace the l
 2. The algorithm in the instruction looks simpler indeed. But here giving a different implementation, which is
 actually faster because of less duplicated calcuation.
 */
-int solutionMushRoom(vector<int> &A, int m, int k)
+int solutionMushRoom(const vector<int> &A, int m, int k)
 {
 	int len = A.size();
 	assert(len >= 0 && k >= 0 && m < len);

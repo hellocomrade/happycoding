@@ -3,9 +3,9 @@
 #include <vector>
 #include <iostream>
 
-using namespace std:
+using namespace std;
 
-int solutionPassingCars(vector<int> &A)
+int solutionPassingCars(const vector<int> &A)
 {
     int len = A.size();
     assert(len > 0);

@@ -21,7 +21,7 @@ A as such an array.
 
 Well, it took me 81 minutes to figure all this out... :(
 */
-vector<int> solutionCountSemiprimes(int N, vector<int> &P, vector<int> &Q)
+vector<int> solutionCountSemiprimes(int N, const vector<int> &P, const vector<int> &Q)
 {
 	assert(N > 0 && N < 50001);
 	int lenp = P.size();

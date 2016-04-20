@@ -2,6 +2,7 @@
 #include <vector>
 #include <stack>
 #include <queue>
+#include <iostream>
 #include "tree.h"
 
 using namespace std;

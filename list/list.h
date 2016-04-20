@@ -1,9 +1,12 @@
 #pragma once
+#include <cstddef>
+using std::size_t;
+
 template <typename T>
 struct _listnode
 {
-	T data;
 	struct _listnode *next;
+	T data;
 
 	_listnode<T>() : next(nullptr), data(){}
 

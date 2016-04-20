@@ -1,6 +1,5 @@
 //https://codility.com/programmers/task/min_max_division/
 //https://www.topcoder.com/community/data-science/data-science-tutorials/binary-search/
-#include "stdafx.h"
 #include <cassert>
 #include <vector>
 #include <algorithm>
@@ -24,7 +23,7 @@ using namespace std;
  * If our partition L is less than K, we probably can find a even smaller 'smallest max' by dropping the lager half of the sequence, 
  * otherwise, drop the smaller half.  
  */
-int solutionMinMaxDivision(int K, int M, vector<int> &A) {
+int solutionMinMaxDivision(int K, int M, const vector<int> &A) {
     int len = A.size();
     assert(len > 0);
     long long high=std::accumulate(A.begin(), A.end(),0ll);
@@ -54,7 +53,7 @@ int solutionMinMaxDivision(int K, int M, vector<int> &A) {
     return (int)low;
 }
 //https://codility.com/demo/results/trainingH27HU9-8CP/
-int solutionMinMaxDivision1(int K, int M, vector<int> &A) {
+int solutionMinMaxDivision1(int K, int M, const vector<int> &A) {
     int h,m,cnt,sum,sm,msum,len;
     int l=*std::max_element(A.begin(), A.end());
     len=A.size();
@@ -86,7 +85,7 @@ int solutionMinMaxDivision1(int K, int M, vector<int> &A) {
     return msum;
 }
 //https://codility.com/demo/results/trainingZ9QRHF-2MD/
-int solutionMinMaxDivision2(int K, int M, vector<int> &A) {
+int solutionMinMaxDivision2(int K, int M, const vector<int> &A) {
     int len = A.size();
     long long h = std::accumulate(A.begin(), A.end(), 0LL);
     long long l = *std::max_element(A.begin(), A.end());

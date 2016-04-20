@@ -8,7 +8,7 @@ using namespace std;
 //very tricky boundary condition:
 //Sum of zero elements is assumed to be equal to 0. This can happen if P = 0 or if P = N.1.
 //But I think my solution is better than the one on their blog...
-int solutionEqui(vector<int> &A) {
+int solutionEqui(const vector<int> &A) {
     int len = A.size();
     if (len == 0)
 	return -1;

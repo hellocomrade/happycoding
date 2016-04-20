@@ -8,7 +8,7 @@
 using namespace std;
 
 //using long long to avoid integer overflow
-int solutionMaxProfit(vector<int> &A) {
+int solutionMaxProfit(const vector<int> &A) {
     int len = A.size();
     if (0 == len || 1 == len)return 0;
     long long minendhere = LLONG_MAX, maxProfixSofar = LLONG_MIN;

@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include <cassert>
 #include <vector>
 #include <unordered_map>
@@ -62,7 +61,7 @@ OK, we now have a solution!
 One thing I overlooked is: we have a possibility for integer overflow here. Since N <= 100000, if we do
 N*(N+1)/2, it will be an overflow for integer! So, use long long to cover the rear.
 */
-int solutionCountDistinctSlices(int M, vector<int> &A)
+int solutionCountDistinctSlices(int M, const vector<int> &A)
 {
 	int len = A.size();
 	assert(len > 0 && M >= 0 && M < 100001);
@@ -98,7 +97,7 @@ I said the hashtable is the only option, I was wrong. You can actually just use 
 M is given up front. It makes the code look cleaner. While, for unordered_map declarations, you could
 use keyword "auto" to make it shorter as well if using c++11 or newer.
 */
-int solutionCountDistinctSlices1(int M, vector<int> &A)
+int solutionCountDistinctSlices1(int M, const vector<int> &A)
 {
 	int len = A.size(), lasti = 0;
 	long long count = 0, i = 0, offset = 0;

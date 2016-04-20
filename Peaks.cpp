@@ -18,7 +18,7 @@ find all peaks in O(N), then loop through all possible divisors from peak[0]+1 t
 the difference in the following two solution is on how to find out if the current interval with 'divisor'
 long is capable to cover at least one peak every time.
 */
-int solutionPeaks1(vector<int> &A)
+int solutionPeaks1(const vector<int> &A)
 {
 	int len = A.size();
 	assert(len > 0);
@@ -65,7 +65,7 @@ int solutionPeaks1(vector<int> &A)
 	return 0;
 }
 
-int solutionPeaks2(vector<int> &A)
+int solutionPeaks2(const vector<int> &A)
 {
 	int len = A.size();
 	assert(len > 0);
@@ -110,7 +110,7 @@ int solutionPeaks2(vector<int> &A)
 	}
 	return 0;
 }
-int solutionPeaks3(vector<int> &A) {
+int solutionPeaks3(const vector<int> &A) {
 	int len = A.size();
 	if (len<3)return 0;
 	int d = 2, itor;
@@ -141,7 +141,7 @@ int solutionPeaks3(vector<int> &A) {
 	}
 	return 0;
 }
-int solutionPeaks(vector<int> &A)
+int solutionPeaks(const vector<int> &A)
 {
 	int len = A.size();
 	assert(len > 0);

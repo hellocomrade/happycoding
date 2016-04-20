@@ -19,7 +19,7 @@ So, the sequence above is less than (sqrt(2)+sqrt(3)+...+sqrt(N))*logN <= NlogN
 However, when I wrote it, since the binary search is always against the entire array, not index 0 to index i.
 It actually could reach O(N^1.5*logN)...Sad, double timeout...
 */
-vector<int> solutionCountNonDivisible1(vector<int> &A)
+vector<int> solutionCountNonDivisible1(const vector<int> &A)
 {
 	int len = A.size();
 	assert(len > 0);
@@ -66,7 +66,7 @@ divisor trial, j. If there is a hit, we substract counts[j] from result[i].
 
 Finally, we recovery the result in the correct order using the hash table.
 */
-vector<int> solutionCountNonDivisible(vector<int> &A)
+vector<int> solutionCountNonDivisible(const vector<int> &A)
 {
 	int len = A.size();
 	assert(len > 0);

@@ -34,7 +34,7 @@ For the integer with even numbr of occurrences, the bits for the integers will b
 Therefore, by the end of the operations, they will all be zero out. On the other hand, for the only
 integer with odd number of occurrences, its value will remain.
 */
-int solutionOddOccurrencesInArray(vector<int> &A)
+int solutionOddOccurrencesInArray(const vector<int> &A)
 {
 	int len = A.size();
 	assert(len > 0);

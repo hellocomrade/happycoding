@@ -15,7 +15,7 @@ space complexity O(1)
 /*
 if all elements are between [0 9]
 */
-vector<int> mostOccurredNumbers1(vector<int> &A)
+vector<int> mostOccurredNumbers1(const vector<int> &A)
 {
 	int len = A.size();
 	assert(len > 0);
@@ -178,9 +178,11 @@ void testmostOccurredNumbers2()
 	vector<int> vec3({ 5, 5, 5, 5, 5 });
 	cout << "Expect 5: " << mostOccurredNumbers2(vec3)[0] << endl;
 
-	cout << "Expect 1: " << mostOccurredNumbers2(vector<int>({ 1 }))[0] << endl;
+        vector<int> vec4({ 1 });
+	cout << "Expect 1: " << mostOccurredNumbers2(vec4)[0] << endl;
 
-	cout << "Expect 6: " << mostOccurredNumbers2(vector<int>({ 1, 2, 3, 4, 5, 6 })).size() << endl;
+        vector<int> vec5({ 1, 2, 3, 4, 5, 6 });
+	cout << "Expect 6: " << mostOccurredNumbers2(vec5).size() << endl;
 }
 void testmostOccurredNumbers3()
 {
@@ -193,8 +195,10 @@ void testmostOccurredNumbers3()
 
 	vector<int> vec3({ 4, 4, 4, 4, 4 });
 	cout << "Expect 4: " << mostOccurredNumbers3(vec3)[0] << endl;
+	
+	vector<int> vec4({ 0 });
+	cout << "Expect 0: " << mostOccurredNumbers3(vec4).size() << endl;
 
-	cout << "Expect 0: " << mostOccurredNumbers3(vector<int>({ 0 })).size() << endl;
-
-	cout << "Expect 0: " << mostOccurredNumbers3(vector<int>({ 0, 1, 2, 3, 4, 5 })).size() << endl;
+        vector<int> vec5({ 0, 1, 2, 3, 4, 5 });
+	cout << "Expect 0: " << mostOccurredNumbers3(vec5).size() << endl;
 }

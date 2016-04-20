@@ -13,7 +13,7 @@ using namespace std;
  * Naive sweepline plus priority heap
  * O(NlogN)
  */
-int nthElement1(vector<int>& lowerBound, vector<int>& upperBound, int n)
+int nthElement1(const vector<int>& lowerBound, const vector<int>& upperBound, int n)
 {
     int len1 = lowerBound.size();
     int len2 = upperBound.size();
@@ -112,7 +112,7 @@ int nthElement1(vector<int>& lowerBound, vector<int>& upperBound, int n)
  * 3. If m is no greater than the lowerbound of interval i, the contribution is 0 to index. Because
  *    even m is equal to the lowerbound of interval i, the contribution to the index is still 0
  */
-int nthElement(vector<int>& lowerBound, vector<int>& upperBound, int n)
+int nthElement(const vector<int>& lowerBound, const vector<int>& upperBound, int n)
 {
     int len1 = lowerBound.size();
     int len2 = upperBound.size();

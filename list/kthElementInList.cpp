@@ -40,9 +40,9 @@ template<typename T>
 T kthElementInList(list<T> &L, int k, int missingvalue)
 {
 	assert(k >= 0);
-	list<T>::const_iterator fi = L.begin();
-	list<T>::const_iterator si = fi;
-	list<T>::const_iterator ei = L.end();
+	typename list<T>::const_iterator fi = L.begin();
+	typename list<T>::const_iterator si = fi;
+	typename list<T>::const_iterator ei = L.end();
 	++k;
 	while (--k > 0 && si != ei)
 		++si;

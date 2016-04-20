@@ -1,6 +1,5 @@
 #include "exprParser.h"
 #include <iostream>
-
 using namespace std;
 
 const string ExprParser::delimiter = ",";

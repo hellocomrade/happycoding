@@ -32,7 +32,7 @@ xor_sum = xor_sum ^ A[index] ^ (index + 1)
 return xor_sum^(length + 1)
 
 */
-int solutionPermMissingElem(vector<int> &A) {
+int solutionPermMissingElem(const vector<int> &A) {
 	long long len = A.size();
 	long long sumA = accumulate(A.begin(), A.end(), 0LL);
 	return (len + 2)*(len + 1) / 2 - sumA;

@@ -13,7 +13,7 @@ Observation:
    as the storage, an extra check is necessary to rule out any element that is greater than len. The function
    in this case, returns immediately with 0
 */
-int solutionPermCheck1(vector<int> &A) {
+int solutionPermCheck1(const vector<int> &A) {
 	unordered_map<int, bool> map;
 	for (auto i : A)
 	{
@@ -30,7 +30,7 @@ int solutionPermCheck1(vector<int> &A) {
 	}
 	return 1;
 }
-int solutionPermCheck(vector<int> &A) {
+int solutionPermCheck(const vector<int> &A) {
 	int len = A.size();
 	vector<int> bucket(len + 1, 0);
 	bucket[0] = 1;

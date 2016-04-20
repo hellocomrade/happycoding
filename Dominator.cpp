@@ -33,7 +33,7 @@ result if and only if it occurs more than N/2 times. Fortunately, this post-scan
 
 So the overall time complexity is still O(N)
 */
-int solutionDominator(vector<int>& A)
+int solutionDominator(const vector<int>& A)
 {
 	int len = A.size();
 	int idx = -1;

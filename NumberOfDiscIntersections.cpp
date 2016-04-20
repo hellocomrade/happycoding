@@ -9,7 +9,7 @@ using namespace std;
  * I didn't get 100 for the first try. I ignored the overflow possibility when I calcuate the length of intervals.
  * Well, looks like it's always a good idea to add some extreme numbers into your own test cases.
  */
-int solutionNumberOfDiscIntersections(vector<int>& A)
+int solutionNumberOfDiscIntersections(const vector<int>& A)
 {
     int len = A.size();
     if (0 == len)return 0;

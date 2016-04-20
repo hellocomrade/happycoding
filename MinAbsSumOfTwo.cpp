@@ -29,10 +29,15 @@ int solutionMinAbsSumOfTwo(vector<int>& A)
 }
 void testMinAbsSumOfTwo()
 {
-    cout << "Expect 1: " << solutionMinAbsSumOfTwo(vector<int>({ 1, 4, -3 })) << endl;
-    cout << "Expect 3: " << solutionMinAbsSumOfTwo(vector<int>({ -8, 4, 5, -10, 3 })) << endl;
-    cout << "Expect 2: " << solutionMinAbsSumOfTwo(vector<int>({ 1, 20, 60, 100, 200 })) << endl;
-    cout << "Expect 10: " << solutionMinAbsSumOfTwo(vector<int>({ -100, -50, -20, -5 })) << endl;
-    cout << "Expect 1: " << solutionMinAbsSumOfTwo(vector<int>({ -100, -50, 2, 49, 95 })) << endl;
+    vector<int> v = { 1, 4, -3 };
+    cout << "Expect 1: " << solutionMinAbsSumOfTwo(v) << endl;
+    v = { -8, 4, 5, -10, 3 };
+    cout << "Expect 3: " << solutionMinAbsSumOfTwo(v) << endl;
+    v = { 1, 20, 60, 100, 200 };
+    cout << "Expect 2: " << solutionMinAbsSumOfTwo(v) << endl;
+    v = { -100, -50, -20, -5 };
+    cout << "Expect 10: " << solutionMinAbsSumOfTwo(v) << endl;
+    v = { -100, -50, 2, 49, 95 };
+    cout << "Expect 1: " << solutionMinAbsSumOfTwo(v) << endl;
 }
 

@@ -18,37 +18,37 @@ A stupid decision led to a more stupid result...
 
 */
 //Wrong one: https://codility.com/demo/results/trainingBQG9ME-XZE/
-int solutionFrogRiverOne1(int X, vector<int> &A) {
-	vector<bool> bv(X + 1, false);
-	long long sum = ((long long)X + 1) * (long long)X / 2;
-	int len = A.size();
-	for (int i = 0; i < len; ++i)
+int solutionFrogRiverOne1(int X, const vector<int> &A) {
+    vector<bool> bv(X + 1, false);
+    long long sum = ((long long)X + 1) * (long long)X / 2;
+    int len = A.size();
+    for (int i = 0; i < len; ++i)
+    {
+	if (false == bv[A[i]])
 	{
-		if (false == bv[A[i]])
-		{
-			bv[A[i]] = true;
-			sum -= A[i];
-			if (0 == sum)
-				return i;
-		}
-	}
-	return -1;
+ 	    bv[A[i]] = true;
+	    sum -= A[i];
+	    if (0 == sum)
+		return i;
+	}	
+    }
+    return -1;
 }
-int solutionFrogRiverOne(int X, vector<int> &A) {
-	vector<bool> bv(X + 1, false);
-	int len = A.size();
-	for (int i = 0; i < len; ++i)
+int solutionFrogRiverOne(int X, const vector<int> &A) {
+    vector<bool> bv(X + 1, false);
+    int len = A.size();
+    for (int i = 0; i < len; ++i)
+    {
+	if (false == bv[A[i]])
 	{
-		if (false == bv[A[i]])
-		{
-			bv[A[i]] = true;
-			if (0 == --X)
-				return i;
-		}
+	    bv[A[i]] = true;
+	    if (0 == --X)
+		return i;
 	}
-	return -1;
+    }
+    return -1;
 }
 void testFrogRiverOne()
 {
-	cout << "Expect 6: " << solutionFrogRiverOne(5, vector<int>{ 1, 3, 1, 4, 2, 3, 5, 4 }) << endl;
+    cout << "Expect 6: " << solutionFrogRiverOne(5, vector<int>{ 1, 3, 1, 4, 2, 3, 5, 4 }) << endl;
 }

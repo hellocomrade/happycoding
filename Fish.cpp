@@ -38,7 +38,7 @@ a smaller index than the counterpart. On ther other hand, if we reach a salmon a
 it means there is no attackers all the way upstream. There is either no attacker by luck or attackers have been
 eliminated already.
 */
-int solutionFish(vector<int> &A, vector<int> &B)
+int solutionFish(const vector<int> &A, const vector<int> &B)
 {
 	int len1 = A.size();
 	int len2 = B.size();

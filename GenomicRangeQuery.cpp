@@ -8,7 +8,7 @@
 
 using namespace std;
 
-vector<int> solutionGenomicRangeQuery(string &S, vector<int> &P, vector<int> &Q) 
+vector<int> solutionGenomicRangeQuery(string &S, const vector<int> &P, const vector<int> &Q) 
 {
     int lenp = P.size();
     int lenq = Q.size();

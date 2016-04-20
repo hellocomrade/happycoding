@@ -4,7 +4,7 @@
 #include <stack>
 #include <algorithm>
 #include <iostream>
-
+using namespace std;
 class CompareFun
 {
     public:
@@ -14,7 +14,7 @@ class CompareFun
 	}
 }comparePairs;
 //O(NlogN)
-int solutionMonotonicPair2(vector<int>& A)
+int solutionMonotonicPair2(const vector<int>& A)
 {
     int len = A.size();
     assert(len > 0);
@@ -39,7 +39,7 @@ int solutionMonotonicPair2(vector<int>& A)
     return maxIdxDistSofar;
 }
 //O(N)
-int solutionMonotonicPair1(vector<int>& A)
+int solutionMonotonicPair1(const vector<int>& A)
 {
     int len = A.size();
     assert(len > 0);

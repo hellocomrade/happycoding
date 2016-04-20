@@ -8,7 +8,7 @@
 using namespace std;
 
 //classic max sub array
-int solutionMaxSliceSum1(vector<int> &A) {
+int solutionMaxSliceSum1(const vector<int> &A) {
     int len = A.size();
     assert(len > 0);
     //integer overflow is possible, long long is the safe choice since it's guaranteed to be 8 bytes
@@ -23,7 +23,7 @@ int solutionMaxSliceSum1(vector<int> &A) {
     }
     return static_cast<int>(maxsofar);
 }
-int solutionMaxSliceSum(vector<int> &A) {
+int solutionMaxSliceSum(const vector<int> &A) {
 	int len = A.size();
 	assert(len > 0);
 	long long maxhere = 0, maxsofar = numeric_limits<long long>::min();

@@ -12,7 +12,7 @@ using namespace std;
 //we use a stack to track the starting point of these bases and pop the most recent one
 //if the next building is shorter than the base, which means this base ends
 //here since the block is rectangle shape(reach its rightmost location)
-int solutionStoneWall(vector<int>& H)
+int solutionStoneWall(const vector<int>& H)
 {
     int len = H.size();
     assert(len > 0);

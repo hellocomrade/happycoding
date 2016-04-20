@@ -27,7 +27,7 @@ Note: we only compare A[m] is greater than its neighbor for a reason: if we do A
 By using greater than comparison only, we can safely use low <= high as the safteguard because either low or high will move 
 by 1 in each loop for sure.
  */
-int localMinima(vector<int>& A)
+int localMinima(const vector<int>& A)
 {
     int len = A.size();
     assert(len > 0);
@@ -53,5 +53,4 @@ void testLocalMinima()
 {
     cout << "Expect 1: " << localMinima(vector<int>({ 15, 13, 12, 18, 19, 20, 7, 6, 5, 4, 3, 2, 1 })) << endl;
     cout << "Expect 2: " << localMinima(vector<int>({ 9, 7, 2, 8, 5, 6, 3, 4 })) << endl;
-    cout << "Expect 1: " << solutionNumberOfExtremes(vector<int>({ 10, 1, 5 })) << endl;
 }

@@ -28,7 +28,7 @@ static int gcd(int a, int b)
 	if (a % b == 0)return b;
 	else return gcd(b, a % b);
 }
-int solutionCommonPrimeDivisors(vector<int> &A, vector<int> &B)
+int solutionCommonPrimeDivisors(const vector<int> &A, const vector<int> &B)
 {
 	int len = A.size();
 	assert(len >= 1 && len < 60001 && B.size() == len);

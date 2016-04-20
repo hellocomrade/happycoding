@@ -28,7 +28,7 @@ counter.insert(std::make_pair(A[i], 1));
 or
 counter.insert(std::pair<int, int>(A[i], 1));
 */
-int solutionEquiLeader1(vector<int> &A)
+int solutionEquiLeader1(const vector<int> &A)
 {
 	int len = A.size();
 	assert(len > 0);
@@ -75,7 +75,7 @@ the number of leader end at index i, so the remaining will have (total_count - c
 check if count > (i+1)/2 and (total_count-count)>(len-i-1)/2, aka if the leader is the majority in the
 subsequences split at index i (i belongs to the first sub)
 */
-int solutionEquiLeader(vector<int> &A)
+int solutionEquiLeader(const vector<int> &A)
 {
 	int len = A.size();
 	assert(len > 0);

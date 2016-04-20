@@ -1,5 +1,5 @@
 ﻿#include <vector>
-
+#include <iostream>
 using namespace std;
 
 /*
@@ -26,7 +26,7 @@ This way we consecutively find the best solutions for each i, until last state N
 
 O(N^2)
 */
-std::pair<int, int> longestNonDecreasingSeq(vector<int> &A)
+std::pair<int, int> longestNonDecreasingSeq(const vector<int> &A)
 {
 	int len = A.size();
 	if (0 == len) return std::make_pair<int, int>(-1, 0);

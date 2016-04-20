@@ -1,3 +1,4 @@
+#include "list.h"
 template<typename T>
 ListNode<T>* BuildListFromArray(T *arr, size_t len)
 {

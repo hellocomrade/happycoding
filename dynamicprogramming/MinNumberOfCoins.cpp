@@ -23,7 +23,7 @@ if memo[i] turns out to be empty, it means there is no way to get value i using 
 coding. Say, we ask for a value that has an exactly same denomination in C, in this case,
 memo[Value - denomination] + 1 is equal to 1, if and only if memo[0] == 0;
 */
-int MinNumberOfCoins(unsigned int K, vector<unsigned int> &A)
+int MinNumberOfCoins(unsigned int K, const vector<unsigned int> &A)
 {
 	int len = A.size();
 	int empty = -1;

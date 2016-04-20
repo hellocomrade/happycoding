@@ -28,7 +28,7 @@ This is actually a variation of integer partition. Comparing with integer partit
    if [1, 2, 3, 4] is given, then (3, 1) and (1, 3) are considered as two different ways to reach 4;
 3. Instead of printing out the partitions, this one asks to print count % P. It's like Fibonacci sequence...
 */
-int solutionFrogJumpCount(int K, vector<int> &A)
+int solutionFrogJumpCount(int K, const vector<int> &A)
 {
 	const int divisor = 1 << 7;
 	int len = A.size();

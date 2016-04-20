@@ -25,7 +25,7 @@ all boundary conditions. If N+1 exists in the sequence, missing value is between
 the missing minimum positive integer is at most N+1. Either way, we don't need more than N+1 elements to track
 the sequence.
 */
-int solutionMissingInteger(vector<int> &A) {
+int solutionMissingInteger(const vector<int> &A) {
 	int len = A.size() + 1;
 	vector<int> B(len + 1, 0);
 	for (int i : A)
@@ -44,7 +44,7 @@ This is a cheat: it should take O(NlogN) time to build a BST. However, the detec
 time complexity is O(N) due to the fact N is no greater than 100,000. So log(1e5) doesn't make
 too much impact on the overall performance.
 */
-int solutionMissingInteger1(vector<int> &A)
+int solutionMissingInteger1(const vector<int> &A)
 {
 	int count = 1;
 	set<int> tree;

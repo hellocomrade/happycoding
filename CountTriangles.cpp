@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include <vector>
 #include <algorithm>
 #include <iostream>
@@ -61,9 +60,14 @@ int solutionCountTriangles(vector<int> &A)
 }
 void testCountTriangles()
 {
-	cout << "Expect 0: " << solutionCountTriangles(vector<int>{}) << endl;
-	cout << "Expect 0: " << solutionCountTriangles(vector<int>{ 10}) << endl;
-	cout << "Expect 0: " << solutionCountTriangles(vector<int>{ 10, 2 }) << endl;
-	cout << "Expect 0: " << solutionCountTriangles(vector<int>{ 10, 2, 5 }) << endl;
-	cout << "Expect 4: " << solutionCountTriangles(vector<int>{ 10, 2, 5, 1, 8, 12 }) << endl;
+	vector<int> v = {};
+	cout << "Expect 0: " << solutionCountTriangles(v) << endl;
+	v = { 10 };
+	cout << "Expect 0: " << solutionCountTriangles(v) << endl;
+	v = { 10, 2 };
+	cout << "Expect 0: " << solutionCountTriangles(v) << endl;
+	v = {10, 2, 5};
+	cout << "Expect 0: " << solutionCountTriangles(v) << endl;
+	v = { 10, 2, 5, 1, 8, 12 };
+	cout << "Expect 4: " << solutionCountTriangles(v) << endl;
 }

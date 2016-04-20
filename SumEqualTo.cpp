@@ -7,7 +7,7 @@ using namespace std;
 
 //Caterpillar Method
 //two iterators moving toward one direction while acessing every element on the way like a caterpillar does
-bool solutionSumEqualTo(vector<int> &A, int sum)
+bool solutionSumEqualTo(const vector<int> &A, int sum)
 {
     int len = A.size();
     assert(len > 0);

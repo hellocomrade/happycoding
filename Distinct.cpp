@@ -13,7 +13,7 @@ using namespace std;
  * Since C++ STL offers container set, which is a red-black tree implementation that doesn't allow
  * duplicates, we simply take advantage of it.
 */
-int solutionDistinct(vector<int> &A)
+int solutionDistinct(const vector<int> &A)
 {
     set<int> tree;
     for (int i : A)

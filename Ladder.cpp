@@ -27,7 +27,7 @@ Observations:
    we keep the result of m/2^5 as n, then we could get any reminder from n from 2^1 to 2^5. On the other hand,
    if we keep the result of m/2^1 as n1 = 1, we will not be able to get 17/2^5 since n1 = 1, the higher bits have been lost.
 */
-vector<int> solutionLadder(vector<int> &A, vector<int> &B)
+vector<int> solutionLadder(const vector<int> &A, const vector<int> &B)
 {
 	const int L = 30000;
 	const int M = 30;

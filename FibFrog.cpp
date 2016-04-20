@@ -158,11 +158,18 @@ void testFibFrog()
 	printFibonacciSeq(getFibonacciUp2N(2));
 	printFibonacciSeq(getFibonacciUp2N(12));
 	printFibonacciSeq(getFibonacciUp2N(1000000));*/
-	cout << "Expect 1: " << solutionFibFrog(vector<int>{}) << endl;
-	cout << "Expect 1: " << solutionFibFrog(vector<int>{ 1 }) << endl;
-	cout << "Expect 1: " << solutionFibFrog(vector<int>{ 0 }) << endl;
-	cout << "Expect -1: " << solutionFibFrog(vector<int>{ 0, 0, 0 }) << endl;
-	cout << "Expect 3: " << solutionFibFrog(vector<int>{ 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0 }) << endl;
-	cout << "Expect 1: " << solutionFibFrog(vector<int>{ 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0 }) << endl;
-	cout << "Expect 2: " << solutionFibFrog(vector<int>{ 0, 1, 1, 0, 1, 0, 0, 1 }) << endl;
+	vector<int> v = {};
+	cout << "Expect 1: " << solutionFibFrog(v) << endl;
+	v = { 1 };
+	cout << "Expect 1: " << solutionFibFrog(v) << endl;
+	v = { 0 };
+	cout << "Expect 1: " << solutionFibFrog(v) << endl;
+	v = { 0, 0, 0 };
+	cout << "Expect -1: " << solutionFibFrog(v) << endl;
+	v = { 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0 };
+	cout << "Expect 3: " << solutionFibFrog(v) << endl;
+	v = { 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0 };
+	cout << "Expect 1: " << solutionFibFrog(v) << endl;
+	v = { 0, 1, 1, 0, 1, 0, 0, 1 };
+	cout << "Expect 2: " << solutionFibFrog(v) << endl;
 }

@@ -1,4 +1,6 @@
+#include <cstddef>
 #include <new>
+using namespace std;
 /*
 represent an internal implementation of the class details, which is encapsulated and only the pointer
 is exposed to outsiders as a "handle".
@@ -31,7 +33,7 @@ private:
 		ObjectPublic *next;
 	};
 public:
-	static void* operator new(size_t size, new_handler handle = 0)
+	static void* operator new (size_t size, new_handler handle = 0)
 	{
 		/*
 		if required size is not equal to the size of ObjectPublic, our new operator can't handle
@@ -69,7 +71,7 @@ public:
 		bytes before the address that returns to the user), so delete can pick it up.
 		For placement delete, since the implementation is unknow, we will need the second argument: size.
 		*/
-		static void operator delete(void *recycleObj, size_t size)
+	static void operator delete (void *recycleObj, size_t size)
 	{
 		if (nullptr == recycleObj)return;
 		if (size != sizeof(ObjectPublic))

@@ -6,7 +6,6 @@
 using namespace std;
 
 /*
-/*
 https://codility.com/demo/results/trainingT5HFZA-A7V/
 This is the solution using binary search and guarantee linear time complexity. The previous versions
 can achive linear in certain cases but can't prove it works for all.
@@ -229,15 +228,26 @@ int solutionFlags2(vector<int> &A)
 }
 void testFlags()
 {
-	cout << "Expect 3: " << solutionFlags(vector<int>({ 1, 5, 3, 4, 3, 4, 1, 2, 3, 4, 6, 2 })) << endl;
-	cout << "Expect 0: " << solutionFlags(vector<int>({ 1 })) << endl;
-	cout << "Expect 0: " << solutionFlags(vector<int>({ 1, 2 })) << endl;
-	cout << "Expect 1: " << solutionFlags(vector<int>({ 1, 2, 1 })) << endl;
-	cout << "Expect 2: " << solutionFlags(vector<int>({ 1, 2, 1, 3, 1 })) << endl;
-	cout << "Expect 5: " << solutionFlags(vector<int>({ 1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5, 6, 1 })) << endl;
-	cout << "Expect 4: " << solutionFlags(vector<int>({ 1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5, 6, 1 })) << endl;
-	cout << "Expect 3: " << solutionFlags(vector<int>({ 1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5, 6, 1 })) << endl;
-	cout << "Expect 2: " << solutionFlags(vector<int>({ 1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5, 6, 1 })) << endl;
-	cout << "Expect 1: " << solutionFlags(vector<int>({ 1, 2, 3, 4, 5, 6, 1 })) << endl;
-	cout << "Expect 4: " << solutionFlags(vector<int>({ 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1 })) << endl;
+    vector<int> v = { 1, 5, 3, 4, 3, 4, 1, 2, 3, 4, 6, 2 };	
+    cout << "Expect 3: " << solutionFlags(v) << endl;
+    v = { 1 };
+    cout << "Expect 0: " << solutionFlags(v) << endl;
+    v = { 1, 2 };
+    cout << "Expect 0: " << solutionFlags(v) << endl;
+    v = { 1, 2, 1 };
+    cout << "Expect 1: " << solutionFlags(v) << endl;
+    v = { 1, 2, 1, 3, 1 };
+    cout << "Expect 2: " << solutionFlags(v) << endl;
+    v = { 1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5, 6, 1 };
+    cout << "Expect 5: " << solutionFlags(v) << endl;
+    v = { 1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5, 6, 1 };
+    cout << "Expect 4: " << solutionFlags(v) << endl;
+    v = { 1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5, 6, 1 };
+    cout << "Expect 3: " << solutionFlags(v) << endl;
+    v = { 1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5, 6, 1 };
+    cout << "Expect 2: " << solutionFlags(v) << endl;
+    v = { 1, 2, 3, 4, 5, 6, 1 };
+    cout << "Expect 1: " << solutionFlags(v) << endl;
+    v = { 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1 };
+    cout << "Expect 4: " << solutionFlags(v) << endl;
 }

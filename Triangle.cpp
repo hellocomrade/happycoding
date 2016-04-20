@@ -42,13 +42,22 @@ int solutionTriangle(vector<int> &A)
 }
 void testTriangle()
 {
-    cout << "Expect 1: " << solutionTriangle(vector<int>({ 10 ,2, 5, 1, 8, 20 })) << endl;
-    cout << "Expect 0: " << solutionTriangle(vector<int>({ 10, 50, 5, 1 })) << endl;
-    cout << "Expect 0: " << solutionTriangle(vector<int>({})) << endl;
-    cout << "Expect 0: " << solutionTriangle(vector<int>({ 10 })) << endl;
-    cout << "Expect 0: " << solutionTriangle(vector<int>({ 10, 50 })) << endl;
-    cout << "Expect 1: " << solutionTriangle(vector<int>({ 2147483647, 2147483645, 2147483646 })) << endl;
-    cout << "Expect 0: " << solutionTriangle(vector<int>({ -1, 5, 6 })) << endl;
-    cout << "Expect 0: " << solutionTriangle(vector<int>({ 0, 5, 6 })) << endl;
-    cout << "Expect 1: " << solutionTriangle(vector<int>({ -1, 5, 6, 7 })) << endl;
+    vector<int> v = { 10 ,2, 5, 1, 8, 20 };
+    cout << "Expect 1: " << solutionTriangle(v) << endl;
+    v = { 10, 50, 5, 1 };
+    cout << "Expect 0: " << solutionTriangle(v) << endl;
+    v = {};
+    cout << "Expect 0: " << solutionTriangle(v) << endl;
+    v = { 10 };
+    cout << "Expect 0: " << solutionTriangle(v) << endl;
+    v = { 10, 50 };
+    cout << "Expect 0: " << solutionTriangle(v) << endl;
+    v = { 2147483647, 2147483645, 2147483646 };
+    cout << "Expect 1: " << solutionTriangle(v) << endl;
+    v = { -1, 5, 6 };
+    cout << "Expect 0: " << solutionTriangle(v) << endl;
+    v = { 0, 5, 6 };
+    cout << "Expect 0: " << solutionTriangle(v) << endl;
+    v = { -1, 5, 6, 7 };
+    cout << "Expect 1: " << solutionTriangle(v) << endl;
 }

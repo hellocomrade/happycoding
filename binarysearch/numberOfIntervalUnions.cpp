@@ -2,7 +2,7 @@
 #include <vector>
 #include <algorithm>
 #include <iostream>
-
+using namespace std;
 /*
  * Given line segments, count the number of possible unions, if an interval is disjoinst, it is considered
  * as an union by itself. For example:
@@ -33,7 +33,7 @@
  * Space complexity: O(N)
  */
 
-int numberOfIntervalUnions(vector<int> &A, vector<int> &B)
+int numberOfIntervalUnions(const vector<int> &A, const vector<int> &B)
 {
     int len1 = A.size();
     int len2 = B.size();
