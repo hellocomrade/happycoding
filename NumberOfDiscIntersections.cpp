@@ -36,6 +36,34 @@ int solutionNumberOfDiscIntersections(const vector<int>& A)
     }
     return count;
 }
+int solutionNumberOfDiscIntersections(vector<int> &&A)
+{
+    int len = A.size();
+    if(0 == len)return 0;
+    vector<std::pair<long, long> > segments;
+    for(int i = 0; i < len; ++i)
+        segments.emplace_back(std::make_pair((long)i - (long)A[i], (long)i + (long)A[i]));
+    std::sort(segments.begin(), segments.end(), [](pair<long, long> p1, pair<long, long> p2){return p1.first < p2.first;});
+    int count = 0, low, high, mid, idx;
+    for(int i = 0; i < len; ++i)
+    {
+        low = i, high = len - 1, idx = i;
+        while(low <= high)
+        {
+            mid = low + (high - low) / 2;
+            if(segments[mid].first <= segments[i].second)
+            {
+                idx = mid;
+                low = mid + 1;
+            }
+            else
+                high = mid - 1;
+        }
+        count += idx - i;
+        if(count > 1e7) return -1;
+    }
+    return count;
+}
 void testNumberOfDiscIntersections()
 {
     cout << "Expect 11: " << solutionNumberOfDiscIntersections(vector<int>({ 1, 5, 2, 1, 4, 0 })) << endl;
