@@ -75,8 +75,39 @@ int solutionMonotonicPair1(const vector<int>& A)
     }
     return maxIdxDistSofar;
 }
+using PairInt = std::pair<int, int>;
+int solutionMonotonicPair3(const vector<int> &A)
+{
+	int len = A.size();
+	assert(len > 0);
+	int maxIdxDistSofar = 0;
+	stack<PairInt> stk;
+	stk.emplace(A[len - 1], len - 1);
+	//we use stack again, but this time, we fill in by far the largest ones from the end of the sequence.
+	//And the elements on the stack are considered as the second elem (Q) of the pair we are look for
+	for (int i = len - 1; i > -1; --i)
+	{
+		if (A[i] > stk.top().first)
+			stk.emplace(A[i], i);
+	}
+	//now, loop the sequence from beginning to find out the first elem (P) of the pair that results in
+	//the greatest Q - P
+	for (int i = 0; i < len; ++i)
+	{
+		while (false == stk.empty() && A[i] <= stk.top().first)
+		{
+			maxIdxDistSofar = std::max(maxIdxDistSofar, stk.top().second - i);
+			stk.pop();
+		}
+	}
+	return maxIdxDistSofar;
+}
 void testMonotonicPair()
 {
-    cout << "Expect 3: " << solutionMonotonicPair2(vector<int>({5,3,6,3,4,2})) << endl;
-    cout << "Expect 3: " << solutionMonotonicPair1(vector<int>({ 5, 3, 6, 3, 4, 2 })) << endl;
+	cout << "Expect 3: " << solutionMonotonicPair2(vector<int>({ 5, 3, 6, 3, 4, 2 })) << endl;
+	cout << "Expect 3: " << solutionMonotonicPair1(vector<int>({ 5, 3, 6, 3, 4, 2 })) << endl;
+	cout << "Expect 5: " << solutionMonotonicPair1(vector<int>({ 5, 3, 100, 1, 2, 6 })) << endl;
+	cout << "Expect 3: " << solutionMonotonicPair3(vector<int>({ 5, 3, 6, 3, 4, 2 })) << endl;
+	cout << "Expect 3: " << solutionMonotonicPair3(vector<int>({ 5, 3, 3, 6, 4, 2 })) << endl;
+	cout << "Expect 5: " << solutionMonotonicPair3(vector<int>({ 5, 3, 100, 1, 2, 6 })) << endl;
 }
