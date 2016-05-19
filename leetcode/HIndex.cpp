@@ -24,6 +24,23 @@ Observation:
 The intuitive approach would be sorting the sequence in dec order, then scan from left to right. This
 will get work done in O(NlogN)
 
+https://en.wikipedia.org/wiki/H-index
+
+First we order the values of f from the largest to the lowest value. Then, we look for the last position
+in which f is greater than or equal to the position (we call h this position). For example,
+if we have a researcher with 5 publications A, B, C, D, and E with 10, 8, 5, 4, and 3 citations,
+respectively, the h index is equal to 4 because the 4th publication has 4 citations and the 5th has only
+3. In contrast, if the same publications have 25, 8, 5, 3, and 3, then the index is 3 because the fourth
+paper has only 3 citations.
+
+f(A)=10, f(B)=8, f(C)=5, f(D)=4, f(E)=3　→ h-index=4
+f(A)=25, f(B)=8, f(C)=5, f(D)=3, f(E)=3　→ h-index=3
+
+If we have the function f ordered in decreasing order from the largest value to the lowest one,
+we can compute the h index as follows:
+
+h = max(h, min(f(i), i))
+
 Another approach, which requires O(N) extra space, since h in the range of [0, len], we can do a bucket
 array to count the values falling into [0, len], if the value is greater than len, it will fall into bucket[len].
 So on bucket[len], we know the number of elements that are no less than len, bucket[len - 1] stores the number of
@@ -35,16 +52,21 @@ If sum >= i, we know we find the largest h index.
 */
 class SolutionHIndex {
 public:
-	int hIndex1(vector<int>& citations) {
+	//O(NlogN)
+	int hIndex(vector<int>& citations) {
 		int len = citations.size();
 		if (0 == len)return 0;
 		std::sort(citations.begin(), citations.end(), std::greater<int>());
-		int h = 0;
-		for (int i = 0; i < len; ++i)
-			h = std::max(h, std::min(i + 1, citations[i]));
-		return h;
+		int i = 0;
+		//for (int i = 0; i < len; ++i)
+		//	h = std::max(h, std::min(i + 1, citations[i]));
+		//After reading the explanation from wiki, the following is more intuitive and slighter faster than
+		//the for loop above
+		while (i < len && citations[i] >= i + 1)++i;
+		return i;
 	}
-	int hIndex(const vector<int>& citations) {
+	//O(N)
+	int hIndex1(const vector<int>& citations) {
 		int len = citations.size();
 		if (0 == len)return 0;
 		vector<int> greaterThan(len + 1, 0);
