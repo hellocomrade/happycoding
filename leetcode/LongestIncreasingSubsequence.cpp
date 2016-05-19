@@ -27,10 +27,45 @@ There is actually a weird algorithm that can solve this problem in O(NlogN) usin
 It takes advantage of binary search. The amazing thing is that the sequence BS is applied on is built
 on the fly and in place of nums! What's more interesting is that the elements stored in nums for BS purpose
 doesn't have any meaning other than maintaining the position of tail.
+
+OK, finally, I came with my version that takes O(1) space and run in O(N) time and keep tracking the LIS in place
+nums[0 -- maxLen - 1]
+We use nums as the place to keep tracking the clue, which is:
+
+nums[i] represents the smallest largest element in a LIS with size of i. So nums[2] means the LIS is 2, if
+we have [1,10] and [1,3], nums[2] = 3. By doing so, we leave the most generous (greedy) option for the further down
+elements in nums[j], given j >= maxLen. Say nums[3] = 4, by searching nums[2], we will get a new LIS with size of 3, which is
+not possible if we leave nums[2] = 10.
+
+Since nums[i], given i in [0, maxLen - 1], is a monotonic sequence (increasing). We can find the element just smaller than nums[k] using
+binary search. There should not be any duplicated value in this mono seq, any binary search shold work. I
+use lower_bound here to get the element that is no less than nums[k]:
+1. If all elements in nums[i], given i in [0, maxLen - 1], are smaller than nums[k], we get a longer LIS,
+so, maxLen++;
+
+2. If returned index j from BS is from 0 to maxLen - 1 and nums[k] < nums[j], we know for LIS with size of j,
+we have a smaller ending element nums[k]. Then we update the nums[j] = nums[k];
 */
 class SolutionLongestIncreasingSubsequence {
 public:
+	//O(N) with O(1) space
 	int lengthOfLIS(vector<int>& nums) {
+		int len = nums.size();
+		if (0 == len)return 0;
+		int maxLen = 1;
+		auto begin = nums.begin();
+		for (int i = 1; i < len; ++i)
+		{
+			auto ret = std::lower_bound(begin, begin + maxLen, nums[i]);
+			if (ret == begin + maxLen)//maxLen + 1
+				*(begin + maxLen++) = nums[i];
+			else if (nums[i] < *ret)
+				*ret = nums[i];
+		}
+		return maxLen;
+	}
+	//O(N) with O(1) space
+	int lengthOfLIS2(vector<int>& nums) {
 		int len = nums.size();
 		auto begin = nums.begin();
 		//tail is used to track the end of the work array, which is nums
@@ -52,6 +87,7 @@ public:
 		}
 		return tail - nums.begin();
 	}
+	//O(N^2) with O(N) space
 	int lengthOfLIS1(vector<int>& nums) {
 		int len = nums.size();
 		vector<int> memo(len, 1);
@@ -82,4 +118,8 @@ void TestlengthOfLIS()
 	cout << "Expect 1: " << lenLIS.lengthOfLIS(vec4) << endl;
 	vector<int> vec5{ 1, 2 };
 	cout << "Expect 2: " << lenLIS.lengthOfLIS(vec5) << endl;
+	vector<int> vec6{ 1, -1, 2, -3, 4, -5, 6, -7 };
+	cout << "Expect 4: " << lenLIS.lengthOfLIS(vec6) << endl;
+	vector<int> vec7{ 10, 9, 2, 5, 3, 4 };
+	cout << "Expect 3: " << lenLIS.lengthOfLIS(vec7) << endl;
 }
