@@ -2,14 +2,16 @@ include Makefile.inc
 OBJS:=$(patsubst %.cpp,%.o,$(wildcard *.cpp))
 SUBS = leetcode binarysearch bitwise cplusplus dynamicprogramming hash list matrix numbers sequenceandstring sorting stackandqueue tree
 
-.PHONY:all subdir clean
+.PHONY:all $(SUBS) clean #subdir
 
-all:${OBJS} subdirs
+all:${OBJS} $(SUBS) #subdirs
 
-subdirs:
-	for dir in ${SUBS}; do \
-            ${MAKE} -C $$dir; \
-    	done
+$(SUBS):
+	${MAKE} -C $@
+#subdirs:
+#	for dir in ${SUBS}; do \
+#            ${MAKE} -C $$dir; \
+#    	done
 
 %.o:%.cpp
 	${CXX} -c ${CPPFLAGS} $< -o $@
