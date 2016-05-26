@@ -85,14 +85,24 @@ public:
 void TestHIndex()
 {
 	SolutionHIndex so;
-	cout << "Expect 0: " << so.hIndex(vector<int>{}) << endl;
-	cout << "Expect 0: " << so.hIndex(vector<int>{0}) << endl;
-	cout << "Expect 0: " << so.hIndex(vector<int>{0, 0}) << endl;
-	cout << "Expect 1: " << so.hIndex(vector<int>{1}) << endl;
-	cout << "Expect 1: " << so.hIndex(vector<int>{1, 1}) << endl;
-	cout << "Expect 3: " << so.hIndex(vector<int>{3, 3, 3, 3, 6, 6}) << endl;
-	cout << "Expect 3: " << so.hIndex(vector<int>{3, 0, 6, 1, 5}) << endl;
-	cout << "Expect 2: " << so.hIndex(vector<int>{6, 4, 2, 1, 1}) << endl;
-	cout << "Expect 3: " << so.hIndex(vector<int>{4, 6, 4, 2, 1, 1}) << endl;
-	cout << "Expect 4: " << so.hIndex(vector<int>{3, 3, 6, 6, 6, 6}) << endl;
+	vector<int> v1{};
+	cout << "Expect 0: " << so.hIndex(v1) << endl;
+	vector<int> v2{0};
+	cout << "Expect 0: " << so.hIndex(v2) << endl;
+	vector<int> v3{0, 0};
+	cout << "Expect 0: " << so.hIndex(v3) << endl;
+	vector<int> v4{1};
+	cout << "Expect 1: " << so.hIndex(v4) << endl;
+	vector<int> v5{1, 1};
+	cout << "Expect 1: " << so.hIndex(v5) << endl;
+	vector<int> v6{3, 3, 3, 3, 6, 6};
+	cout << "Expect 3: " << so.hIndex(v6) << endl;
+	vector<int> v7{3, 0, 6, 1, 5};
+	cout << "Expect 3: " << so.hIndex(v7) << endl;
+	vector<int> v8{6, 4, 2, 1, 1};
+	cout << "Expect 2: " << so.hIndex(v8) << endl;
+	vector<int> v9{4, 6, 4, 2, 1, 1};
+	cout << "Expect 3: " << so.hIndex(v9) << endl;
+	vector<int> v10{3, 3, 6, 6, 6, 6};
+	cout << "Expect 4: " << so.hIndex(v10) << endl;
 }
