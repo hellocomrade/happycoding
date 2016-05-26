@@ -38,7 +38,7 @@ int solutionStoneWall(const vector<int>& H)
     return count + packedBlock.size();
 }
 //https://codility.com/demo/results/trainingS43RG7-MG2/
-int solution1(const vector<int> &H) {
+int solutionStoneWall1(const vector<int> &H) {
     int len = H.size();
     if(0 == len)return len;
     stack<int> stk;
