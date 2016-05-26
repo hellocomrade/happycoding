@@ -37,6 +37,27 @@ int solutionStoneWall(const vector<int>& H)
     }
     return count + packedBlock.size();
 }
+//https://codility.com/demo/results/trainingS43RG7-MG2/
+int solution1(const vector<int> &H) {
+    int len = H.size();
+    if(0 == len)return len;
+    stack<int> stk;
+    stk.push(H[0]);
+    int count = 0, h = 0;
+    for(int i = 1; i < len; ++i)
+    {
+        h = H[i];
+        while(stk.empty() == false && h <= stk.top())
+        {
+            if(h < stk.top())
+                ++count;
+            stk.pop();    
+        }
+        stk.push(h);        
+    }
+    count += stk.empty() ? 0 : stk.size();
+    return count;
+}
 void testStoneWall()
 {
 	cout << "Expect 7: " << solutionStoneWall(vector<int>({8,8,5,7,9,8,7,4,8})) << endl;
