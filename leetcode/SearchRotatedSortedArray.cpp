@@ -28,7 +28,7 @@ non-rotated sorted array as well. In this case, the first section's length is 0
 class SolutionSearchRotatedSortedArray {
 public:
 	//first version, kind of easy to understand to me
-	int search1(vector<int>& A, int target) {
+	int search1(const vector<int>& A, int target) {
 		int len = A.size();
 		if (len < 1)return -1;
 		int l = 1, h = len - 1, m = 0, f = A[0];
@@ -56,7 +56,7 @@ public:
 	}
 	//second version, a bit harder to swallow though, especially on the boundary cases involving
 	//nums[0], you can make it easier by excluding nums[0] up front, see the next version.
-	int search2(const vector<int>& nums, int target) {
+	int search2(const const vector<int>& nums, int target) {
 		int len = nums.size();
 		if (len < 1)return -1;
 		int first = nums[0];
@@ -84,7 +84,7 @@ public:
 	}
 	//nums[0] has been selected as the refernce, and target is compared with it up front
 	//This eliminates the need for considering the boundary cases mentioned in search2
-	int search3(vector<int>& nums, int target) {
+	int search3(const vector<int>& nums, int target) {
 		int len = nums.size();
 		if (len < 1)return -1;
 		int first = nums[0];
@@ -115,7 +115,7 @@ public:
 	This version conducts regular BS. This is fine if both target and mid are on the same side. If they
 	are not, we will introduce fake +infinity and -infinity
 	*/
-	int search(vector<int>& nums, int target)
+	int search(const vector<int>& nums, int target)
 	{
 		int len = nums.size();
 		if (len < 1)return -1;
