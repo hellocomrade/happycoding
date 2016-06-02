@@ -56,7 +56,7 @@ public:
 	}
 	//second version, a bit harder to swallow though, especially on the boundary cases involving
 	//nums[0], you can make it easier by excluding nums[0] up front, see the next version.
-	int search2(const const vector<int>& nums, int target) {
+	int search2(const vector<int>& nums, int target) {
 		int len = nums.size();
 		if (len < 1)return -1;
 		int first = nums[0];
