@@ -42,7 +42,6 @@ class SolutionNumber2 {
 public:
 	//Slower, 32O(N), but it's an easy to understand one
 	int singleNumber1(vector<int>& nums) {
-		int bit1 = 0, bit2 = 0;
 		unsigned int mask = 1 << 31;
 		int cnt = 0, ans = 0;
 		while (mask)
