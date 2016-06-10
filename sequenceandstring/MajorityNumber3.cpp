@@ -86,5 +86,5 @@ void TestMajorityNumber3(){
 	assert(3 == so.majorityNumber(vector<int>{3, 1, 2, 3, 2, 3, 3, 4, 4, 4}, 3));
 	assert(61 == so.majorityNumber(vector<int>{7, 1, 7, 7, 61, 61, 61, 10, 10, 10, 61}, 3));
 	//This should return both 1 and 9
-	so.majorityNumber(vector<int>{1, 1, 1, 9, 9, 9, 9}, 3));
+	so.majorityNumber(vector<int>{1, 1, 1, 9, 9, 9, 9}, 3);
 }
