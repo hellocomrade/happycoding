@@ -20,7 +20,7 @@ namespace RotateList {
 	struct ListNode {
 		int val;
 		ListNode *next;
-		ListNode(int x) : val(x), next(NULL) {}
+		ListNode(int x) : val(x), next(nullptr) {}
 	};
 	class Solution {
 	private:
@@ -48,7 +48,6 @@ namespace RotateList {
 			if (head != nullptr)
 			{
 				int len = 0;
-				ListNode *itor = head;
 				this->aux(head, k, head, &newhead, len);
 			}
 			return newhead;
