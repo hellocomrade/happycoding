@@ -6,8 +6,8 @@ def factorization(N):
     f[0] = f[1] = -1
     i = 2
     while i * i <= N:
-        k = i * i
-        if f[k] == 0:
+        if f[i] == 0:
+            k = i * i
             while k <= N:
                 if f[k] == 0:
                    f[k] = i
