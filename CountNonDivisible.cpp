@@ -105,6 +105,44 @@ vector<int> solutionCountNonDivisible(const vector<int> &A)
 		result1[i] = result[A[i]];
 	return result1;
 }
+//https://codility.com/demo/results/trainingBNKZVK-NDB/
+//This is a O(N^1.5) solution but could pass the test cases
+//if you use an extra hash table to store the result coz
+//the only possible timeout is the last case, which is a huge
+//array with identical elements.
+vector<int> solutionCountNonDivisible2(vector<int> &A) {
+	int len = A.size();
+	vector<int> ans(len, len);
+	unordered_map<int, int> map;
+	unordered_map<int, int> counter;
+	auto end = counter.end();
+	auto end1 = map.end();
+	for (int i : A) {
+		if (counter.find(i) == end)
+			counter.emplace(i, 1);
+		else
+			counter[i]++;
+	}
+	int j = 1, m = 0;
+	for (int i = 0; i < len; ++i) {
+		if (end1 != map.find(A[i])) {
+			ans[i] = map[A[i]];
+			continue;
+		}
+		j = 1, m = A[i];
+		while (j * j <= m) {
+			if (m % j == 0) {
+				if (counter.find(j) != end)
+					ans[i] -= counter[j];
+				if (j * j < m && counter.find(m / j) != end)
+					ans[i] -= counter[m / j];
+			}
+			++j;
+		}
+		map.emplace(A[i], ans[i]);
+	}
+	return ans;
+}
 static void printResult(const vector<int> &vec)
 {
 	for (int i : vec)
