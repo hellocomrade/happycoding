@@ -18,6 +18,27 @@ namespace SortList {
 		ListNode(int x) : val(x), next(nullptr) {}
 	};
 	class SolutionSortList {
+	private:
+		void copyListfrom2(ListNode*& copyfrom, ListNode*& copy2, int cnt) {
+			if (cnt > 0) {
+				while (copyfrom != nullptr && cnt--) {
+					copy2->next = copyfrom;
+					copy2 = copyfrom;
+					copyfrom = copyfrom->next;
+				}
+			}
+		}
+		void seekNext(ListNode* left, int size, ListNode*& right, int& lcnt, int& rcnt) {
+			lcnt = rcnt = 0;
+			while (left && ++lcnt < size)left = left->next;
+			if (left && left->next) {
+				right = left->next;
+				left = right;
+				while (left && ++rcnt < size)left = left->next;
+			}
+			else
+				right = nullptr;
+		}
 	public:
 		//Toooo long
 		ListNode* sortList1(ListNode* head) {
@@ -158,6 +179,54 @@ namespace SortList {
 				}
 			}
 			return ans;
+		}
+		//I am not sure if this version is better it's shorter though.
+		//by using two aux funtions to handle duplicates logics
+		ListNode *sortList2(ListNode *head) {
+			ListNode *first = head, *second = nullptr, *tmp = nullptr, *itor = nullptr;
+			if (head) {
+				int size = 1, lcnt = 1, rcnt = 1;
+				second = head->next;
+				head = nullptr;
+				while (second) {
+					while (first) {
+						if (second == nullptr) {
+							this->copyListfrom2(first, itor, lcnt);
+							break;
+						}
+						while (lcnt > 0 && rcnt > 0) {
+							if (first->val <= second->val) {
+								tmp = first;
+								first = first->next;
+								--lcnt;
+							}
+							else {
+								tmp = second;
+								second = second->next;
+								--rcnt;
+							}
+							if (head == nullptr) {
+								head = tmp;
+								itor = tmp;
+							}
+							else {
+								itor->next = tmp;
+								itor = tmp;
+							}
+						}
+						if (lcnt > 0)this->copyListfrom2(first, itor, lcnt);
+						else if (second != nullptr && rcnt > 0)this->copyListfrom2(second, itor, rcnt);
+						first = tmp = second;
+						this->seekNext(tmp, size, second, lcnt, rcnt);
+					}
+					itor->next = nullptr;
+					size <<= 1;
+					first = tmp = head;
+					head = nullptr;
+					this->seekNext(tmp, size, second, lcnt, rcnt);
+				}
+			}
+			return first;
 		}
 	};
 }
