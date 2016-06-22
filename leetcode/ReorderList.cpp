@@ -133,8 +133,8 @@ namespace SolutionReorderList{
 				}
 				if (!slow)return;
 				//printf("%d\n", slow->val);
-				tmp->next = NULL;
-				tmp = NULL;
+				tmp->next = nullptr;
+				tmp = nullptr;
 				fast = slow;
 				while (slow->next)
 				{
@@ -159,7 +159,7 @@ namespace SolutionReorderList{
 }
 void TestReorderList()
 {
-	SolutionReorderList::ListNode l7{ NULL, 7 };
+	SolutionReorderList::ListNode l7{ nullptr, 7 };
 	SolutionReorderList::ListNode l6{ &l7, 6 };
 	SolutionReorderList::ListNode l5{ &l6, 5 };
 	SolutionReorderList::ListNode l4{ &l5, 4 };
