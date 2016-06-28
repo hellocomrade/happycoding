@@ -12,7 +12,7 @@ public class SolutionSubarraySum {
     public ArrayList<Integer> subarraySum(int[] nums) {
         // write your code here
         int len = nums.length;
-        ArrayList<Integer> ans = new ArrayList<>(Arrays.asList(0, 0));
+        ArrayList<Integer> ans = new ArrayList<>(Arrays.asList(0, 0));//since presumption is such a subarray must exist, init {0,0} will cover the case: [0] 
         HashMap<Integer, Integer> map = new HashMap<>();
         map.put(nums[0], 0);
         for(int i = 1; i < len; ++i) {
