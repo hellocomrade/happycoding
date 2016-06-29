@@ -1,3 +1,4 @@
+import java.util.HashMap;
 public class SolutionLongestSubstrWithoutRepeatingChar {
     public int lengthOfLongestSubstring(String s) {
         if(s == null || s.isEmpty())return 0;
