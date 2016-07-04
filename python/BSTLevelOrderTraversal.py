@@ -7,7 +7,7 @@ class TreeNode:
 """
 
 
-class Solution:
+class SolutionBSTLevelOrderTraversal:
     """
     @param root: The root of binary tree.
     @return: Level order in a list of lists of integers
