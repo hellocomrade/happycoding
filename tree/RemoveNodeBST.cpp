@@ -54,7 +54,7 @@ namespace RemoveNodeBST {
 			this->left = this->right = nullptr;
 		}
 	};
-	class Solution {
+	class SolutionRemoveNodeBST {
 	public:
 		/**
 		* @param root: The root of the binary search tree.
