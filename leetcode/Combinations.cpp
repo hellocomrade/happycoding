@@ -43,7 +43,7 @@ private:
 		}
 	}
 public:
-	vector<vector<int>> combine(int n, int k) {
+	vector<vector<int>> combine1(int n, int k) {
 		vector<vector<int>> ans;
 		if (n >= k && k >= 0) {
 			if (k > 0) {
