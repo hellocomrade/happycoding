@@ -58,4 +58,14 @@ public:
 		}
 		return ans;
 	}
+	//This makes the above codes shorter, but not necessary faster.
+	//It does have a smaller memory profile since we moved vec out of the loop and reuse it again and again.
+	vector<vector<int> > combine(int n, int k) {
+		vector<vector<int>> ans;
+		if (n >= k && k >= 0) {
+			vector<int> vec(k, 0);
+			aux(ans, vec, 1, n, k, 0);
+		}
+		return ans;
+	}
 };
