@@ -19,11 +19,11 @@ public class SolutionCombinations {
      * @return: All the combinations of k numbers out of 1..n
      */
     public List<List<Integer>> combine(int n, int k) {
-		    List<List<Integer>> ans = new ArrayList<>();
-		    if(n >= k && k >= 0) {
-		        List<Integer> lst = new ArrayList<>();
-		        aux(ans, lst, 1, n, k);
-		    }
-		    return ans;
+	List<List<Integer>> ans = new ArrayList<>();
+	    if(n >= k && k >= 0) {
+	    	List<Integer> lst = new ArrayList<>();
+		aux(ans, lst, 1, n, k);
+	}
+	return ans;
     }
 }
