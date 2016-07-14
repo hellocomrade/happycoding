@@ -20,9 +20,9 @@ public class SolutionCombinations {
      */
     public List<List<Integer>> combine(int n, int k) {
 	List<List<Integer>> ans = new ArrayList<>();
-	    if(n >= k && k >= 0) {
-	    	List<Integer> lst = new ArrayList<>();
-		aux(ans, lst, 1, n, k);
+	if(n >= k && k >= 0) {
+	    List<Integer> lst = new ArrayList<>();
+	    aux(ans, lst, 1, n, k);
 	}
 	return ans;
     }
