@@ -5,7 +5,7 @@ class TreeNode:
         self.val = val
         self.left, self.right = None, None
 """
-class Solution:
+class SolutionRemoveNodeInBST:
     def __rightTreeSmallest(self, node):
         right = node.right
         if right.left:
