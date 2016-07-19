@@ -23,6 +23,23 @@ int solutionEqui(const vector<int> &A) {
 	    return i-1;
     return -1;
 }
+//https://codility.com/demo/results/demoZ59B7J-6BS/
+int solutionEqui1(const vector<int> &A) {
+    int len = A.size(), ans = -1;
+    if(len > 0) {
+        vector<long long> memo(len + 1, 0LL);
+        memo[0] = 0LL;
+        for(int i = 1; i <= len; ++i)
+            memo[i] = memo[i - 1] + A[i - 1];
+        for(int i = 1; i <= len; ++i) {
+            if(memo[i - 1] == memo[len] - memo[i]) {
+                ans = i - 1;
+                break;
+            }
+        }
+    }
+    return ans;
+}
 void testEqui()
 {
     cout << "Expect 1: " << solutionEqui(vector<int>({ -1, 3, -4, 5, 1, -6, 2, 1 })) << endl;
