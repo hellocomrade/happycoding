@@ -40,6 +40,9 @@ we will have [1, 5]. This will not affect us from telling 2 is missing, isn't it
 What if we get [5,1,3,2,4]? we have all positive numbers already! In this case, we shall return len + 1 since that's the next
 missing positive integer!
 
+Also see here:https://codility.com/demo/results/trainingQRV95S-FA7/
+
+The alternative is using pigeonhole principle, which needs an extra O(N) space
 */
 class SolutionFirstMissingPositive {
 public:
@@ -48,10 +51,8 @@ public:
 	* @return: an integer
 	*/
 	int firstMissingPositive(vector<int> A) {
-		// write your code here
 		int len = A.size();
 		if (0 == len)return 1;
-		int cnt = 0;
 		for (int i = 0; i < len; ++i)
 		{
 			if (A[i] - 1 != i)
