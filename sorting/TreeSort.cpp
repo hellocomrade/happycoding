@@ -34,7 +34,7 @@ namespace TreeSort {
 	        BSTInOrderTraversal(root->right);
 	        return;
 	    }
-	    TreeNode* Sort(vector<int> A) {
+	    TreeNode* Sort(vector<int>& A) {
 	        int len = A.size(), idx = 0;
 	        TreeNode *root = nullptr;
 	        srand(time(nullptr));
