@@ -1,6 +1,7 @@
 //https://codility.com/programmers/task/max_product_of_three
 #include <cassert>
 #include <algorithm>
+#include <functional>
 #include <vector>
 
 using namespace std;

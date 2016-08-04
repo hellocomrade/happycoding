@@ -1,5 +1,6 @@
 //https://codility.com/programmers/task/tape_equilibrium
 #include <cassert>
+#include <cstdlib>
 #include <climits>
 #include <vector>
 #include <numeric>
