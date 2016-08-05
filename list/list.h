@@ -25,8 +25,35 @@ struct _listnode
 //C11
 template <typename T>
 using ListNode = struct _listnode<T>;
-
+/*
 template<typename T>
 ListNode<T>* BuildListFromArray(T *arr, size_t len);
 template<typename T>
 void CleanupList(ListNode<T> *phead);
+*/
+template<typename T>
+ListNode<T>* BuildListFromArray(T *arr, size_t len)
+{
+	size_t i = 1;
+	ListNode<T> *phead = new ListNode<T>();
+	phead->data = arr[0];
+	ListNode<T> *itor = phead;
+	for (; i < len; ++i)
+	{
+		itor->next = new ListNode<T>();
+		itor->next->data = arr[i];
+		itor = itor->next;
+	}
+	return phead;
+}
+template<typename T>
+void CleanupList(ListNode<T> *phead)
+{
+	ListNode<T> *itor = nullptr;
+	while (phead != nullptr)
+	{
+		itor = phead;
+		phead = phead->next;
+		delete itor;
+	}
+}
