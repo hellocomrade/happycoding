@@ -1,5 +1,5 @@
 #include "list.h"
-template<typename T>
+/*template<typename T>
 ListNode<T>* BuildListFromArray(T *arr, size_t len)
 {
 	size_t i = 1;
@@ -24,4 +24,4 @@ void CleanupList(ListNode<T> *phead)
 		phead = phead->next;
 		delete itor;
 	}
-}
+}*/
