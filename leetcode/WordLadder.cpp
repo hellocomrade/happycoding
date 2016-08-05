@@ -82,8 +82,59 @@ private:
 		return map;
 	}
 public:
-	//Still slow, 284ms...
-	int ladderLength(string start, string end, unordered_set<string> &dict) {
+    //212 ms
+    //Preprocess words using ? ask wildcard, for example, hit will be put under three keys: "?it",
+    //"h?t" and "hi?". All other words following the same pattern will be appended to the vector
+    //under the key,
+    //Having this in hand, we reduce the comparison from 26 [a - z] to the lenght of the words,
+    //they all have the same length, which is way less than 26 for test cases.
+    int ladderLength(string start, string end, unordered_set<string> &dict) {
+        if (start == end)return 1;
+        int len = start.length(), size = 0, dist = 1;
+        char mask = '?', oldChar = 0;
+        string strClone;
+        unordered_map<std::string, vector<std::string> > maps;
+        auto endMap = maps.end();
+        dict.erase(start);
+        dict.emplace(end);
+        for(string str : dict) {
+            if(str.length() != len)return 0;
+            strClone = str;
+            for(int i = 0; i < len; ++i) {
+                oldChar = str[i];
+                str[i] = mask;
+                if(maps.find(str) == endMap)maps.emplace(str, vector<string>());
+                maps[str].push_back(strClone);
+                str[i] = oldChar;
+            }
+        }
+        queue<string> q;
+        q.push(start);
+        while(false == q.empty()) {
+            size = q.size();
+            for(int i = 0; i < size; ++i) {
+                strClone = q.front(); q.pop();
+                //the following loop really reduce the time complexity for given test cases
+                for(int j = 0; j < len; ++j) {
+                    oldChar = strClone[j];
+                    strClone[j] = mask;
+                    if(maps.find(strClone) != endMap) {
+                        for(string str : maps[strClone]) {
+                            if(str == end)
+                                return dist + 1;
+                            q.push(str);
+                        }
+                        maps.erase(strClone);
+                    }
+                    strClone[j] = oldChar;
+                }
+            }
+            ++dist;
+        }
+        return 0;
+    }
+    //Still slow, 284ms...
+    int ladderLength4(string start, string end, unordered_set<string> &dict) {
 		if (start == end)return 1;
 		char oc = 0;
 		int len = start.length(), distance = 1, qsize = 0;
