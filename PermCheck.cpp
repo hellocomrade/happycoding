@@ -6,13 +6,26 @@ using namespace std;
 
 /*
 https://codility.com/demo/results/training66TYXU-7B5/
+https://codility.com/demo/results/trainingMPKRTY-8K2/
 
 Observation:
 1. Given extra O(N) space, use either a vector or a hash table
 2. The elements in the vector doesn't have to fit into the range of [1, len]. Therefore, if you use vector
    as the storage, an extra check is necessary to rule out any element that is greater than len. The function
    in this case, returns immediately with 0
+3. It's actually possible to get this done using const space: the trick is to repeatly move A[i] to index A[A[i] - 1], if possible.
+   Otherwise, we know this is not a permutation. Two exit conditions: A[i] > size or A[i] == A[A[i] - 1], which means there are duplicates.
 */
+int solutionPermCheck(const vector<int> &A) {
+    int len = A.size();
+    for(int i = 0; i < len; ++i) {
+        while(A[i] != i + 1) {
+            if(A[i] > len || A[A[i] - 1] == A[i])return 0;
+            std::swap(A[i], A[A[i] - 1]);
+        }
+    }
+    return 1;	
+}
 int solutionPermCheck1(const vector<int> &A) {
 	unordered_map<int, bool> map;
 	for (auto i : A)
@@ -30,7 +43,7 @@ int solutionPermCheck1(const vector<int> &A) {
 	}
 	return 1;
 }
-int solutionPermCheck(const vector<int> &A) {
+int solutionPermCheck2(const vector<int> &A) {
 	int len = A.size();
 	vector<int> bucket(len + 1, 0);
 	bucket[0] = 1;
