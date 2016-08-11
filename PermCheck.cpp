@@ -16,8 +16,9 @@ Observation:
    in this case, returns immediately with 0
 3. It's actually possible to get this done using const space: the trick is to repeatly move A[i] to index A[A[i] - 1], if possible.
    Otherwise, we know this is not a permutation. Two exit conditions: A[i] > size or A[i] == A[A[i] - 1], which means there are duplicates.
+   However, this approach will have to modifyinput vector.
 */
-int solutionPermCheck(const vector<int> &A) {
+int solutionPermCheck(vector<int> &A) {
     int len = A.size();
     for(int i = 0; i < len; ++i) {
         while(A[i] != i + 1) {
@@ -63,6 +64,8 @@ int solutionPermCheck2(const vector<int> &A) {
 }
 void testPermCheck()
 {
-	cout << "Expect 1: " << solutionPermCheck(vector<int>{ 4, 1, 3, 2 }) << endl;
-	cout << "Expect 0: " << solutionPermCheck(vector<int>{ 4, 1, 3 }) << endl;
+	vector<int> vec1{ 4, 1, 3, 2};
+	cout << "Expect 1: " << solutionPermCheck(vec1) << endl;
+	vector<int> vec2{ 4, 1, 3 };
+	cout << "Expect 0: " << solutionPermCheck(vec2) << endl;
 }
