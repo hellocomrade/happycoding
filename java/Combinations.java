@@ -7,7 +7,7 @@ public class SolutionCombinations {
             ans.add(new ArrayList<Integer>(lst));
             return;
         }
-        for(int i = s; i <= n; ++i) {
+        for(int i = s; i + k <= n + 1; ++i) {
             lst.add(i);
             aux(ans, lst, i + 1, n, k - 1);
             lst.remove(lst.size() - 1);
