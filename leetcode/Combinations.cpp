@@ -37,7 +37,13 @@ private:
 			ans.push_back(vector<int>(vec));
 			return;
 		}
-		for (int i = s; i <= n; ++i) {
+		//for (int i = s; i <= n; ++i) {
+		//the following break condition (i + k <= n + 1) is better than the above
+		//it will end the loop as early as no combination possible
+		//otherwise, the recursion could end up at i > n, which could be too late, for example: given "4, 4", the loop
+		//should end right after i = 1 is done. With the old condition breaker though, the recursion will continue till i = 5
+		//coz idx == k is not sufficient to end the recursion in this scenario
+		for (int i = s; i + k <= n + 1; ++i) {
 			vec[idx] = i;
 			aux(ans, vec, i + 1, n, k, idx + 1);
 		}
