@@ -137,11 +137,16 @@ public:
 };
 void TestNQueens() {
     SolutionNQueens so;
+    vector<vector<string>> ans1 = so.solveNQueens(1);
+    assert(1 == ans1.size());
+    vector<vector<string>> ans2 = so.solveNQueens(2);
+    assert(0 == ans2.size());
+    vector<vector<string>> ans3 = so.solveNQueens(3);
+    assert(0 == ans3.size());
     vector<vector<string>> ans5 = so.solveNQueens(5);
     assert(10 == ans5.size());
     vector<vector<string>> ans8 = so.solveNQueens(8);
     assert(92 == ans8.size());
-    return;
 }
 
 
