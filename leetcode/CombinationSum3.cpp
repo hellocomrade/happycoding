@@ -44,11 +44,9 @@ class SolutionCombinationSum3 {
 private:
     void aux(vector<vector<int>> &ans, vector<int> &ret, int idx, int m, int n) {
         if(idx == ret.size()) {
-            if(0 == n) {
+            if(0 == n)
                 ans.push_back(vector<int>(ret));
-                return;
-            }
-            else return;
+            return;
         }
         for(int i = m; i < 10 && n - i >= 0; ++i) {
             if(idx > 0 && ret[idx - 1] >= i)break;
