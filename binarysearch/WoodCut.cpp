@@ -18,7 +18,15 @@ Challenge
 O(n log Len), where Len is the longest length of the wood in the array.
 
 Observation:
-Classic BS greedy
+Classic BS greedy. Note: it is allowd to give up some wood pieces that is too small to be cut anymore. 
+
+Say [ 1, 232, 124, 456], the result is still 114 coz we simply ignore element "1" as long as 114 could make more than k cuts
+since we are looking for the max length here. This is mentioned because we need a reasonable start point for variable h, which
+define the upper boundary of our BS. Because of the above reason, we should pick the max length in all wood pieces in the given
+array. If we use negation: given a cut length that is greater than the longest wood pieces in the array, there is no way to cut
+any wood pieces. Therefore, the count is 0.
+
+The lower boundary is easy to figure out: 1...since we are dealing with integer here.
 */
 class SolutionWoodCut {
 public:
