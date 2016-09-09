@@ -13,7 +13,7 @@ using namespace std;
  
  Elements in a subset must be in non-descending order.
  The solution set must not contain duplicate subsets.
- Have you met this question in a real interview? Yes
+
  Example
  If S = [1,2,3], a solution is:
  
