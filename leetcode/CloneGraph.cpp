@@ -62,6 +62,12 @@ namespace CloneGraph {
 				newnode = new UndirectedGraphNode(node->label);
 				notes.emplace(newnode->label, newnode);
 				for (auto n : node->neighbors) {
+					/*
+					Clone only happens if the neighbor has not been visited yet. If it has been visited, we will
+					take its address and push it to the new neighbor list. Note: at this moment, it's possible that
+					this newly pushed neighbor has not finished the build of its own neighbor list yet. But, that's OK.
+					It will complete eventually. Since we copy the pointer, every update will be included.
+					*/
 					if (end == notes.find(n->label)) neighbor = this->aux(notes, n);
 					else neighbor = notes.find(n->label)->second;
 					newnode->neighbors.push_back(neighbor);
