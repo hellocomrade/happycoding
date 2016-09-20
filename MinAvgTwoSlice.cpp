@@ -93,6 +93,42 @@ int solutionMinAvgTwoSlice1(const vector<int> &A) {
         idx=i;
     return idx;
 }
+/*
+Another "silly" but works solution.
+In order to maintain time complexity at O(N) with O(N) extra space, we could assume a scenario that at any given index K, we
+could find the min average, which starts at K and ends at M, M > K.
+In order to achieve this goal/assumption, we scan the array from the end: at any given index I, we store the sum of a slice that could 
+generate min avg from I to len - 1, len is the size of the array. We also store the number of elements in this slice.
+
+Such a slice either contains only 1 element if (the previous chosen slice at [I - 1] + A[I]) / (the previous chosen slice at [I - 1] size + 1) > A[i]
+or append A[I] to the previous chosen slice at [I - 1] as the chosen slice at [I]
+*/
+int solutionMinAvgTwoSlice2(vector<int> &A) {
+    int ans = -1;
+    int len = (int)A.size();
+    double minAvg = numeric_limits<double>::max(), val = 0;
+    vector<std::pair<int, int>> memo(len, std::make_pair(numeric_limits<int>::max(), -1));
+    memo[len - 1].first = A[len - 1];
+    memo[len - 1].second = 1;
+    for(int i = len - 2; i > 0; --i) {
+        if((double)(A[i] + memo[i + 1].first) / (1 + memo[i + 1].second) > A[i]) {
+            memo[i].first = A[i];
+            memo[i].second = 1;
+        }
+        else {
+            memo[i].first = A[i] + memo[i + 1].first;
+            memo[i].second = 1 + memo[i + 1].second;
+        }
+    }
+    for(int i = 0; i < len - 1; ++i) {
+        val = (double)(A[i] + memo[i + 1].first) / (1 + memo[i + 1].second);
+        if(val < minAvg) {
+            minAvg = val;
+            ans = i;
+        }
+    }
+    return ans;
+}
 void testMinAvgTwoSlice()
 {
     cout << "Expect 1: " << solutionMinAvgTwoSlice(vector<int>({ 4, 2, 2, 5, 1, 5, 8 })) << endl;
