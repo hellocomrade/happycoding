@@ -111,7 +111,13 @@ int solutionMinAvgTwoSlice2(vector<int> &A) {
     memo[len - 1].first = A[len - 1];
     memo[len - 1].second = 1;
     for(int i = len - 2; i > 0; --i) {
-        if((double)(A[i] + memo[i + 1].first) / (1 + memo[i + 1].second) > A[i]) {
+    	//https://codility.com/demo/results/trainingVXJZZZ-DT5/
+    	/*
+    	The previous version on the condition is > instead of >=, which will return the correct start index for the slice. However,
+    	the actual min average value is wrong. For example [1, 2, 2]. The correct min avg is 1.5, not 1.67...
+    	Therefore, I replaced the operator with >=. It also passed all test cases and let's hope it's right this time...
+    	*/
+        if((double)(A[i] + memo[i + 1].first) / (1 + memo[i + 1].second) >= A[i]) {
             memo[i].first = A[i];
             memo[i].second = 1;
         }
