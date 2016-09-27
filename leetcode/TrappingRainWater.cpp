@@ -7,15 +7,15 @@ using namespace std;
 
 //https://leetcode.com/problems/trapping-rain-water/
 /*
-42. Trapping Rain Water  QuestionEditorial Solution  My Submissions
+42. Trapping Rain Water
 
 Given n non-negative integers representing an elevation map where the width of each bar is 1, compute how much water it is able to trap after raining.
 
 For example,
 Given [0,1,0,2,1,0,1,3,2,1,2,1], return 6.
 
-M
-M   MM M
+       M
+   M   MM M
 _M_MM_MMMMMM
 
 The above elevation map is represented by array [0,1,0,2,1,0,1,3,2,1,2,1]. In this case, 6 units of rain water are being trapped.
@@ -24,22 +24,28 @@ Observations:
 First glance makes me think "skyline" algorithm. A classic algorithm uses a stack:
 
 Put the first non-zero element on the stack, keep pushing elements then on the stack until
-there is an element that is no less than the element on top of the stack. Then keeping pop
-the element from the stack (move backward) to calcuate the area for water. We also have to track
-the last calculated height, therefore on the next calculation round, we could substract the
-area on the lower level to avoid duplicated count.
+there is an element K that is no less than the top of the stack as the right boundary of the basin. Then keeping poping
+the element T as the left boundary of the basin from the stack (move backward) to calcuate the area for water between K and T. Because of the way we operate the stack,
+at any given moment, the elements on the stack is in a non-increasing order from bottom to the top of the stack. Therefore, the top
+of the stack is where the smallest element is located, like a min-heap.
 
-Also don't forget the last round! A typical mistake I could make...It's out of the while loop.
+As for the area, the width is Index(K) - Index(T) + 1 and the height is K - T - delta, given delta as the element that was poped up previously
+from the stack, which was involved as the height for the calcuation of the area of lower level.
 
-Is this good enough. No, well, according to the Leetcode stats. Here is a better one without using
+
+Also don't forget the last round! A typical mistake I could make...It's out of the while loop. We may find the first element on the top of
+the stack that is greater than K
+
+Is this good enough? No, well, according to the Leetcode stats. Here is a better one without using
 any extra space: https://discuss.leetcode.com/topic/5125/sharing-my-simple-c-code-o-n-time-o-1-space
 
 Two pointers appraoch, one from the left and one from the right. The idea is: if we could find a boundary
-on the left side is lower than the right boundary, we can safely count the difference between this left
+on the left side is lower than the max right boundary so far, we can safely count the difference between this left
 boundary (maxFromLeft) and the current left as the area for water. Same applies if right boundary is smaller,
 we count from right though.
-M
-M     M
+
+	  M
+      M	    M
 M     M     M
 M     M     M
 M     M   M M
