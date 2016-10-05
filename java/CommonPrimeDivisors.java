@@ -1,3 +1,4 @@
+//https://codility.com/demo/results/trainingKQ9TCN-X6U/
 class SolutionCommonPrimeDivisors {
     private int gcd(int a, int b) {
         return 0 == b ? a : gcd(b, a % b);
