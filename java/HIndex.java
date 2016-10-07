@@ -35,7 +35,7 @@ public class SolutionHIndex {
         }
         return ans;
     }
-    public int hIndex(int[] citations) {
+    public int hIndex2(int[] citations) {
         int len = citations.length;
         if(len > 0) {
             Arrays.sort(citations);
