@@ -35,4 +35,17 @@ public class SolutionHIndex {
         }
         return ans;
     }
+    public int hIndex(int[] citations) {
+        int len = citations.length;
+        if(len > 0) {
+            Arrays.sort(citations);
+            int i = len;
+            //Since I didn't find an elegant way to sort an int (primitive type) array in no increasing order, the following
+            //conditions look ugly!
+            while(i > 0 && citations[i - 1] >= len - i + 1)
+                --i;
+            return len - i;
+        }
+        return 0;
+    }
 }
