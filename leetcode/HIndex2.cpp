@@ -19,9 +19,11 @@ Since an increasing monotonic sequence B is given, the h index is actually the l
 
 On a sorted sequence, we could conduct BS and get O(logN). We intend to move to the left side of the array,
 so we could achieve a greater (len - i) and qualify the definition of h index, which is the closest pair
-between (len - i) and B[i] that satisfies B[i] >= (len - i). If current B[mid] is less than len - mid, we
+between (len - i) and A[i] that satisfies A[i] >= (len - i). If current A[mid] is less than len - mid, we
 have to move the mid to the right.
 
+I have a java version using BS greedy. which makes more sense to me: 
+https://github.com/hellocomrade/happycoding/blob/master/java/HIndex2.java
 */
 class SolutionHIndex2 {
 public:
@@ -42,6 +44,18 @@ public:
 		}
 		return h;
 	}
+	int hIndex1(const vector<int>& citations) {
+            int len = citations.size();
+	    int l = 0, h = len - 1, m = 0;
+            while(l <= h) {
+                m = l + (h - l) / 2;
+                if(citations[m] >= (len - m)) // there are (len - m) papers that are no less than citations[m]
+		    h = m - 1;//Therefore, move to the left and see if we could find more papers >= (len - m) 
+            	else 
+		    l = m + 1;
+            }
+            return len - l;
+        }
 };
 void TestHIndex2()
 {
