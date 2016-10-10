@@ -66,6 +66,7 @@ public:
 		return i;
 	}
 	//O(N)
+	//an example of h-index that is inclusive on both ends: [1,4,4,4,5,5], h-index = 4
 	int hIndex1(const vector<int>& citations) {
 		int len = citations.size();
 		if (0 == len)return 0;
