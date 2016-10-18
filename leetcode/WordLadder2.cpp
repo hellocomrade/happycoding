@@ -57,21 +57,19 @@ the recursion.
 class SolutionWordLadder2 {
 private:
 	/*
-	dfs
+	DFS
 	The arugment list was written as vector<string> vec, which influenced the performance hugely due to the extensive copy construction on vec!
 	Once that has been corrected, we have this algorithm ACed.
 	*/
 	void aux(vector<vector<string>>& ans, vector<string>& vec, unordered_map<string, std::pair<vector<string>, int>>& g, const string& start, const string& end, int order) {
+		vec[order] = start;
 		if (end == start) {
-			ans.push_back(std::move(vector<string>(vec.begin(), vec.begin() + order)));
+			ans.push_back(std::move(vector<string>(vec.begin(), vec.begin() + order + 1)));
 			return;
 		}
-		if (g.end() != g.find(start) && g[start].second == order) {
-			for (auto& str : g[start].first) {
-				vec[order] = str;
+		for (auto& str : g[start].first)
+			if (g[str].second == order + 1)
 				this->aux(ans, vec, g, str, end, order + 1);
-			}
-		}
 	}
 public:
 	/**
@@ -82,38 +80,60 @@ public:
 	*/
 	vector<vector<string>> findLadders(string start, string end, unordered_set<string> &dict) {
 		vector<vector<string>> ans;
+		/*
+		in the pair, the vector contains all immediate and legal children of the node, int is the order of the node
+		*/
 		unordered_map<string, std::pair<vector<string>, int>> g;
-		unordered_map<string, int> orders;
+		/*
+		Put end on the dict to make sure we have an ending point on the graph
+		*/
 		dict.emplace(end);
 		size_t len = start.length();
 		char old_char = 0;
 		string str, key;
 		queue<string> q;
 		q.push(start);
-		orders.emplace(start, 0);
 		while (false == q.empty()) {
 			key = std::move(q.front()); q.pop();
 			if (key == end) break;
 			str = key;
-			g.emplace(key, std::make_pair(vector<string>(), orders[key] + 1));
+			/*
+			Since we use a huge structure to store graph info, g[key] should be created already when we set up its order during BFS.
+			This is only for the string start as the key.
+			BTW, for an existing key-value in unordered_map, try to emplace again will simply be ignored. In other words, newly given
+			value will NOT replace the existing one.
+			*/
+			if (start == key)
+				g.emplace(key, std::make_pair(vector<string>(), 0));
 			for (size_t i = 0; i < len; ++i) {
 				for (char j = 'a'; j <= 'z'; ++j) {
 					if (j == str[i])continue;
 					old_char = str[i];
 					str[i] = j;
 					if (dict.end() != dict.find(str)) {
-						if (orders.end() == orders.find(str) || orders[str] == orders[key] + 1) {
-							if (orders.end() == orders.find(str)) {
+						/*
+						We will only process for the following two conditions:
+						1. Node str has not been visited yet during a BFS. This can be confirmed by g.find(str) == g.end();
+						2. Node str has been visited. However, the current key's order is one level above node str. In other
+						words, according to the transform rule and common sense of a "shortest path", node key to node str
+						is legit and str should be considered as key's legal child even though str has other parent(s).
+						*/
+						if (g.end() == g.find(str) || g[str].second == g[key].second + 1) {
+							/*
+							If g.find on str returns end, it means node str has not been visited yet
+							*/
+							if (g.end() == g.find(str)) {
 								/*
 								we should only push str to the queue if str hasn't be on the queue before.
 								otherwise, we will introduce duplications onto the neighor list of str.
 								*/
 								q.push(str);
-								orders.emplace(str, orders[key] + 1);
+								g.emplace(str, std::make_pair(vector<string>(), g[key].second + 1));
 							}
 							/*
 							however, we will put str onto key's neighor list even str is accessed before for an obvious reason:
-							we need to find all possible routes even they may overlap in between (not completely though)
+							we need to find all possible routes even they may overlap in between (not completely though). In such
+							scenario, str has multiple parents.
 							*/
 							g[key].first.push_back(str);
 						}
@@ -123,8 +143,7 @@ public:
 			}
 		}
 		vector<string> vec(dict.size() + 2);
-		vec[0] = start;
-		this->aux(ans, vec, g, start, end, 1);
+		this->aux(ans, vec, g, start, end, 0);
 		return ans;
 	}
 };
