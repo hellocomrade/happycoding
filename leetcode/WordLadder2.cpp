@@ -31,17 +31,43 @@ All words have the same length.
 All words contain only lowercase alphabetic characters.
 
 Observations:
+As a "phase II" of word ladder (Leetcode 127), instead of finding the count of the minimum steps, K to transform from start to end,
+we will have to find all "shortest pathes" with K steps.
+
+In Leetcode 127, we built a hash table with keys using wild card '?'. So, instead of trying all 26 alphabets against a given word,
+we only replace each letter in the given word with '?'. This is usually a good way to boost the performance considering the fact most
+of English words are way less than 26 letters each.
+
+However, in this one, we gave up that idea because I was afraid that we will use too much memory and take too long to complete the algorithm.
+Why? Since we are asked to find all possible shortest path, in order to save memory, we may have to take backtracing approach. This will normally
+requires a DFS built in a recursive approach. Somehow, before we do that, we need to create a structure that is comprehensive enough to track
+all possible routes between start till end.
+
+This can be done using a BFS. We first introduce string end as a virtual node into dict so we would have an ending point for our Breadth First Search.
+Then starting from string start, we find all immediate neighbors who meet the transform rule for a given node. At meantime, we keep tracking the order of
+the given node. All neighbors will then be pushed to a queue as long as they haven't been accessed before. This process will stop once we reach string end.
+
+Is this sufficient enough to cover all nodes we need to examine? Yes, since we are doing BFS, once we have reached the string end, it is guaranteed that the detination
+will be reached as earliest as it can and all nodes that can transfer to the string end have already put string end onto their neighbor list. All other nodes that are not reached yet at this moment are definitely irrelevant to
+shortest path scan.
+
+An interesting bug of passing value of a vector instead of its reference, which introduced huge performance penalty since this is done during
+the recursion.
 */
 class SolutionWordLadder2 {
 private:
-	//dfs
+	/*
+	dfs
+	The arugment list was written as vector<string> vec, which influenced the performance hugely due to the extensive copy construction on vec!
+	Once that has been corrected, we have this algorithm ACed.
+	*/
 	void aux(vector<vector<string>>& ans, vector<string>& vec, unordered_map<string, std::pair<vector<string>, int>>& g, const string& start, const string& end, int order) {
 		if (end == start) {
 			ans.push_back(std::move(vector<string>(vec.begin(), vec.begin() + order)));
 			return;
 		}
 		if (g.end() != g.find(start) && g[start].second == order) {
-			for (auto str : g[start].first) {
+			for (auto& str : g[start].first) {
 				vec[order] = str;
 				this->aux(ans, vec, g, str, end, order + 1);
 			}
@@ -70,7 +96,7 @@ public:
 			if (key == end) break;
 			str = key;
 			g.emplace(key, std::make_pair(vector<string>(), orders[key] + 1));
-			for (int i = 0; i < len; ++i) {
+			for (size_t i = 0; i < len; ++i) {
 				for (char j = 'a'; j <= 'z'; ++j) {
 					if (j == str[i])continue;
 					old_char = str[i];
@@ -78,9 +104,17 @@ public:
 					if (dict.end() != dict.find(str)) {
 						if (orders.end() == orders.find(str) || orders[str] == orders[key] + 1) {
 							if (orders.end() == orders.find(str)) {
+								/*
+								we should only push str to the queue if str hasn't be on the queue before.
+								otherwise, we will introduce duplications onto the neighor list of str.
+								*/
 								q.push(str);
 								orders.emplace(str, orders[key] + 1);
 							}
+							/*
+							however, we will put str onto key's neighor list even str is accessed before for an obvious reason:
+							we need to find all possible routes even they may overlap in between (not completely though)
+							*/
 							g[key].first.push_back(str);
 						}
 					}
