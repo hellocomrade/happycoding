@@ -88,7 +88,7 @@ since low is in non-decreasing mode for any given i during j moves from i + 1 to
 say the inner loop, including all junk inside, only takes O(N) time for each outer loop on i.
 
 */
-int solutionCountTriangles(vector<int> &A)
+int solutionCountTriangles1(vector<int> &A)
 {
 	int len = A.size();
 	std::sort(A.begin(), A.end());
