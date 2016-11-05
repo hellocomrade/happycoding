@@ -54,6 +54,13 @@ When the most inner loop exits, we calculate the distance between k and j (off b
 A[i] + A[j] <= A[k]). After that, we increase j by 1 but DO NOT reset k.
 
 Be aware we count all duplicate cases as valid.
+
+There is actually another very elegant design according to the tutorial. Say [1,2,3,4], at beginning, i = 0, j = 1, k = 2. The condition
+doesn't meet, j++. At the end of the first iteration, i = 0, j = 2, k = 2. This is not a legit combination. However, the most inner
+while loop is able to fix this since A[0] + A[2] is always greater than A[2] given all postive integers. So, k can be fixed to its correct
+threshold position, which is 3 in this case, automatically. In other words, once j == k, k will catch up and turn to k + 1 at least. The count on ans
+will not be affected. 
+I have a version in Java and there are quite a few logics to solve this. But the codes in the tutorial are much cleaner.
 */
 int solutionCountTriangles(vector<int> &A) {
     int len = static_cast<int>(A.size()), j = 0, k = 0, ans = 0;
