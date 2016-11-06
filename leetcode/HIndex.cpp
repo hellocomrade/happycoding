@@ -55,13 +55,30 @@ public:
 	/*
 	O(NlogN)
 	You could sort asc or desc. If asc, then you assign h-index at the highest value, otherwise h-index is 0
-	Then loop the sorted array. It appears sorting asc is better.
+	Then loop the sorted array. It appears sorting asc is better. Well, I take it back, even for sorting desecendingly,
+	the same approach on sorting ascendingly applied. No more comparing with i + 1.
 	*/
 	int hIndex(vector<int>& citations) {
             int ans = static_cast<int>(citations.size());
             std::sort(citations.begin(), citations.end());
-            for(int i : citations)
+            for(int i : citations) {
                 if(ans > i)--ans;
+                else break;
+            }
+            return ans;
+    	}
+	/*
+	My only concern is: the loop actually stops at the first possible h index. According to the description, there might be
+	multiple h index possible and since ans starts with 0, we could miss the even greater h index? However, no test case seems
+	address that?
+	*/
+	int hIndex0(vector<int>& citations) {
+            int ans = 0;
+            std::sort(citations.begin(), citations.end(), std::greater<int>());
+            for(int i : citations) {
+                if(i > ans)++ans;
+                else break;
+            }
             return ans;
     	}
 	int hIndex1(vector<int>& citations) {
