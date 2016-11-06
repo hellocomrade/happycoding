@@ -23,6 +23,14 @@ public class SolutionHIndex {
         return 0;
     }
     //O(1) space + O(NlogN) time
+    //sorting asc is more concise in terms of coding
+    public int hIndex0(int[] citations) {
+        int ans = citations.length;
+        Arrays.sort(citations);
+        for(int i : citations)
+            if(i < ans)--ans;
+        return ans;
+    }
     public int hIndex1(int[] citations) {
         int len = citations.length, i = 0;
         int ans = len;
