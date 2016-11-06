@@ -52,8 +52,19 @@ If sum >= i, we know we find the largest h index.
 */
 class SolutionHIndex {
 public:
-	//O(NlogN)
+	/*
+	O(NlogN)
+	You could sort asc or desc. If asc, then you assign h-index at the highest value, otherwise h-index is 0
+	Then loop the sorted array. It appears sorting asc is better.
+	*/
 	int hIndex(vector<int>& citations) {
+            int ans = static_cast<int>(citations.size());
+            std::sort(citations.begin(), citations.end());
+            for(int i : citations)
+                if(ans > i)--ans;
+            return ans;
+    	}
+	int hIndex1(vector<int>& citations) {
 		int len = citations.size();
 		if (0 == len)return 0;
 		std::sort(citations.begin(), citations.end(), std::greater<int>());
@@ -67,7 +78,7 @@ public:
 	}
 	//O(N)
 	//an example of h-index that is inclusive on both ends: [1,4,4,4,5,5], h-index = 4
-	int hIndex1(const vector<int>& citations) {
+	int hIndex2(const vector<int>& citations) {
 		int len = citations.size();
 		if (0 == len)return 0;
 		vector<int> greaterThan(len + 1, 0);
