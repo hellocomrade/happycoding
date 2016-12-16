@@ -22,6 +22,21 @@ Observations:
    Actually, you can avoid this trouble by simply using substraction since we won't allow any
    negative integer showing up anyway.
 */
+//https://codility.com/demo/results/trainingGMUGX7-CJV/
+/*
+Actually, negative elements will not contribute to any triangle. In a sorted array, given A[i], A[i + 1], A[i + 2], at least
+A[i] and A[i + 1] are negative, therefore A[i] + A[i + 1] will be less then A[i + 2] for sure.
+
+We actually need to start counting from the first positive element.
+*/
+int solutionTriangle1(vector<int> &A) {
+    int len = A.size();
+    std::sort(A.begin(), A.end());
+    auto low = lower_bound(A.begin(), A.end(), 1);
+    for(int i = std::distance(A.begin(), low); i < len - 2; ++i)
+        if(A[i] > A[i + 2] - A[i + 1])return 1;
+    return 0;
+}
 int solutionTriangle(vector<int> &A)
 {
     int len = A.size();
