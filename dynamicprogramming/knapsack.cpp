@@ -33,6 +33,12 @@ public:
     }
     /*
      * Apply DP, bottom-up without recursion. But not pay attention on the size of memory we take for memo
+     * Typical DP table form memorization
+     * 2D memo array structure:        0, 1, 2, 3, 4, ..., capacity <---column
+     *                          item 1
+     *                          item 2
+     *                          ...
+     *                  row---> item n
      */
     int Knapsack01Orig(const vector<int>& values, const vector<int>& weights, int capacity) {
         unsigned long len = values.size();
@@ -54,7 +60,9 @@ public:
         return (int)memo[len - 1][capacity - 1];
     }
     /*
-     * DP with space saver
+     * DP with space saver: we only need intermidate results in memo array for the previous item. Therefore, the space need is
+     * only capacity + 1 if zero weight is allowed or wasted
+     * Same trick to avoid overwrite values in memo before they are actually used: scan memo backward.
      */
     int Knapsack01(const vector<int>& values, const vector<int>& weights, int capacity) {
         unsigned long len = values.size();
