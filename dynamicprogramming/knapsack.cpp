@@ -5,8 +5,36 @@
 using namespace std;
 
 class SolutionKnapsack {
+private:
+    long long knapsack01Aux(const vector<int>& values, const vector<int>& weights, int n, int w) {
+        if(n < 0 || w < 0)return 0;
+        if(weights[n] > w)
+            return knapsack01Aux(values, weights, n - 1, w);
+        return std::max((long long)values[n] + (long long)knapsack01Aux(values, weights, n - 1, w - weights[n]), knapsack01Aux(values, weights, n - 1, w));
+    }
 public:
-    int Knapsack01(const vector<int>& values, const vector<int>& weights, int capacity) {
+    /*
+     * Dummy solution for knapsack 01, using a classic, recursive, top-down approach, which examine every possible case,
+     * WITHOUT using DP:
+     * Item k is either in the optimized solution or not, if it's in, we will recursively examine the remaining
+     * with capacity - weights[k]; if it's not, we go examing the left with the capacity unchanged. Either way, we take
+     * the one that gives us a greater value sum.
+     * A special case is: if weights[k] is greater than the available weight, we can conclude item k is definitely not
+     * in the optimized solution.
+     *
+     * We should be able to identify that this dummy version repeatly calculates the same scenario, which can be avoided
+     * if we memorize these intermediate results.
+     */
+    int Knapsack01Dummy(const vector<int>& values, const vector<int>& weights, int capacity) {
+        int len = static_cast<int>(values.size());
+        if(static_cast<int>(weights.size()) != len)return -1;
+        else if(len == 0)return 0;
+        return static_cast<int>(this->knapsack01Aux(values, weights, len - 1, capacity));
+    }
+    /*
+     * Apply DP, bottom-up without recursion. But not pay attention on the size of memory we take for memo
+     */
+    int Knapsack01Orig(const vector<int>& values, const vector<int>& weights, int capacity) {
         unsigned long len = values.size();
         if(weights.size() != len)return -1;
         else if(len == 0)return 0;
@@ -24,6 +52,25 @@ public:
             }
         }
         return (int)memo[len - 1][capacity - 1];
+    }
+    /*
+     * DP with space saver
+     */
+    int Knapsack01(const vector<int>& values, const vector<int>& weights, int capacity) {
+        unsigned long len = values.size();
+        if(weights.size() != len)return -1;
+        else if(0 == len)return 0;
+        vector<long long> memo(capacity + 1, 0LL);
+        for(unsigned long i = 0; i < len; ++i) {
+            for(int j = capacity; j > -1; --j) {//we allow item with zero weight
+                if(weights[i] < 0)break;
+                else if(weights[i] <= j)
+                    memo[j] = std::max(0 == j ? 0 : memo[j - 1], (long long)values[i] + (long long)memo[j - weights[i]]);
+                else
+                    memo[j] = 0 == j ? memo[0] : memo[j - 1];
+            }
+        }
+        return static_cast<int>(memo[capacity]);
     }
 };
 void TestKnapsack() {
