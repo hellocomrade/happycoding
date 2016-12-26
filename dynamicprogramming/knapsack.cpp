@@ -65,9 +65,9 @@ public:
             for(int j = capacity; j > -1; --j) {//we allow item with zero weight
                 if(weights[i] < 0)break;
                 else if(weights[i] <= j)
-                    memo[j] = std::max(0 == j ? 0 : memo[j - 1], (long long)values[i] + (long long)memo[j - weights[i]]);
+                    memo[j] = std::max(memo[j], (long long)values[i] + (long long)memo[j - weights[i]]);
                 else
-                    memo[j] = 0 == j ? memo[0] : memo[j - 1];
+                    memo[j] = memo[j];
             }
         }
         return static_cast<int>(memo[capacity]);
