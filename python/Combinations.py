@@ -3,7 +3,7 @@ class SolutionCombinations_2Slow:
         if idx == k:
             ans.append([i for i in arr])
             return
-        for i in xrange(begin, end):
+        for i in range(begin, end):
             arr[idx] = i
             self._aux(ans, arr, i + 1, end, k, idx + 1) 
     """    
@@ -23,7 +23,7 @@ class SolutionCombinations1(object):
     def _aux(self, ans, ret, i, k, n):
         if k == 0:
             return ans.append(ret[:])
-        for j in xrange(i, n + 1):
+        for j in range(i, n + 1):
             if j + k > n + 1: return
             ret.append(j)
             self._aux(ans, ret, j + 1, k - 1, n)
@@ -44,7 +44,7 @@ class SolutionCombinations2(object):
     def _aux(self, ans, ret, i, k, n):
         if k == 0:
             return ans.append(ret[:])
-        for j in xrange(i, n + 1):
+        for j in range(i, n + 1):
             if j + k > n + 1: return
             ret.append(j)
             self._aux(ans, ret, j + 1, k - 1, n)

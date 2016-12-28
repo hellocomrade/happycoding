@@ -5,7 +5,7 @@ class SolutionJumpGame2:
     def jump(self, A):
         size = len(A) - 1
         nextStop, longestStop, jmp = 0, 0, 0
-        for i in xrange(size):
+        for i in range(size):
             if i + A[i] >= size:
                 return jmp + 1
             longestStop = max(longestStop, i + A[i])

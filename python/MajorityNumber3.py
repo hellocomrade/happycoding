@@ -1,4 +1,4 @@
-//http://www.lintcode.com/en/problem/majority-number-iii/
+#http://www.lintcode.com/en/problem/majority-number-iii/
 class SolutionMajorityNumber3:
     """
     @param nums: A list of integers

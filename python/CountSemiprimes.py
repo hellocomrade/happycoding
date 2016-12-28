@@ -19,11 +19,11 @@ def solution(N, P, Q):
     ans = []
     prefixSum = [0] * (N + 1)
     fact = factorization(N)
-    for i in xrange(2, N+1):
+    for i in range(2, N+1):
         if fact[i] != 0 and fact[i // fact[i]] == 0:
             prefixSum[i] = prefixSum[i - 1] + 1
         else:
             prefixSum[i] = prefixSum[i - 1]
-    for i in xrange(len(P)):
+    for i in range(len(P)):
         ans += [prefixSum[Q[i]] - prefixSum[P[i] - 1]]
     return ans

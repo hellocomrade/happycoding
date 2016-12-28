@@ -6,8 +6,8 @@ def solution(S, P, Q):
     lookup = {'A': 0, 'C': 1, 'G': 2, 'T': 3}  
     memo = [cntS * [cntS] for i in xrange(4)]
     memo[lookup[S[cntS - 1]]][cntS - 1] = cntS - 1
-    for i in xrange(cntS - 2, -1, -1):
-        for j in xrange(4):
+    for i in range(cntS - 2, -1, -1):
+        for j in range(4):
             memo[j][i] = memo[j][i + 1]
         memo[lookup[S[i]]][i] = i
     for p, q in zip(P, Q):

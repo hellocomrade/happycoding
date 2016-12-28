@@ -1,4 +1,4 @@
-//https://codility.com/demo/results/training3A4DDM-K2V/
+#https://codility.com/demo/results/training3A4DDM-K2V/
 def solution(A):
     # write your code in Python 2.7
     size = len(A)
@@ -12,7 +12,7 @@ def solution(A):
             cnt -= 1
     cnt = A.count(s)
     if cnt > size // 2:
-        for i in xrange(size):
+        for i in range(size):
             if A[i] == s:
                 cnt1 += 1
             if cnt1 > (i + 1) // 2 and cnt - cnt1 > (size - 1 - i) // 2:

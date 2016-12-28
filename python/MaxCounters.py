@@ -8,7 +8,7 @@ def solution(N, A):
         else:
             ans[i - 1] = ans[i - 1] + 1 if ans[i - 1] >= maxSofar else maxSofar + 1
             maxAtHere = max(ans[i - 1], maxAtHere)
-    for i in xrange(N):
+    for i in range(N):
         if ans[i] < maxSofar:
             ans[i] = maxSofar
     return ans

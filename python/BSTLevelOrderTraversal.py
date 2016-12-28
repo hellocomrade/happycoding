@@ -21,7 +21,7 @@ class SolutionBSTLevelOrderTraversal:
             while q:
                 size = len(q)
                 vec = [0] * size
-                for i in xrange(size):
+                for i in range(size):
                     node = q.pop(0)
                     vec[i] = node.val
                     if node.left:
