@@ -33,6 +33,18 @@ we find a closer interval. Keep this going until right pointer is equal to the l
 class SolutionMinimumSizeSubarraySum{
 public:
 	int minSubArrayLen(int s, vector<int>& nums) {
+	    int len = (int)nums.size();
+            int ans = len + 1, sum = 0, l = 0;
+            for(int i = 0; i < len; ++i) {
+                sum += nums[i];
+                while(sum >= s) {
+                    ans = std::min(ans, i - l + 1);
+               	    sum -= nums[l++];
+            	}
+       	    }
+            return ans == len + 1 ? 0 : ans;	
+	}
+	int minSubArrayLen1(int s, vector<int>& nums) {
 		int len = nums.size(), ans = len + 1;
 		long long sum = 0;
 		if (len < 1)return 0;
