@@ -5,6 +5,8 @@ using namespace std;
 
 //https://leetcode.com/problems/longest-increasing-subsequence/
 /*
+300. Longest Increasing Subsequence
+
 Given an unsorted array of integers, find the length of longest increasing subsequence.
 
 For example,
@@ -48,7 +50,7 @@ we have a smaller ending element nums[k]. Then we update the nums[j] = nums[k];
 */
 class SolutionLongestIncreasingSubsequence {
 public:
-	//O(N) with O(1) space
+	//O(NlogN) with O(1) space
 	int lengthOfLIS(vector<int>& nums) {
 		int len = nums.size();
 		if (0 == len)return 0;
@@ -64,7 +66,7 @@ public:
 		}
 		return maxLen;
 	}
-	//O(N) with O(1) space
+	//O(NlogN) with O(1) space
 	int lengthOfLIS2(vector<int>& nums) {
 		int len = nums.size();
 		auto begin = nums.begin();
