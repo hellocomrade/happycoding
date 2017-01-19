@@ -2,6 +2,7 @@
 #include <vector>
 #include <stack>
 #include <cmath>
+#include <cstdint>
 #include <cassert>
 
 using namespace std;
