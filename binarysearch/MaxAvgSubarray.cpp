@@ -110,7 +110,7 @@ void TestMaxAvgSubarray() {
     //15.667
     assert(std::abs(15.667 - so.maxAverage(vector<int>{1, 12, -5, -6, 50, 3}, 3)) <= ERROR);
     assert(-1 == so.maxAverage(vector<int>{-1, -1, -1, -1}, 2));
-    assert(INT_MIN == so.maxAverage(vector<int>{INT_MIN, INT_MIN, INT_MIN, INT_MIN}, 2));
+    assert(INT32_MIN == so.maxAverage(vector<int>{INT32_MIN, INT32_MIN, INT32_MIN, INT32_MIN}, 2));
     //-21.4
     assert(std::abs(-21.4 - so.maxAverage(vector<int>{-1, -2, -3, -100, -1, -50}, 4)) <= ERROR);
     //5.707
