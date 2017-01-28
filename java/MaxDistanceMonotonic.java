@@ -4,6 +4,7 @@
 This is actually a O(NlogN) solution, but Codility say otherwise:) They need better, longer test cases.
 The O(N) solution will be added later. So it's here:https://codility.com/demo/results/training8NVKBY-RE8/
 */
+import java.util.Stack;
 import java.util.Collections;
 import java.util.ArrayList;
 class SolutionMaxDistanceMonotonic {
