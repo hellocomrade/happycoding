@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <cassert>
 #include <string>
 #include <algorithm>
