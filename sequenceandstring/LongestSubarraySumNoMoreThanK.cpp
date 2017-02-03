@@ -33,7 +33,7 @@ public:
         stk.push(std::make_pair(prefixSum[len], len));
         for(int i = len; i > 0; --i)
             if(prefixSum[i] < stk.top().first)stk.push(std::make_pair(prefixSum[i], i));
-        for(int i = 0; i <= len; ++i) {
+        for(int i = 0; i <= len && !stk.empty(); ++i) {
             while(false == stk.empty() && stk.top().first - prefixSum[i] <= k) {
                 if(ans.second - ans.first < stk.top().second - i - 1)
                     ans.first = i, ans.second = stk.top().second - 1;
