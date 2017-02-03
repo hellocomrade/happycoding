@@ -37,10 +37,10 @@ public:
         size_t len1 = word1.length(), len2 = word2.length();
         size_t m = 0, mul = 0;
         vector<size_t> memo(len1 + 1, 0);
-        for(int i = 1; i <= len1; ++i)memo[i] = i;
-        for(int i = 1; i <= len2; ++i) {
+        for(size_t i = 1; i <= len1; ++i)memo[i] = i;
+        for(size_t i = 1; i <= len2; ++i) {
             mul = memo[0], memo[0] = i;
-            for(int j = 1; j <= len1; ++j) {
+            for(size_t j = 1; j <= len1; ++j) {
                 m = memo[j];
                 if(word1[j - 1] == word2[i - 1])memo[j] = mul;
                 else memo[j] = std::min(std::min(mul + 1, memo[j - 1] + 1), m + 1);
