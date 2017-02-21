@@ -26,10 +26,10 @@ using namespace std;
    r a b b b i t <--s
  r 1 1 1 1 1 1 1
  a 0 1 1 1 1 1 1
- b 0 0 1 ?
- b
- i
- t
+ b 0 0 1 ? 2 2 2
+ b 0 0 0 1 3 3 3
+ i 0 0 0 0 0 3 3
+ t 0 0 0 0 0 0 3
  ^
  |
  t
