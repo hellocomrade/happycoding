@@ -58,7 +58,12 @@ using namespace std;
  
  Well, I still don't understand why s = "abcd" and t="", the answer is 1...I think that's just a by product of the "standard" implementation of the algorithm, which using an memo with length of (M + 1) and all memo[0][j] is initialized with 1.
  
+ Another example:
  
+   w g n a c f f a f d g j e a j
+ a 0 0 0 1 1 1 1 2 2 2 2 2 2 3 3
+ f 0 0 0 0 0 1 2 2 4 4 4 4 4 4 4
+ j 0 0 0 0 0 0 0 0 0 0 0 4 4 4 8
 */
 class SolutionDistinctSubsequences {
 public:
