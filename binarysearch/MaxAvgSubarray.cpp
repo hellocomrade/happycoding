@@ -64,12 +64,9 @@ public:
         /*
          The above syntax suger can't be used since it will accumulate nums[i] using int type, which is an integer overflow hazard!
          */
-        double ans = 0;
-        for (int i = 0; i < len; ++i)
-            ans += nums[i];
-        ans /= len;
+        double ans = left;
         stack<std::pair<double, int> > stk;
-        while (std::abs(right - left) >= ERROR) {
+        while (right - left >= ERROR) {
             mid = left + (right - left) / 2;
             stk.empty();
             //std::copy(nums.begin(), nums.end(), memo.begin());
@@ -101,7 +98,7 @@ public:
             else right = mid;
             
         }
-        return ans;
+        return std::abs(ans) < ERROR ? 0.0 : ans;
     }
 };
 void TestMaxAvgSubarray() {
@@ -118,4 +115,5 @@ void TestMaxAvgSubarray() {
     }, 312)) <= ERROR);
     //-0.333
     assert(std::abs(-0.333 - so.maxAverage(vector<int>{5, -10, 4}, 2)) <= ERROR);
+    assert(std::abs(so.maxAverage(vector<int>{-1, 0, 1}, 3)) < 1e-6);
 }
