@@ -54,6 +54,42 @@ public:
      * @param k an integer
      * @return the maximum average
      */
+	 /*
+	 This is a faster version, which doesn't rely on the monotoic pair trick. Monotonic pair version
+	 is more general, which is actually a overkill since we only need to find any subarray size no less than K.
+
+	 Therefore, we simplify the problem to: At index i, comparing with the min value of prefixSum with index from 0 to i - k. If index i doesn't meet the need,
+	 we move on to i + 1, but before we do that we compare current min on prefixSum with prefixSum[i - k + 1]. As you can see, we actually keep tracking
+	 on a window that is at least with size of K.
+
+	 This whole thing can be done during the calcuation of prefixSum, which makes this really efficient. The monotonic version is O(NlogN) also,
+	 but since it has 2 more loop inside while, it's slower (well, 5 times slower sometines using the test cases in Lintcode).
+	 */
+	double maxAverage(const vector<int>& nums, int k) {
+		int len = (int)nums.size();
+		if (0 == len || k < 1)return 0;
+		vector<double> prefixSum(len + 1, 0);
+		double left = (double)*std::min_element(nums.begin(), nums.end()), right = (double)*std::max_element(nums.begin(), nums.end());
+		double ERROR = 1e-6, ans = left, mid, minSofar;
+		bool flag;
+		while (right - left >= ERROR) {
+			mid = left + (right - left) / 2, minSofar = 0.0, flag = false;
+			for (int i = 1; i <= len; ++i) {
+				prefixSum[i] = prefixSum[i - 1] + nums[i - 1] - mid;
+				if (i >= k) {
+					if (prefixSum[i] - minSofar > ERROR) {
+						ans = std::max(ans, mid);
+						flag = true;
+						break;
+					}
+					minSofar = std::min(minSofar, prefixSum[i - k + 1]);
+				}
+			}
+			if (flag)left = mid;
+			else right = mid;
+		}
+		return std::abs(ans) < ERROR ? 0.0 : ans;
+	}
     //This version is shorter due to apply prefixSum with length of len + 1
     double maxAverage1(vector<int>& nums, int k) {
         int len = (int)nums.size(), m = 0;
