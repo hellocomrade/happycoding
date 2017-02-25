@@ -3,8 +3,30 @@ class SolutionMaximumAverageSubarray:
     # @param {int[]} nums an array with positive and negative numbers
     # @param {int} k an integer
     # @return {double} the maximum average
-    # This version Time Limit Exceeded
+    # This one doesn't use monotonic pair trick, but a simplier approach using a window on array that is no less than K 
     def maxAverage(self, nums, k):
+        ans, err = 0, 1e-8
+        if nums and k > 0:
+            count = len(nums)
+            prefixSum = [0.0] * (1 + count)
+            l, r, mid, minSofar = min(nums), max(nums), 0.0, 0.0
+            ans, flag = l, False
+            while r - l >= err:
+                mid, minSofar, flag = (r + l) / 2.0, 0.0, False
+                for i in range(1, count + 1):
+                    prefixSum[i] = prefixSum[i - 1] + nums[i - 1] - mid
+                    if i >= k:
+                        if prefixSum[i] - minSofar >= err:
+                            ans, flag = max(mid, ans), True
+                            break
+                        minSofar = min(minSofar, prefixSum[i - k + 1])
+                if flag:
+                    l = mid
+                else:
+                    r = mid
+        return 0.0 if abs(ans) < err else ans
+    # This version Time Limit Exceeded
+    def maxAverage1(self, nums, k):
         ans, err = 0, 1e-8
         if nums and k > 0:
             count = len(nums)
