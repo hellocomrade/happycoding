@@ -77,7 +77,7 @@ public:
 			for (int i = 1; i <= len; ++i) {
 				prefixSum[i] = prefixSum[i - 1] + nums[i - 1] - mid;
 				if (i >= k) {
-					if (prefixSum[i] - minSofar > ERROR) {
+					if (prefixSum[i] - minSofar >= ERROR) {
 						ans = std::max(ans, mid);
 						flag = true;
 						break;
