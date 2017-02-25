@@ -57,34 +57,34 @@ public:
     //This version is shorter due to apply prefixSum with length of len + 1
     double maxAverage1(vector<int>& nums, int k) {
         int len = (int)nums.size(), m = 0;
-		      if (0 == len || k < 1)return 0;
-		      vector<double> prefixSum(len + 1, 0);
-		      double left = (double)*std::min_element(nums.begin(), nums.end()), right = (double)*std::max_element(nums.begin(), nums.end());
-		      double ERROR = 1e-6, ans = left, mid;
-		      stack<std::pair<double, int> > stk;
-		      while (right - left >= ERROR) {
-			         mid = left + (right - left) / 2, m = 0;
-			         stk.empty();
-			         for (int i = 1; i <= len; ++i)//no need to handle prefixSum[0] separately
-				            prefixSum[i] = prefixSum[i - 1] + nums[i - 1] - mid;
-            //In fact, prefixSum[0] does have a meaning here. prefixSum[i] - prefix[0] represents sum from 0 to i
-			         stk.push(std::make_pair(prefixSum[0], 0));
-			         for (int i = 1; i <= len; ++i)
-				            if (prefixSum[i] < stk.top().first)stk.push(std::make_pair(prefixSum[i], i));
-			         for (int i = len; i > -1 && m < k; --i) {
-				            while (false == stk.empty() && prefixSum[i] >= stk.top().first) {
-					               m = std::max(m, i - stk.top().second);
-					               stk.pop();
-					               if (m >= k)break;
-				            }
-			         }
-			         if (m >= k) {
-				            left = mid;
-				            ans = std::max(ans, mid);
-			         }
-			         else right = mid;
-		      }
-		      return std::abs(ans) < ERROR ? 0.0 : ans;
+		if (0 == len || k < 1)return 0;
+		vector<double> prefixSum(len + 1, 0);
+		double left = (double)*std::min_element(nums.begin(), nums.end()), right = (double)*std::max_element(nums.begin(), nums.end());
+		double ERROR = 1e-6, ans = left, mid;
+		stack<std::pair<double, int> > stk;
+		while (right - left >= ERROR) {
+			mid = left + (right - left) / 2, m = 0;
+			stk.empty();
+			for (int i = 1; i <= len; ++i)//no need to handle prefixSum[0] separately
+				prefixSum[i] = prefixSum[i - 1] + nums[i - 1] - mid;
+			//In fact, prefixSum[0] does have a meaning here. prefixSum[i] - prefix[0] represents sum from 0 to i
+			stk.push(std::make_pair(prefixSum[0], 0));
+			for (int i = 1; i <= len; ++i)
+				if (prefixSum[i] < stk.top().first)stk.push(std::make_pair(prefixSum[i], i));
+			for (int i = len; i > -1 && m < k; --i) {
+				while (false == stk.empty() && prefixSum[i] >= stk.top().first) {
+					    m = std::max(m, i - stk.top().second);
+					    stk.pop();
+					    if (m >= k)break;
+				}
+			}
+			if (m >= k) {
+				left = mid;
+				ans = std::max(ans, mid);
+			}
+			else right = mid;
+		}
+		return std::abs(ans) < ERROR ? 0.0 : ans;
     }
     double maxAverage2(const vector<int>& nums, int k) {
         int len = (int)nums.size(), m;
