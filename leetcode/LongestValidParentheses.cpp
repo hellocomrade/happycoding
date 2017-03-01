@@ -37,9 +37,8 @@ class SolutionLongestValidParentheses {
 public:
 	//Not DP, using stack, simplified
 	int longestValidParentheses(string s) {
-		size_t len = s.length(), last = 0, ans = 0;
-		if (len < 2)return 0;
-		stack<long long> stk;
+		size_t last = 0, ans = 0;
+		stack<size_t> stk;
 		for (char c : s) {
 			ans = std::max(ans, last);
 			if ('(' == c) {
@@ -84,6 +83,8 @@ public:
 };
 void TestLongestValidParentheses() {
 	SolutionLongestValidParentheses so;
+	assert(0 == so.longestValidParentheses(")"));
+	assert(0 == so.longestValidParentheses("("));
 	assert(6 == so.longestValidParentheses(")()((())()"));
 	assert(10 == so.longestValidParentheses(")()((())())"));
 	assert(8 == so.longestValidParentheses(")()((())))()"));
