@@ -35,8 +35,21 @@ it's possible to have a valid parentheses reaches the end of the string. The val
 */
 class SolutionLongestValidParentheses {
 public:
+	//A "DP" version. Store longest so far at each possible ')'
+        int longestValidParentheses(string s) {
+            long long len = (long long)s.length(), ans = 0;
+            if(len < 2)return 0;
+            vector<long long> memo(len, 0LL);
+            for(int i = 1; i < len; ++i) {
+                if(')' == s[i] && i - memo[i - 1] - 1 >= 0 && '(' == s[i - memo[i - 1] - 1]) {
+                    memo[i] = 2 + memo[i - 1] + ((i - memo[i - 1] - 2 >= 0) ? memo[i - memo[i - 1] - 2] : 0);
+                    ans = std::max(ans, memo[i]);
+                }
+            }
+            return (int)ans;
+        }
 	//Not DP, using stack, simplified
-	int longestValidParentheses(string s) {
+	int longestValidParentheses1(string s) {
 		size_t last = 0, ans = 0;
 		stack<size_t> stk;
 		for (char c : s) {
@@ -54,7 +67,7 @@ public:
 		return (int)std::max(ans, last);
 	}
 	//Not DP, using stack
-	int longestValidParentheses1(string s) {
+	int longestValidParentheses2(string s) {
 		size_t len = s.length();
 		long long last = 0, ans = 0;
 		if (len < 2)return 0;
