@@ -24,7 +24,21 @@ we reset the gas tank to 0 and start point to i + 1, so we will try to begin our
 */
 class SolutionGasStation {
 public:
-	int canCompleteCircuit(vector<int>& gas, vector<int>& cost) {
+    int canCompleteCircuit(vector<int>& gas, vector<int>& cost) {
+        size_t len = gas.size();
+        long long total = 0, sumSofar = 0;
+        int start = 0;
+        for(int i = 0; i < len; ++i) {
+            total += gas[i] - cost[i];
+            sumSofar += gas[i] - cost[i];
+            if(sumSofar < 0) {
+                start = i + 1;
+                sumSofar = 0;
+            }
+        }
+        return total < 0 ? -1 : start;
+    }
+	int canCompleteCircuit1(vector<int>& gas, vector<int>& cost) {
 		int len1 = gas.size();
 		int len2 = cost.size();
 		if (len1 < 1 || len2 < 1 || len1 != len2)return -1;
