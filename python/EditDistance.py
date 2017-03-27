@@ -7,7 +7,8 @@ class SolutionEditDistance(object):
         :rtype: int
         """
         len1, len2, upperLeft, tmp = len(word1), len(word2), 0, 0
-        memo = range(0, len1 + 1)
+        #For Python 3.X, range has its own type, therefore, has to create a list based upon range
+        memo = list(range(0, len1 + 1))
         for row in range(1, len2 + 1):
             upperLeft, memo[0] = memo[0], row
             for col in range(1, len1 + 1):
