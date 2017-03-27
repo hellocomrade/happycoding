@@ -50,7 +50,7 @@ private:
 		It stores the next possible match index value at position (i - 1) given index i.
 		Or you can say it's the longest substring that is both a proper prefix and suffix of string from [0 to i - 1]
 
-		i			0	1	2	3	4	5	6	7	8
+		i		0	1	2	3	4	5	6	7	8
 		pattern[i]	A	B	A	C	A	B	A	B	C
 		lpps[i]		-1	0	0	1	0	1	2	3	2
 
