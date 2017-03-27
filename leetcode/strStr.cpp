@@ -25,9 +25,18 @@ As for KMP, the definition of "proper prefix" is the prefixes of a string except
 the prefixes are: "A", "AB", "ABC", "ABCD"
 the proper prefixes, on the other hand, are: "A", "AB", "ABC".
 
-Why we don't need "ABCD"? Well, if a prefix like "ABCD" is matched in haystack, we have an answer already, no need to further check.
+Why we don't need "ABCD"? Well, simply put: KMP avoids unnecessary comparisons by moving the head of the pattern directly to the next matching position.
+It achieves this by a theorm: at given index i on haystack, we apply pattern for comparison, if the match fails on index j of pattern, of course,
+i < j, we could jump couple position if and only if there is a longest proper prefix plus suffix available in pattern from 0 to j on pattern. For example:
+EEABCABFEEEEEE
+  ABCABD
 
-Actually, KMP needs to preprocess the pattern and calculate the longest "proper prefix and suffix" from 0 to i - 1 and store the length in an array
+It fails on 'E' vs 'D', instead of aligning pattern to 'B'(index 3), we could jump to index 5 on haystack. This is because in "ABCAB" (before failed 'D'),
+we can find a lpps: "AB". Such a substring is a prefix and also suffix of "ABCAB". In other words, we try to use the existing match on the end of pattern
+to see if such match also exist at the begining of pattern, if scuh thing exist, we can safely jump over multiple characters on haystack, which guarantees
+safe.
+
+Therefore, KMP needs to preprocess the pattern and calculate the longest "proper prefix and suffix" from 0 to i - 1 and store the length in an array
 at index i. This process can be done in O(N).
 
 At any given index i, lpps[i] means the longest "proper prefix and suffix" from 0 to i - 1 in the pattern. In such an array, lpps[0] = -1 and lpps[1] = 0.
