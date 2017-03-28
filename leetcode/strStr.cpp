@@ -83,6 +83,7 @@ private:
 					lpps[i++] = 0;
 			}
 		}
+		//Copy elision: http://en.cppreference.com/w/cpp/language/copy_elision
 		return lpps;
 	}
 public:
