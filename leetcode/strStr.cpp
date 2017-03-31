@@ -91,19 +91,19 @@ public:
 		size_t lenh = haystack.length(), lenn = needle.length(), i = 0, j = 0;
 		if (lenh >= lenn) {
 			vector<long long> lpps = this->longestProperPrefixAndSuffix(needle);
-			while (i < lenh) {
+			while (i <= lenh - lenn) {
 				while (j < lenn && haystack[i + j] == needle[j])++j;
 				if (j == lenn)
 					return i;
 				else {
-					//Avoid wasting time comparing lpps at next start point
-					j = lpps[j] <= 0 ? 0 : lpps[j];
 					/*
 					when j = 0, lpps[0] = -1 works perfectly to cove the situation that the match fails at beginning of the strings
 					in such a case i += j is equal to i, however since lpps[j] == -1, we actually move it to right by 1.
 					In other situations, since j > 0, j - lpps[j] moves i to the next start point for comparison.
 					*/
 					i += j - lpps[j];
+					//Avoid wasting time comparing lpps at next start point
+					j = lpps[j] <= 0 ? 0 : lpps[j];
 				}
 			}
 		}
