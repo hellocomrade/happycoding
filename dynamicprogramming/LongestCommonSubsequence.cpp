@@ -25,7 +25,7 @@ Observation:
 
 Classic DP
 
-LCS(i, j) = (A[i] == A[j]) ? LCS(i - 1, j - 1) + 1 : MAX(LCS(i, j - 1), LCS(i - 1, j))
+LCS(i, j) = (A[i] == B[j]) ? LCS(i - 1, j - 1) + 1 : MAX(LCS(i, j - 1), LCS(i - 1, j))
 
 O(M*N) time and O(N) space
 */
