@@ -26,7 +26,7 @@ http://techieme.in/find-interleaving-strings-using-dynamic-programming/
 Optimal substructure: The optimal substructure relation for this problem means, if the lengths of A and B are M and N respectively,
 then if A(1..M), B(1..N) interleaves C(1..M+N), for 1 <= K < M and 1 <= L < N, A(1..K) and B(1..L) will interleave C(1..K+L)
 
-0    a    d    e
+   0    a    d    e
 
 0  T    T    T    F
 
