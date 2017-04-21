@@ -56,7 +56,8 @@ private:
 		size_t len = pattern.length(), i = 2, nextMatchIndex = 0;
 		/*
 		lpps stands for longest proper prefix and suffix.
-		It stores the next possible match index value at position (i - 1) given index i.
+		It stores the immediate fallback index value at position (i - 1) for possible match, given index i, assuming pattern[i] and haystack[i] are 
+		different, but match occurs at pattern[i - 1] and haystack[i - 1].
 		Or you can say it's the longest substring that is both a proper prefix and suffix of string from [0 to i - 1]
 
 		i		0	1	2	3	4	5	6	7	8
