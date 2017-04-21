@@ -31,7 +31,7 @@ i < j, we could jump couple position if and only if there is a longest proper pr
 EEABCABFEEEEEE
   ABCABD
 
-It fails on 'E' vs 'D', instead of aligning pattern to 'B'(index 3), we could jump to index 5 on haystack. This is because in "ABCAB" (before failed 'D'),
+It fails on 'F' vs 'D', instead of aligning pattern to 'B'(index 3), we could jump to index 5 on haystack. This is because in "ABCAB" (before failed 'D'),
 we can find a lpps: "AB". Such a substring is a prefix and also suffix of "ABCAB". In other words, we try to use the existing match on the end of pattern
 to see if such match also exist at the begining of pattern, if scuh thing exist, we can safely jump over multiple characters on haystack, which guarantees
 safe.
