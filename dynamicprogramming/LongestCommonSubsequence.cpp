@@ -25,6 +25,18 @@ Observation:
 
 Classic DP
 
+https://www.ics.uci.edu/~eppstein/161/960229.html
+
+Recursive LCS:
+
+    int lcs_length(char * A, char * B)
+    {
+	if (*A == '\0' || *B == '\0') return 0;
+	else if (*A == *B) return 1 + lcs_length(A+1, B+1);
+	else return max(lcs_length(A+1,B), lcs_length(A,B+1));
+    }
+
+
 LCS(i, j) = (A[i] == B[j]) ? LCS(i - 1, j - 1) + 1 : MAX(LCS(i, j - 1), LCS(i - 1, j))
 
 O(M*N) time and O(N) space
