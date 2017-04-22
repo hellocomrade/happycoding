@@ -57,8 +57,18 @@ we have a smaller ending element nums[k]. Then we update the nums[j] = nums[k];
 */
 class SolutionLongestIncreasingSubsequence {
 public:
-	//O(NlogN) with O(1) space
 	int lengthOfLIS(vector<int>& nums) {
+            size_t len = 0;
+            vector<int>::iterator lower, head = nums.begin();
+            for(int i : nums) {
+                lower = lower_bound(head, head + len, i);
+                *lower = i;
+                if(lower == head + len)++len;
+            }
+            return static_cast<int>(len);
+        }
+	//O(NlogN) with O(1) space
+	int lengthOfLIS3(vector<int>& nums) {
 		int len = nums.size();
 		if (0 == len)return 0;
 		int maxLen = 1;
