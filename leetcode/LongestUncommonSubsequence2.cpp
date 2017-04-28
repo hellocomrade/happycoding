@@ -3,7 +3,6 @@
 #include <string>
 #include <unordered_set>
 #include <unordered_map>
-#include <algorithm>
 
 using namespace std;
 
@@ -20,10 +19,35 @@ The input will be a list of strings, and the output needs to be the length of th
 Example 1:
 Input: "aba", "cdc", "eae"
 Output: 3
-Note:
 
+Note:
 All the given strings' lengths will not exceed 10.
 The length of the given list will be in the range of [2, 50].
+
+Observations:
+Since I did 521 already, I kind of know 522 should have nothing to do with LCS or DP either. 522 is an expansion of 521, as you can guess.
+
+Instead of comparing only 2 strings in 521, you get a list of strings. Such a "LUS" can be decided in the following rules with precedence:
+Examine the strings in a decending order:
+1. The longest string is the answer as long as no duplicate can be found for such a string;
+["abc", "de", "f"], "abc" is the answer
+["abc", "abc", "de"], "abc" is NOT the answer, since the duplicate. "abc" at index 0 is a subsequence of "abc" at index 1.
+
+2. If the first rule can not be met, start from shorter strings using the rule 1 as well with one more addon:
+such a string can not be a subsequence of any string that is longer.
+["abc", "abc", "de"], "de" is the answer
+["abc", "abc", "ac"], "ac" is NOT the answer since "ac" is a subsequence of "abc"
+
+Since we need to scan the string list in a decending order, it appears we need to sort strings by their length. But I took a differnt route, did
+too much Java recently so I go with Hashtables and array. No string's length exceeds 10, we only need 11 entries in hashtable, it's like a bucket sort.
+Given array memo, at index k stores all strings with length of k. The data type inside the bucket is a Hashtable, key is the string and value is the count of its occurrence.
+This can fulfill the sorting but we need a way to check if it's a subsequence.
+
+Instead of checking all string pairs, I used this "bucket"/"bin" sort idea again. Again, since no string is longer than 10, we only need 11 bins. Each index on the bin
+represents the position on the string. The data type inside the bin is a Hashset, which tracks unique occurrence for any character at this position in all longer strings.
+
+Then when we have to test if a string S is a subsequence of any string that has been scaned(longer than S), starts from haystack backward, comparing character by character, each
+check will take O(logN) time, N is the number of characters at haystack[i]
 */
 class SolutionLongestUncommonSubsequence2 {
 private:
@@ -31,7 +55,6 @@ private:
 		size_t plen = pattern.size(), hlen = haystack.size();
 		int i = 0, j = hlen - 1;
 		while (i < plen) {
-			while (j > -1 && 0 == haystack[j].size())--j;
 			while (j > -1 && haystack[j].end() == haystack[j].find(pattern[i]))--j;
 			if (-1 == j)return true;
 			else --j, ++i;
@@ -50,9 +73,13 @@ public:
 		}
 		for (int i = memo.size() - 1; i > -1; --i) {
 			for (auto s : memo[i]) {
+				/*
+				string s.second is an answer if and only if it doesn't have a duplicate and it is NOT a subsequence of any
+				string that is longer than it.
+				*/
 				if (1 == s.second && true == this->isSubsequence(memochr, s.first))
 					return i;
-				else
+				else//Otherwise, put all characters on to haystack
 					for (size_t j = 0; j < s.first.size(); ++j)
 						memochr[s.first.size() - j].emplace(s.first[j]);
 			}
