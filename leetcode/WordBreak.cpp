@@ -21,6 +21,7 @@ Return true because "leetcode" can be segmented as "leet code".
 UPDATE (2017/1/4):
 The wordDict parameter had been changed to a list of strings (instead of a set of strings). Please reload the code definition to get the latest changes.
 
+
 Observation:
 Classic entry level DP question. O(N^2)
 
