@@ -9,6 +9,8 @@ Souds like merge sort, why don't we apply merge sort trick directly! Only differ
 as the array to store the intermidate merge result. Since we merge the continuous 2 lists into 1 on each merge run, the array
 will shrink to half. Have to consider the odd: we have odd number of lists in the vector. Then the last one will be transfered to
 the smaller array without processing. It will be merged with the result of (len - 1) lists, given len as a odd number.
+
+Merge 2 lists has been done in leedcode 21, which can be found at: https://github.com/hellocomrade/happycoding/blob/master/leetcode/mergeTwoLists.cpp
 */
 namespace mergeKSortedLists{
 
