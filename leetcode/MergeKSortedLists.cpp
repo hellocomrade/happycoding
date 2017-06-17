@@ -1,5 +1,7 @@
 #include <vector>
 
+using namespace std;
+
 //https://leetcode.com/problems/merge-k-sorted-lists/
 /*
 23. Merge k Sorted Lists
@@ -42,7 +44,7 @@ private:
         return dummy.next;
     }
 public:
-    ListNode* mergeKLists(std::vector<ListNode*>& lists) {
+    ListNode* mergeKLists(vector<ListNode*>& lists) {
         size_t len = lists.size();
         if(0 == len)return nullptr;
         size_t k = 0;
