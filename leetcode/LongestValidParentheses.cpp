@@ -1,5 +1,6 @@
 #include <cassert>
 #include <stack>
+#include <vector>
 #include <string>
 #include <algorithm>
 
