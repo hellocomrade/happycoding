@@ -37,6 +37,19 @@ int solutionPermMissingElem(const vector<int> &A) {
 	long long sumA = accumulate(A.begin(), A.end(), 0LL);
 	return (len + 2)*(len + 1) / 2 - sumA;
 }
+/*
+You have to write more here but it's still O(N), one time slower than the above but you don't
+have to worry about integer overflow...
+*/
+int solutionPermMissingElem(const vector<int> &A) {
+    int len = A.size();
+    for(int i = 0; i < len; ++i) {
+        while(A[i] != i + 1 && A[i] - 1 < len)
+            std::swap(A[i], A[A[i] - 1]);
+    }
+    for(int i = 0; i < len; ++i)if(A[i] != i + 1)return i + 1;
+    return len + 1;
+}
 void testPermMissingElem()
 {
 	cout << "Expect 4: " << solutionPermMissingElem(vector<int>{ 2, 3, 1, 5 }) << endl;
