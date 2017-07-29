@@ -41,7 +41,7 @@ int solutionPermMissingElem(const vector<int> &A) {
 You have to write more here but it's still O(N), one time slower than the above but you don't
 have to worry about integer overflow...
 */
-int solutionPermMissingElem(const vector<int> &A) {
+int solutionPermMissingElem1(const vector<int> &A) {
     int len = A.size();
     for(int i = 0; i < len; ++i) {
         while(A[i] != i + 1 && A[i] - 1 < len)
