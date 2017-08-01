@@ -30,11 +30,39 @@ so, we simply overwrite it with the index of the current char into the hashtable
 we don't have to clean up the hashtable before each scan.
 
 Yes, each time we find a duplicate, we have to backtrace, but overall, this is a linear algorithm
+
+Ref: https://leetcode.com/problems/longest-substring-without-repeating-characters/solution/
+
+A sliding window is an abstract concept commonly used in array/string problems. 
+A window is a range of elements in the array/string which usually defined by the start and end indices, i.e. [i, j)[i,j) (left-closed, right-open). 
+A sliding window is a window "slides" its two boundaries to the certain direction. For example, if we slide [i, j)[i,j) to the right by 11 element, then it becomes [i+1, j+1)[i+1,j+1) (left-closed, right-open).
 */
 class SolutionLongestSubstringNoRepeatingChar {
 public:
-	//Slower, but more flexible
+	int lengthOfLongestSubstring(string s) {
+            size_t len = s.length(), start = 0, ans = 0;
+            int memo[128] = {0};
+            for(size_t i = 0; i < len; ++i) {
+                start = std::max(start, (size_t)memo[s[i]]);
+                ans = std::max(ans, i - start + 1);
+                memo[s[i]] = i + 1;
+            }
+            return static_cast<int>(ans);
+        }
+	//This version makes more sense to me but it's slower coz using hashmap
 	int lengthOfLongestSubstring1(string s) {
+            size_t len = s.length(), start = 0, ans = 0;
+            unordered_map<char, int> memo;
+            auto end = memo.end();
+            for(size_t i = 0; i < len; ++i) {
+                start = std::max(start, (size_t)(end == memo.find(s[i]) ? 0 : memo[s[i]] + 1));
+                ans = std::max(ans, i - start + 1);
+                memo[s[i]] = i;
+            }
+            return static_cast<int>(ans);
+        }
+	//Slower, but more flexible
+	int lengthOfLongestSubstring3(string s) {
 		int len = s.length();
 		if (len < 2)return len;
 		unordered_map<char, int> map;
@@ -57,7 +85,7 @@ public:
 		return std::max(cnt, ans);
 	}
 	//Faster by assuming all characters are in ASCII tables
-	int lengthOfLongestSubstring(string s) {
+	int lengthOfLongestSubstring2(string s) {
 		int len = s.length();
 		if (len < 2)return len;
 		int map[256];
