@@ -108,7 +108,7 @@ private:
 	}
 public:
 	//O(log(M) + log(N))
-	double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
+	double findMedianSortedArrays(const vector<int>& nums1, const vector<int>& nums2) {
 		double ans = 0.0;
 		size_t len1 = nums1.size(), len2 = nums2.size();
 		if (0 == len1 && 0 == len2)return 0.0;
