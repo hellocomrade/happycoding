@@ -1,3 +1,7 @@
+#include <limits>
+
+using namespace std;
+
 class SolutionReverseInteger {
 public:
     int reverse(int x) {
