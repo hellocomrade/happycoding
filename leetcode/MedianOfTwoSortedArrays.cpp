@@ -121,6 +121,7 @@ private:
 		}
 		return -1;
 	}
+	//log(M + N), recursive
 	int getKthRecursive(const vector<int>& nums1, const vector<int>& nums2, int start1, int start2, int k) {
 		int len1 = (int)nums1.size(), len2 = (int)nums2.size(), t1, t2;
 		if (k <= 0 || k > len1 + len2)return 0;
