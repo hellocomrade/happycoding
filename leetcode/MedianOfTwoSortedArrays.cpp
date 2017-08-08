@@ -44,9 +44,24 @@ because we compare a number with a range...
 
 There is a better explanation for this approach at: http://www.drdobbs.com/parallel/finding-the-median-of-two-sorted-arrays/240169222?pgno=2
 
-Wait, actually the time complexity is log(M) + log(N) since we have to search both arrays!
+Wait, actually the time complexity is log(M) + log(N) since we have to search both arrays. It get even worse if (M + N) is an even number. In that
+case, in the worst scenario, method search will have to be called four times...
 
-Still not log(M + N) and there is actually a log(MIN(M, N)) version...
+log(M + N) version will have a slightly better performance because they guarantee to find median in at most
+two calls.
+
+In order to reach log(M + N), obviously, we have to BS two arrays and then cut half off the table on both arrays at each iteration. Since we search both
+arrays at same time, if (M + N) is an odd number, we only need to run it once. And if even, twice is needed. This is better than logM + LogN implementation.
+
+Method getK runs in log(M + N) and it has a very elegant implementation I copied from someone on leetcode. Of course, it backs by very sophisicated design.
+Instead of comparing the mid of nums1 with nums2[(M + N) / 2 - 1], nums2[(M + N) / 2], which causes lots of complication on edge cases, it only compare two
+elemetns each iteration: nums1[start1 + k / 2 - 1] with nums2[start2 + k /2 - 1]. Then depending on the result, it cut k to k - k /2 and increase either start1 or
+start2 by k / 2 accordingly. So, start index always increase and at mean time, count k keeps decreasing.
+
+3 edge cases to consider, be aware these 3 cases have to be handled in the exact order listed below:
+- start1 | start2 > len1 | len2 - 1, then it guaranteed we can find the answer at start2 | start1 + k - 1;
+- 1 == k, then returns min(nums1[start1], nums[start2]);
+- (start1 + k / 2 - 1) >= len1 or (start2 + k / 2 - 1) >= len2, in this case, t1 or t2 will be assigned to INT_MAX;
 */
 class SolutionMedianOfTwoSortedArrays {
 private:
@@ -106,9 +121,60 @@ private:
 		}
 		return -1;
 	}
+	int getKthRecursive(const vector<int>& nums1, const vector<int>& nums2, int start1, int start2, int k) {
+		int len1 = (int)nums1.size(), len2 = (int)nums2.size(), t1, t2;
+		if (k <= 0 || k > len1 + len2)return 0;
+		if (start1 > len1 - 1)return nums2[start2 + k - 1];
+		else if (start2 > len2 - 1)return nums1[start1 + k - 1];
+		if (1 == k)return std::min(nums1[start1], nums2[start2]);
+		t1 = (start1 + k / 2 - 1) < len1 ? nums1[start1 + k / 2 - 1] : numeric_limits<int>::max();
+		t2 = (start2 + k / 2 - 1) < len2 ? nums2[start2 + k / 2 - 1] : numeric_limits<int>::max();
+		if (t1 < t2)
+			return getKthRecursive(nums1, nums2, start1 + k / 2, start2, k - k / 2);
+		else
+			return getKthRecursive(nums1, nums2, start1, start2 + k / 2, k - k / 2);
+	}
+	//log(M + N), iterative
+	int getKth(const vector<int>& nums1, const vector<int>& nums2, int k) {
+		int len1 = (int)nums1.size(), len2 = (int)nums2.size(), start1 = 0, start2 = 0, t1, t2;
+		if (k <= 0 || k > len1 + len2)return 0;
+		while (k > 0) {
+			if (start1 > len1 - 1)return nums2[start2 + k - 1];
+			else if (start2 > len2 - 1)return nums1[start1 + k - 1];
+			if (1 == k)return std::min(nums1[start1], nums2[start2]);
+			t1 = (start1 + k / 2 - 1) < len1 ? nums1[start1 + k / 2 - 1] : numeric_limits<int>::max();
+			t2 = (start2 + k / 2 - 1) < len2 ? nums2[start2 + k / 2 - 1] : numeric_limits<int>::max();
+			if (t1 < t2)start1 += k / 2;
+			else start2 += k / 2;
+			k -= k / 2;
+		}
+		return -1;//we should never reach here!
+	}
 public:
+	double findMedianSortedArrays(const vector<int>& nums1, const vector<int>& nums2) {
+		double ans = 0.0;
+		size_t len1 = nums1.size(), len2 = nums2.size();
+		size_t targetCnt = std::min(len1, len2) + abs((int)(len1 - len2)) / 2 + 1;
+		long long total = (long long)len1 + len2;
+		if (1 == (total & 1))
+			ans = this->getKthRecursive(nums1, nums2, 0, 0, targetCnt);
+		else
+			ans = (this->getKthRecursive(nums1, nums2, 0, 0, targetCnt - 1) + this->getKthRecursive(nums1, nums2, 0, 0, targetCnt)) / 2.0;
+		return ans;
+	}
+	double findMedianSortedArraysIterative(const vector<int>& nums1, const vector<int>& nums2) {
+		double ans = 0.0;
+		size_t len1 = nums1.size(), len2 = nums2.size();
+		size_t targetCnt = std::min(len1, len2) + abs((int)(len1 - len2)) / 2 + 1;
+		long long total = (long long)len1 + len2;
+		if (1 == (total & 1))
+			ans = this->getKth(nums1, nums2, targetCnt);
+		else
+			ans = (this->getKth(nums1, nums2, targetCnt - 1) + this->getKth(nums1, nums2, targetCnt)) / 2.0;
+		return ans;
+	}
 	//O(log(M) + log(N))
-	double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
+	double findMedianSortedArrays1(const vector<int>& nums1, const vector<int>& nums2) {
 		double ans = 0.0;
 		size_t len1 = nums1.size(), len2 = nums2.size();
 		if (0 == len1 && 0 == len2)return 0.0;
@@ -129,7 +195,7 @@ public:
 		return ans;
 	}
 	//O(log(M*N))
-	double findMedianSortedArrays1(const vector<int>& nums1, const vector<int>& nums2) {
+	double findMedianSortedArraysLogMN(const vector<int>& nums1, const vector<int>& nums2) {
 		double ans = 0.0;
 		size_t len1 = nums1.size(), len2 = nums2.size();
 		if (0 == len1 && 0 == len2)return ans;
