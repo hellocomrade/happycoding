@@ -37,7 +37,7 @@ It does require more instructions...
 class SolutionPalindromeNumber {
 private:
 	int digits(int x) {
-		size_t y = std::abs(x);
+		std::size_t y = std::abs(x);
 		if (x < 10)return 1;
 		if (x < 100)return 2;
 		if (x < 1000)return 3;
