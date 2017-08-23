@@ -77,7 +77,9 @@ the house that the transmitter should be installed. It actually can be a boolean
 
 So we base, then measure, if distance >= k, we site, then assign site to base, then measure from new base till distance >= k, now count one more transmitter.
 
-Two details:
+Three details:
+- When we move base to i - 1, we have to make sure x[i] will be compared with x[base] in the next iteration. Therefore, we do --i. After ++i at the end of the loop, we actually will do i again
+  for the next iteration.
 - If two houses are too far away, 1 == i - base && vdist[i] - vdist[base] > k, we need a transmitter to cover house with index base. Break the usual logic and move one.
 - Based upon the given condition range, n > 0, there should always be at least one transmitter needed, ans = 1. This assignment will save a lot of hassle to cover the case
 like: ([10], 1, 1) or ([1, 2, 3, 5], 4, 1) or ([1, 3, 6, 15, 16], 5, 3) or ([1, 3, 6, 15, 18, 19, 20], 5, 3), all boundary conditions
