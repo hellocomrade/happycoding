@@ -140,9 +140,9 @@ public:
         int i = 0, ans = 0, b = 0;
         while(i < n) {
             b = x[i];
-            while(i < n && x[i + 1] - b <= k)++i;
+            while(i - 1 < n && x[i + 1] - b <= k)++i;
             b = x[i];
-            while(i < n && x[i + 1] - b <= k)++i;
+            while(i - 1 < n && x[i + 1] - b <= k)++i;
             ++i, ++ans;
         }
         return ans;
@@ -150,10 +150,16 @@ public:
 };
 void TestHackerlandRadioTransmitters() {
 	HackerlandRadioTransmitters hrt;
-	assert(1 == hrt.calculator(vector<int>{1}, 1, 1));
-	assert(1 == hrt.calculator(vector<int>{10, 10, 10}, 3, 3));
-	assert(1 == hrt.calculator(vector<int>{2, 2, 2, 2, 1, 1, 1, 1}, 8, 2));
-	assert(2 == hrt.calculator(vector<int>{1, 2, 3, 4, 5}, 5, 1));
-	assert(4 == hrt.calculator(vector<int>{9, 5, 4, 2, 6, 15, 12}, 7, 2));
-	assert(3 == hrt.calculator(vector<int>{7, 2, 4, 6, 5, 9, 12, 11}, 8, 2));
+	vector<int> vec = {1};
+	assert(1 == hrt.calculator(vec, 1, 1));
+	vec = {10, 10, 10};
+	assert(1 == hrt.calculator(vec, 3, 3));
+	vec = {2, 2, 2, 2, 1, 1, 1, 1};
+	assert(1 == hrt.calculator(vec, 8, 2));
+	vec = {1, 2, 3, 4, 5};
+	assert(2 == hrt.calculator(vec, 5, 1));
+	vec = {9, 5, 4, 2, 6, 15, 12};
+	assert(4 == hrt.calculator(vec, 7, 2));
+	vec = {7, 2, 4, 6, 5, 9, 12, 11};
+	assert(3 == hrt.calculator(vec, 8, 2));
 }
