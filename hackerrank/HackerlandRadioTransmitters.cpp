@@ -86,7 +86,7 @@ like: ([10], 1, 1) or ([1, 2, 3, 5], 4, 1) or ([1, 3, 6, 15, 16], 5, 3) or ([1, 
 */
 class HackerlandRadioTransmitters {
 public:
-	int calculator(const vector<int>& x, int n, int k) {
+	int calculator2(const vector<int>& x, int n, int k) {
 		int ans = 1, base = 0, site = -1, i = 0;
 		set<int> dist(x.begin(), x.end());
 		vector<int> vdist(dist.begin(), dist.end());
@@ -113,6 +113,40 @@ public:
 		}
 		return ans;
 	}
+	
+    //Avoid extra set and --i
+    int calculator1(vector<int>& x, int n, int k) {
+	std::sort(x.begin(), x.end());
+    	n = x.size();
+    	int i = 0, ans = 0, b = 0;
+    	while(i < n) {
+            while(i < n && x[i] - x[b] <= k)++i;
+            if(i - b > 1) {
+            	b = i - 1;
+            	while(i < n && x[i] - x[b] <= k)++i;
+            }
+            b = i;
+            ++ans;
+    	}
+    	return ans;
+    }
+    /*
+    * using i + 1 to make sure we are either at the site of the transmitter or at the end of range. Doing so also
+    * avoid extra care on the case the adjacent houses are more distant than k.
+    */
+    int calculator(vector<int>& x, int n, int k) {
+	std::sort(x.begin(), x.end());
+        n = x.size();
+        int i = 0, ans = 0, b = 0;
+        while(i < n) {
+            b = x[i];
+            while(i < n && x[i + 1] - b <= k)++i;
+            b = x[i];
+            while(i < n && x[i + 1] - b <= k)++i;
+            ++i, ++ans;
+        }
+        return ans;
+    }
 };
 void TestHackerlandRadioTransmitters() {
 	HackerlandRadioTransmitters hrt;
