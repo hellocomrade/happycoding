@@ -58,9 +58,9 @@ We can visualize the initial, uncut tree as:
 	 \
 	200
 	/  \
-   100  100
-   /  \
- 500  600
+      100  100
+      /  \
+    500  600
 
 There are n - 1 = 5 edges we can cut:
 
@@ -91,9 +91,9 @@ can always break the graph in two pieces:
 	 \
 	200
 	/  \
-  100  100
-  /  \ /
-500  600
+      100  100
+      /  \ /
+    500  600
 
 Breaking edges between 100 and 600 won't generate two trees...
 */
