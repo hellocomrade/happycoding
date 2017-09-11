@@ -1,3 +1,5 @@
+#include <cstddef>
+using std::size_t;
 //https://www.hackerrank.com/challenges/maximizing-xor
 /*
 Maximizing XOR
