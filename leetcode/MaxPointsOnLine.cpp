@@ -56,8 +56,16 @@ each iteration.
 One last thing is the duplicated points. I handle them by sorting the points first. Then during the scanning,
 the duplicated point with points[i] will be skipped and the counting is on. We then append the duplicate count onto
 the final result.
+
+By a second thought, sorting is unnecessary, we still have to handle duplicates though. We don't care the oder of these points
+anyway. Actually, there would be lots of repeat calacuations, for example pnt0, pnt1, and pntN are on one line.
+When we start from pnt0, we get 3 points; next iteration is based on pnt1, the same line, we get 2 points (pnt1 and pntN). So,
+it won't affect the final answer, just waste time...
+
+One more thing to point out is that hashing on double type might not be safe:
+https://stackoverflow.com/questions/7403210/hashing-floating-point-values
 */
-namespace MaxPointsOnLine{
+namespace MaxPointsOnLine {
 	struct Point {
 		int x;
 		int y;
@@ -72,7 +80,42 @@ namespace MaxPointsOnLine{
 		}
 	public:
 		int maxPoints(vector<Point>& points) {
-			auto comp = [](const Point &p1, const Point &p2){
+			long long ans = 1, maxsofar = 0, dupCnt = 0, a, b, g;
+			size_t len = points.size();
+			if (len > 1) {
+				unordered_map<long long, unordered_map<long long, unordered_map<double, long long>>> map;
+				double c;
+				for (size_t i = 0; i < len - 1; ++i) {
+					for (size_t j = i + 1; j < len; ++j) {
+						if (points[j].y == points[i].y && points[i].x == points[j].x) {
+							++dupCnt;
+							continue;
+						}
+						a = points[j].y - points[i].y;
+						b = points[i].x - points[j].x;
+						c = points[j].x * points[i].y * 1LL - points[i].x * points[j].y * 1LL;
+						g = this->gcd(a, b);
+						if (0 != g)
+							a /= g, b /= g, c /= g;
+						if (map.end() == map.find(a))map.emplace(a, unordered_map<long long, unordered_map<double, long long>>());
+						if (map[a].end() == map[a].find(b))map[a].emplace(b, unordered_map<double, long long>());
+						if (map[a][b].end() == map[a][b].find(c))
+							map[a][b].emplace(c, 2);
+						else
+							++map[a][b][c];
+						maxsofar = std::max(maxsofar, map[a][b][c]);
+					}
+					if (0 == maxsofar)
+						++dupCnt;
+					ans = std::max(ans, maxsofar + dupCnt);
+					dupCnt = maxsofar = 0;
+					map.clear();
+				}
+			}
+			return 0 == len ? 0 : ans;
+		}
+		int maxPoints1(vector<Point>& points) {
+			auto comp = [](const Point &p1, const Point &p2) {
 				if (p1.x < p2.x)return true;
 				else if (p1.x == p2.x && p1.y < p2.y)return true;
 				else return false;
@@ -126,6 +169,12 @@ void TestMaxPointsOnLine()
 	using MPOL = MaxPointsOnLine::SolutionMaxPointsOnLine;
 	using Point = MaxPointsOnLine::Point;
 	MPOL so;
+
+	vector<Point> pnts00;
+	pnts00.emplace_back(Point(0, 0));
+	pnts00.emplace_back(Point(-1, -1));
+	pnts00.emplace_back(Point(2, 2));
+	assert(3 == so.maxPoints(pnts00));
 
 	vector<Point> pnts1;
 	pnts1.emplace_back(Point(1, 1));
