@@ -67,27 +67,27 @@ For example 'b' over 'b*' OR 'b' over '.*', in this situation, 'b' could match z
 a single 'b' or multiple 'b':
 # Match single 'b', then we have to look at if memo[i][j - 1] is True. For example:
 'a[b]' over 'ab*';
-  0 a b  *
-0 + - -  -
-a - + -  +
+    0 a b  *
+  0 + - -  -
+  a - + -  +
 [b] - - + [+]
 # Match more than one 'b', then we need to look at if memo[i - 1][j] is True. For example:
 'ab[b]' over 'ab*';
-  0 a b  *
-0 + - -  -
-a - + -  +
-b - - +  +
+    0 a b  *
+  0 + - -  -
+  a - + -  +
+  b - - +  +
 [b] - - - [+]
 # Match zero 'b', then we have to look back if memo[i][j - 2] is True. For example:
 '[b]' over 'bb*';
-  0 b b  *
-0 + - -  -
+    0 b b  *
+  0 + - -  -
 [b] - + - [+]
 
 2. If s[i] != p[j - 1] AND '.' != p[j - 1], then we have to look back if memo[i][j - 2] is True. For example:
 '[a]' over 'ab*';
-  0 a b  *
-0 + - -  -
+    0 a b  *
+  0 + - -  -
 [a] - + - [+]
 
 Are we done? NO, s could be "", so does p! Luckily, we have the extra first row added to cover this, that's why
