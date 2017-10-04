@@ -1,5 +1,6 @@
 #include <cassert>
 #include <string>
+#include <vector>
 #include <algorithm>
 
 using namespace std;
@@ -51,6 +52,16 @@ This is a good way to think about this question!
 
 Implementation wide, since I use C++, I tried to delay using substr and copy construct as much as I can coz
 they are really expensive for string operations...
+
+According to the offical soluations, there is a DP version. Idea is:
+
+Given p(i, j) = True, 0 <= i = j < len(s)
+
+then p(i, j) = p(i + 1, j - 1) && s[i + 1] == s[j - 1], 0 <= i < j < len(s)
+
+I think it demonstrates 2d memorization pretty well.
+Unlike other string DP, using 2D memo involves comparing str[i] with str[j] sequentially. Here, we compare str[i] with
+str[i + step].
 */
 class SolutionLongestPalindromicSubstr {
 public:
@@ -67,6 +78,22 @@ public:
 			}
 		}
 		return s.substr(a1, a2 - a1 + 1);
+	}
+	//DP
+	string longestPalindrome1(string s) {
+		int len = s.size(), step = 1, alen = 1, start = 0;
+		vector<vector<bool> > memo(len, vector<bool>(len));
+		for (int i = 0; i < len; ++i) {
+			++step;
+			for (int j = 0; j + step <= len; ++j) {
+				memo[j][j + step - 1] = (j + 1 >= j + step - 2 || true == memo[j + 1][j + step - 2]) && s[j] == s[j + step - 1];
+				if (true == memo[j][j + step - 1] && alen < step) {
+					start = j;
+					alen = step;
+				}
+			}
+		}
+		return 0 == len ? s : s.substr(start, alen);
 	}
 };
 void TestLongestPalindromicSubstr() {
