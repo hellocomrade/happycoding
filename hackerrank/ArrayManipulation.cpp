@@ -46,9 +46,46 @@ After first update list will be 100 100 0 0 0.
 After second update list will be 100 200 100 100 100.
 After third update list will be 100 200 200 200 100.
 So the required answer will be 200.
+
+Observations:
+Naive approach is very simple but takes O(M*N), which will get a ETL. The problem is, every operation will cost at most
+O(N) to update the array! If we could figure out a way to update the array in O(1), we would have a linear solution.
+
+For any operation with range [a, b] and value k on array Arr, we will Arr[a - 1] += k, Arr[b] -= k (if b < len(Arr)). Then at the end,
+the final result in Arr with index i will be: Arr[0] + .. + Arr[i]. We only need to pick the greatest one.
+
+For the given exapmle above, we apply operation 1, 2 and 3:
+
+Original: [  0, 0,      0, 0,    0]
+Op 1:     [100, 0,   -100, 0,    0]
+Op 2:     [100, 100, -100, 0,    0]
+Op 3:     [100, 100,    0, 0, -100]
+
+Then apply prefix sum: [100, 200, 200, 200, 100], the max is 200
+
+By doing so, we update Arr with only O(1) per operation. So the overall costs is down to (M + N).
+
+In the editorial, there is an even better solution takes O(MLogM), which breaks the operation into operation(a) and operation(b).
+Then, sort them by index, so we would know the sequence of applying them. Then simply do sum to get the greatest one. In this case,
+n is not necessary.
 */
 class SolutionArrayManipulation {
 public:
+	//O(M + N)
+	long long maxElement1(const vector<tuple<int, int, int> >& operations, int n) {
+		vector<long long> vec(n, 0LL);
+		long long ans = 0, sum = 0;
+		for (auto t : operations) {
+			vec[std::get<0>(t) - 1] += std::get<2>(t);
+			if (std::get<1>(t) < n) vec[std::get<1>(t)] -= std::get<2>(t);
+		}
+		for (auto v : vec) {
+			sum += v;
+			if (ans < sum)ans = sum;
+		}
+		return ans;
+	}
+	//O(MLogM)
 	long long maxElement(const vector<tuple<int, int, int> >& operations) {
 		vector<pair<int, int> > vec;
 		long long ans = 0, sum = 0;
