@@ -69,7 +69,11 @@ namespace SwapNodesInPairs {
 			}
 			return nullptr == dummy.next ? head : dummy.next;
 		}
-		//Using pointer to pointer to avoid re-establishing the connections on every 2 nodes
+		/*
+		Using pointer to pointer to simplify reconnecting swapped node pairs by referencing it to 
+		the previous second node's next varaible that could otherwise be done by tracking the previous second node
+		directly. Nice trick!
+		*/
 		ListNode* swapPairs(ListNode* head) {
 			ListNode **phead = &head, *pn1, *pn2;
 			while (nullptr != (pn1 = *phead) && nullptr != (pn2 = pn1->next)) {
