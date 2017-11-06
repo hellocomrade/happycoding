@@ -69,7 +69,7 @@ namespace SwapNodesInPairs {
 			}
 			return nullptr == dummy.next ? head : dummy.next;
 		}
-		//Using pointer to pointer, no need to use pointer cur
+		//Using pointer to pointer to avoid re-establishing the connections on every 2 nodes
 		ListNode* swapPairs(ListNode* head) {
 			ListNode **phead = &head, *pn1, *pn2;
 			while (nullptr != (pn1 = *phead) && nullptr != (pn2 = pn1->next)) {
