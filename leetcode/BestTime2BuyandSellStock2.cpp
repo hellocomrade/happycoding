@@ -27,7 +27,16 @@ sell and buy the stock at the same day...
 */
 class SolutionBestTime2BuyandSellStock2 {
 public:
-	int maxProfit1(const vector<int>& prices) {
+	int maxProfit1(const vector<int> &prices) {
+            int bestBuy = numeric_limits<int>::min(), ans = 0, t = 0;
+            for(int p : prices) {
+                t = bestBuy;
+                bestBuy = std::max(bestBuy, ans - p);
+                ans = std::max(ans, p + bestBuy);
+            }
+            return ans;
+        }
+	int maxProfit2(const vector<int>& prices) {
 		int len = prices.size();
 		if (len < 2)return 0;
 		int minPriceSofar = prices[0];
