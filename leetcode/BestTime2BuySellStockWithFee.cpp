@@ -55,30 +55,22 @@ bestBuy, on the other hand is: min(bestBuy, price - prev_ans)
 
 Why prev_ans? coz ans could be overwritten on any given price, when that happens, the max profit for bestBuy should be the previous one. You
 can not sell and buy at the same time.
+
+Update on 11/20/2017
+Based upon the new comment on leetcode 122, no temp variable like t is needed.
 */
 class SolutionBestTime2BuySellStockWithFee {
 public:
-	//we can calculate bestBuy at first
-	int maxProfit(const vector<int>& prices, int fee) {
-            int ans = 0, t = 0, bestBuy = numeric_limits<int>::max();
-	    for (int p : prices) {
-		t = bestBuy;
-                bestBuy = std::min(bestBuy, p + fee - ans);
-		ans = std::max(ans, p - t);	
-	    }
-	    return ans;
-    	}
-	int maxProfit1(const vector<int>& prices, int fee) {
-            int ans = 0, t = 0, bestBuy = numeric_limits<int>::min();
-	    for (int p : prices) {
-		t = bestBuy;
-                bestBuy = std::max(bestBuy, ans - p - fee);
-		ans = std::max(ans, p + t);	
-	    }
-	    return ans;
-        }
+	int maxProfit(vector<int>& prices, int fee) {
+		int ans = 0, bestBuy = numeric_limits<int>::max();
+		for (int p : prices) {
+			bestBuy = std::min(bestBuy, p + fee - ans);
+			ans = std::max(ans, p - bestBuy);
+		}
+		return ans;
+	}
 	//Greedy, fee is charged when buy
-	int maxProfit2(const vector<int>& prices, int fee) {
+	int maxProfit0(const vector<int>& prices, int fee) {
 		int ans = 0, t = 0, bestBuy = numeric_limits<int>::min();
 		for (int p : prices) {
 			t = ans;
@@ -88,7 +80,7 @@ public:
 		return ans;
 	}
 	//Greedy with overflow possibility if fee is charged on sale (p - fee - numeric_limits<int>::max())
-	int maxProfit3(const vector<int>& prices, int fee) {
+	int maxProfit1(const vector<int>& prices, int fee) {
 		long long ans = 0, t = 0, bestBuy = numeric_limits<int>::max();
 		for (int p : prices) {
 			t = ans;
@@ -98,7 +90,7 @@ public:
 		return static_cast<int>(ans);
 	}
 	//DP, naive, O(N^2), TLE
-	int maxProfit4(const vector<int>& prices, int fee) {
+	int maxProfit3(const vector<int>& prices, int fee) {
 		int len = static_cast<int>(prices.size()), ans = 0;
 		vector<int> memo(len + 1, numeric_limits<int>::min());
 		memo[0] = memo[1] = 0;

@@ -40,10 +40,23 @@ The final answer is max(ans, max(max1, prices[i] - prev_bestBuy[1]), prices[i] -
 after two transactions.
 
 The over complexity is still O(N) time and O(1) space.
+
+Update on 11/20/2017
+Based upon the new comment on leetcode 122, we know variable t1 and t2 can be avoided.
 */
 class SolutionBestTime2BuyandSellStock3 {
 public:
-	int maxProfit(const vector<int>& prices) {
+	int maxProfit(vector<int>& prices) {
+		int ans = 0, maxHere = 0, bestBuy[] = { numeric_limits<int>::max(), numeric_limits<int>::max() };
+		for (int p : prices) {
+			bestBuy[0] = std::min(bestBuy[0], p);
+			bestBuy[1] = std::min(bestBuy[1], p - maxHere);
+			maxHere = std::max(maxHere, p - bestBuy[0]);
+			ans = std::max(ans, std::max(maxHere, p - bestBuy[1]));
+		}
+		return ans;
+	}
+	int maxProfit1(const vector<int>& prices) {
 		int ans = 0, max1 = 0, t1 = 0, t2 = 0, bestBuy[] = { numeric_limits<int>::max(), numeric_limits<int>::max() };
 		for (int p : prices) {
 			t1 = bestBuy[0], t2 = bestBuy[1];
