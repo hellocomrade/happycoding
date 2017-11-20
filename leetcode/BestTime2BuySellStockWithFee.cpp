@@ -61,7 +61,7 @@ Based upon the new comment on leetcode 122, no temp variable like t is needed.
 */
 class SolutionBestTime2BuySellStockWithFee {
 public:
-	int maxProfit(vector<int>& prices, int fee) {
+	int maxProfit(const vector<int>& prices, int fee) {
 		int ans = 0, bestBuy = numeric_limits<int>::max();
 		for (int p : prices) {
 			bestBuy = std::min(bestBuy, p + fee - ans);
