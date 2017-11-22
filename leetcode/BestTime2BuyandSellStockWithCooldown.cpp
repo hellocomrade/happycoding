@@ -1,5 +1,6 @@
 #include <vector>
 #include <algorithm>
+#include <limits>
 #include <iostream>
 
 using namespace std;
@@ -45,9 +46,27 @@ at k = i + 1
 coolDown[k] = max(maxProfit[k - 1], price[k] - price[k - 1] + coolDown[k - 2])
 
 maxProfit[k] = max(maxProfit[k - 1], coolDown[k])
+
+Update on 11/22/2017, based up the new comment for leetcode 122 and 714, I come with the latest one that only requires
+3 variable and run in O(N) time. Surprisingly, no dicussion on top list is close to this. Even in this "most consistent"
+tutorial: https://discuss.leetcode.com/topic/107998/most-consistent-ways-of-dealing-with-the-series-of-stock-problems
+
+The idea is: bestBuy at index i can only be taken from ans_prev, which is i - 2. Why? If there is a best sell at i - 1,
+there would not be any bestBuy or best sell at index i due to cool down. Therefore, if we want to examine if a bestBuy or
+best sell at index i, we have to look back to i - 2. Of course, if there is no best sell at i - 1, ans_prev will be as
+same as ans.
 */
-class SolutionBestTime2BuyandSellStockWithCooldown{
+class SolutionBestTime2BuyandSellStockWithCooldown {
 public:
+	int maxProfit(const vector<int>& prices) {
+		int ans = 0, bestBuy = numeric_limits<int>::max(), ans_prev = 0;
+		for (int p : prices) {
+			bestBuy = std::min(bestBuy, p - ans_prev);
+			ans_prev = ans;
+			ans = std::max(ans, p - bestBuy);
+		}
+		return ans;
+	}
 	int maxProfit1(const vector<int>& prices) {
 		int len = prices.size();
 		if (len < 2)return 0;
@@ -80,7 +99,7 @@ public:
 		}
 		return std::max(profitEndHere, prevCoolDown);
 	}
-	int maxProfit(const vector<int>& prices) {
+	int maxProfit3(const vector<int>& prices) {
 		int len = prices.size();
 		if (len < 2)return 0;
 		int maxProfit = 0;
