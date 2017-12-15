@@ -64,7 +64,7 @@ See findDuplicate3 for details.
 */
 class SolutionFindDuplicateNumber {
 public:
-	int findDuplicate(vector<int>& nums) {
+	int findDuplicate(const vector<int>& nums) {
 		int slow = nums[0], fast = nums[0];
 		do {
 			slow = nums[slow];
@@ -77,7 +77,7 @@ public:
 		}
 		return fast;
 	}
-	int findDuplicate1(vector<int>& nums) {
+	int findDuplicate1(const vector<int>& nums) {
 		int low = 1, high = nums.size() - 1, mid = 0, cnt = 0;
 		while (low <= high) {
 			mid = low + (high - low) / 2, cnt = 0;
@@ -88,7 +88,7 @@ public:
 		}
 		return low;
 	}
-	int findDuplicate2(vector<int>& nums) {
+	int findDuplicate2(const vector<int>& nums) {
 		int low = 1, high = nums.size() - 1, mid = 0, cnt = 0;
 		while (low < high) {
 			mid = low + (high - low) / 2, cnt = 0;
