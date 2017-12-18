@@ -1,4 +1,6 @@
+#include "stdafx.h"
 #include <vector>
+#include <algorithm>
 
 using namespace std;
 
@@ -27,6 +29,24 @@ Require O(logM + LogN), search the matrix[i][0] to find the right row, then cond
 class SolutionSearch2DMatrix {
 public:
 	bool searchMatrix(vector<vector<int>>& matrix, int target) {
+		int n = matrix.size();
+		if (n > 0) {
+			int m = matrix[0].size();
+			if (m > 0) {
+				int l = 0, r = n - 1, mid = 0;
+				while (l <= r) {
+					mid = l + (r - l) / 2;
+					if (target == matrix[mid][0])return true;
+					else if (target < matrix[mid][0])r = mid - 1;
+					else l = mid + 1;
+				}
+				r = std::max(0, r);
+				return binary_search(matrix[r].begin(), matrix[r].end(), target);
+			}
+		}
+		return false;
+	}
+	bool searchMatrix1(vector<vector<int>>& matrix, int target) {
 		int m = matrix.size();
 		if (m < 1)return false;
 		int n = matrix[0].size();
@@ -46,7 +66,7 @@ public:
 		}
 		if ((mid1 == 0 && matrix[0][0] > target) || (mid1 == m - 1 && matrix[m - 1][n - 1] < target))return false;
 		/*
-		//You could make the code shorter by using lower_bound, but it's slower as well...
+		//You could make the code shorter by using lower_bound
 		auto k = std::lower_bound(matrix[mid1].begin(), matrix[mid1].end(), target);
 		return *k == target;
 		*/

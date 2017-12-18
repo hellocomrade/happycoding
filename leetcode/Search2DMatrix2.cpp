@@ -1,8 +1,10 @@
+#include "stdafx.h"
 #include <vector>
 #include <iostream>
 
 using namespace std;
 //http://articles.leetcode.com/searching-2d-sorted-matrix-part-ii
+//https://leetcode.com/problems/search-a-2d-matrix-ii/solution/
 //https://leetcode.com/problems/search-a-2d-matrix-ii/
 /*
 240. Search a 2D Matrix II
@@ -60,16 +62,28 @@ private:
 
 	}
 public:
+	bool searchMatrix(vector<vector<int>>& matrix, int target) {
+		int m = matrix.size();
+		if (0 < m) {
+			int n = matrix[0].size(), i = 0, j = n - 1;
+			while (i < m && j > -1) {
+				if (target < matrix[i][j])--j;
+				else if (target > matrix[i][j])++i;
+				else return true;
+			}
+		}
+		return false;
+	}
 	//Slow BS and Divide and Conquer
 	bool searchMatrixSlow(vector<vector<int>>& matrix, int target) {
 		int m = matrix.size();
 		if (m < 1)return false;
 		int n = matrix[0].size();
-		if (n < 1)return false;
+		if(n < 1)return false;
 		return this->aux(matrix, target, 0, m - 1, 0, n - 1, m, n);
 	}
 	//Zigzag Trick... O(m + n)
-	bool searchMatrix(vector<vector<int>>& matrix, int target) {
+	bool searchMatrix1(vector<vector<int>>& matrix, int target) {
 		int m = matrix.size();
 		if (m < 1)return false;
 		int n = matrix[0].size();
