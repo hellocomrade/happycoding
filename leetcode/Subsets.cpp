@@ -58,7 +58,7 @@ public:
         return ans;
     }
     //Iteration
-    vector<vector<int>> subsets(vector<int>& nums) {
+    vector<vector<int>> subsets1(vector<int>& nums) {
         vector<vector<int>> ans;
         ans.push_back(vector<int>());
         int len = (int)nums.size();
