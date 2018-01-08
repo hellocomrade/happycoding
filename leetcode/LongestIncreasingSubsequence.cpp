@@ -1,6 +1,6 @@
 #include <vector>
 #include <algorithm>
-#include <iostream>
+#include <cassert>
 using namespace std;
 
 //https://leetcode.com/problems/longest-increasing-subsequence/
@@ -25,17 +25,10 @@ has to be examined so we can find the max LIS length at index i.
 During this process, we will keep tracking maxLen in a separate variable due to the fact that the max LIS is not always
 in memo[len - 1].
 
-There is actually a smarter algorithm that can solve this problem in O(NlogN) using O(1) space!
-
-https://en.wikipedia.org/wiki/Longest_increasing_subsequence
-
+There is actually a weird algorithm that can solve this problem in O(NlogN) using O(1) space!
 It takes advantage of binary search. The amazing thing is that the sequence BS is applied on is built
-on the fly and in place of nums! It keeps tracking an array A with numbers in strict ascending order. At eacn index i, it guarantees
-A[i] is the smallest number in given target array nums to maintain a LIC with the length of (i + 1). For example, [2, 3, 1], we have
-2
-2,3
-Then when we examine 1, we notice that we could replace 2 with 1 at index i = 0 and still keep LIC with length 1 and 2, so we shall do
-1,3
+on the fly and in place of nums! What's more interesting is that the elements stored in nums for BS purpose
+doesn't have any meaning other than maintaining the position of tail.
 
 OK, finally, I came with my version that takes O(1) space and run in O(N) time and keep tracking the LIS in place
 nums[0 -- maxLen - 1]
@@ -57,16 +50,26 @@ we have a smaller ending element nums[k]. Then we update the nums[j] = nums[k];
 */
 class SolutionLongestIncreasingSubsequence {
 public:
+	//O(NlogN) with O(1) space
 	int lengthOfLIS(vector<int>& nums) {
-            size_t len = 0;
-            vector<int>::iterator lower, head = nums.begin();
-            for(int i : nums) {
-                lower = lower_bound(head, head + len, i);
-                *lower = i;
-                if(lower == head + len)++len;
-            }
-            return static_cast<int>(len);
-        }
+		int ans = 0;
+		for (int i : nums) {
+			auto itor = std::lower_bound(nums.begin(), nums.begin() + ans, i);
+			*itor = i;
+			ans = std::max(ans, (int)(itor - nums.begin()) + 1);
+		}
+		return ans;
+	}
+	//O(NlogN) with O(N) space. This is useful if input vector is const
+	int lengthOfLIS4(vector<int>& nums) {
+		vector<int> vec;
+		for (int i : nums) {
+			auto itor = std::lower_bound(vec.begin(), vec.end(), i);
+			if (itor == vec.end())vec.push_back(i);
+			else *itor = i;
+		}
+		return static_cast<int>(vec.size());
+	}
 	//O(NlogN) with O(1) space
 	int lengthOfLIS3(vector<int>& nums) {
 		int len = nums.size();
@@ -128,17 +131,17 @@ void TestlengthOfLIS()
 {
 	SolutionLongestIncreasingSubsequence lenLIS;
 	vector<int> vec1{ 10, 9, 2, 5, 3, 7, 101, 18 };
-	cout << "Expect 4: " << lenLIS.lengthOfLIS(vec1) << endl;
+	assert(4 == lenLIS.lengthOfLIS(vec1));
 	vector<int> vec2{};
-	cout << "Expect 0: " << lenLIS.lengthOfLIS(vec2) << endl;
+	assert(0 == lenLIS.lengthOfLIS(vec2));
 	vector<int> vec3{ 0 };
-	cout << "Expect 1: " << lenLIS.lengthOfLIS(vec3) << endl;
+	assert(1 == lenLIS.lengthOfLIS(vec3));
 	vector<int> vec4{ 2, 1 };
-	cout << "Expect 1: " << lenLIS.lengthOfLIS(vec4) << endl;
+	assert(1 == lenLIS.lengthOfLIS(vec4));
 	vector<int> vec5{ 1, 2 };
-	cout << "Expect 2: " << lenLIS.lengthOfLIS(vec5) << endl;
+	assert(2 == lenLIS.lengthOfLIS(vec5));
 	vector<int> vec6{ 1, -1, 2, -3, 4, -5, 6, -7 };
-	cout << "Expect 4: " << lenLIS.lengthOfLIS(vec6) << endl;
+	assert(4 == lenLIS.lengthOfLIS(vec6));
 	vector<int> vec7{ 10, 9, 2, 5, 3, 4 };
-	cout << "Expect 3: " << lenLIS.lengthOfLIS(vec7) << endl;
+	assert(3 == lenLIS.lengthOfLIS(vec7));
 }
