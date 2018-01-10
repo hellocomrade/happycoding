@@ -49,6 +49,16 @@ public:
             }
             return static_cast<int>(ans);
         }
+	int lengthOfLongestSubstring4(string s) {
+            int memo[256] = {0};
+            int slow = 0, fast = 0, len = s.length(), ans = 0;
+            while(fast < len) {
+                if(memo[(int)s[fast]] > slow)slow = memo[(int)s[fast]];
+                memo[(int)s[fast]] = fast + 1;
+                ans = std::max(ans, ++fast - slow);
+            }
+            return ans;
+        }
 	//This version makes more sense to me but it's slower coz using hashmap
 	int lengthOfLongestSubstring1(string s) {
             size_t len = s.length(), start = 0, ans = 0;
