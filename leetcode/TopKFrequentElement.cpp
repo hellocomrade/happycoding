@@ -69,7 +69,7 @@ public:
         vector<std::pair<int, size_t>> heap;
         unordered_map<int, size_t> counts;
         for(int i : nums)++counts[i];
-        auto cmp = [](const auto& p1, const auto& p2) {return p1.second < p2.second;};
+        auto cmp = [](const std::pair<int, size_t>& p1, const std::pair<int, size_t>& p2) {return p1.second < p2.second;};
         for(auto i : counts)heap.push_back(i);
         std::make_heap(heap.begin(), heap.end(), cmp);
         for(int i = 0; i < k; ++i) {
