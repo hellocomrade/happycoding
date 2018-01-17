@@ -27,6 +27,23 @@ non-rotated sorted array as well. In this case, the first section's length is 0
 */
 class SolutionSearchRotatedSortedArray {
 public:
+	//I am still not happy with this...
+	int search0(vector<int>& nums, int target) {
+       	    int len = (int)nums.size(), l = 0, r = len - 1, m = 0;
+            while(l <= r) {//cout << l << ',' << r << endl;
+                m = l + (r - l) / 2;
+                if(target == nums[m])return m;
+                if(nums[m] >= nums[l]) {
+                    if(target > nums[m] || (target < nums[m] && target < nums[l]))l = m + 1;
+                    else r = m - 1;
+                }
+                else {
+                    if(target > nums[m] && target <= nums[r])l = m + 1;
+                    else r = m - 1;
+                }
+            }
+            return -1;
+        }
 	//first version, kind of easy to understand to me
 	int search1(const vector<int>& A, int target) {
 		int len = A.size();
