@@ -56,7 +56,7 @@ algorithm better and actually closer to search00. Note: we don't compare with nu
 */
 class SolutionSearchRotatedSortedArray {
 public:
-	int search(vector<int>& nums, int target) {
+	int search(const vector<int>& nums, int target) {
 		int len = (int)nums.size(), l = 0, r = len - 1, m = 0;
 		while (l <= r) {//cout << l << ',' << r << endl;
 			m = l + (r - l) / 2;
@@ -72,7 +72,7 @@ public:
 		}
 		return -1;
 	}
-	int search0(vector<int>& nums, int target) {
+	int search0(const vector<int>& nums, int target) {
 		int len = (int)nums.size(), l = 0, r = len - 1, m = 0;
 		while (l <= r) {//cout << l << ',' << r << endl;
 			m = l + (r - l) / 2;
@@ -88,7 +88,7 @@ public:
 		}
 		return -1;
 	}
-	int search00(vector<int>& nums, int target) {
+	int search00(const vector<int>& nums, int target) {
 		int len = (int)nums.size(), l = 0, r = len - 1, m = 0;
 		long lb = numeric_limits<int>::min() - 1L, ub = numeric_limits<int>::max() + 1L, mval;
 		while (l <= r) {
@@ -102,7 +102,7 @@ public:
 		return -1;
 	}
 	//I am still not happy with this...
-	int search000(vector<int>& nums, int target) {
+	int search000(const vector<int>& nums, int target) {
 		int len = (int)nums.size(), l = 0, r = len - 1, m = 0;
 		while (l <= r) {//cout << l << ',' << r << endl;
 			m = l + (r - l) / 2;
