@@ -38,7 +38,7 @@ Then swap nums[k] with either nums[l] if nums[k] == 0 or nums[r] if nums[k] == 2
 We use two pointers to make sure the elements in [0, l) and (r, len(nums) - 1] are sorted already.
 
 
-I saw a very elegant solution, then I copied it here, sortColors. It uses two-pointers in a different way:
+I saw a very elegant solution, so I copied it here, sortColors. It uses two-pointers plus one in a different way:
 
 - [0, l) defines the zone for 0s;
 
@@ -48,20 +48,47 @@ I saw a very elegant solution, then I copied it here, sortColors. It uses two-po
 
 while loop ends if i > r since elements in (r, len(nums) - 1] are all 2s already;
 
+Pay attention on when ++i should apply! Since there are actually 3 pointers: l, r and i, a sorted subarray resides in range [0, i) and l <= i,
+when swap is done between nums[l] and nums[i], nums[i] will be either 0 or 1, either way there is no need to check nums[i], again since l <= i.
+
+On the other hand, on the right side, when swap is done between nums[r] and nums[i], nums[i] could be 0, 1, and 2, therefore, has to check
+nums[i] on the next iteration. Since we have a branch that i doesn't increase, will it lead to a infinite loop? No, coz r is decreased everytime
+nums[i] == 2, the exit condition of while is i > r;
+
+sortColors guarantees O(N): in each iteration, either i or r will move inward and while loop ends when r < i.
+
+sortColors0 is another smart solution, it uses 3 pointers as well, each of them marks the starting point of 0, 1, 2 in the array. They are update
+based upon based upon current nums[i].
 */
 class SolutionSortColors {
 public:
 	void sortColors(vector<int>& nums) {
-		int len = (int)nums.size(), l = 0, r = len - 1, i = 0;
-		while (i <= r) {
-			if (0 == nums[i])
-				std::swap(nums[l++], nums[i++]);
-			else if (2 == nums[i])
-				std::swap(nums[r--], nums[i]);
-			else //1 == nums[i]
-				++i;
-		}
+	    int len = (int)nums.size(), l = 0, r = len - 1, i = 0;
+	    while (i <= r) {
+		if (0 == nums[i])
+		    std::swap(nums[l++], nums[i++]);
+		else if (2 == nums[i])
+		    std::swap(nums[r--], nums[i]);
+		else //1 == nums[i]
+		    ++i;
+	    }
 	}
+	void sortColors0(vector<int>& nums) {
+            int len = (int)nums.size(), n0 = -1, n1 = -1, n2 = -1;
+            for(int i = 0; i < len; ++i) {
+                switch(nums[i]) {
+                    case 0:
+                        nums[++n2] = 2, nums[++n1] = 1, nums[++n0] = 0;
+                        break;
+                    case 1:
+                        nums[++n2] = 2, nums[++n1] = 1;
+                        break;
+                    case 2:
+                        nums[++n2] = 2;
+                        break;
+                }
+            }
+        }
 	void sortColors1(vector<int>& nums) {
 		int len = (int)nums.size(), l = 0, r = len - 1, t = 0;
 		while (l < r) {
