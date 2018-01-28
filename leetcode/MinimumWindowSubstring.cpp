@@ -24,7 +24,7 @@ If there are multiple such windows, you are guaranteed that there will always be
 Observations:
 Seems to be a good fit of hashmap and two pointers, aka sliding window. Come one, leetcode hints you in the title "Minimum Window Substring".
 
-Two hashmap, one for counting the occurrence of each char in t, one for counting the occurrence of chars in t in the sliding window.
+Two hashmaps, one for counting the occurrence of each char in t, one for counting the occurrence of chars in t in the sliding window.
 
 Varaible cnt is used to count if every char (including duplicates) in t has shown in the sliding window.
 
@@ -56,7 +56,11 @@ public:
 			if (--cntMap[s[r++]] >= 0)++cnt;
 			/*
 			If r < lens is used at outter exit condition, there has to be an inner while or left pointer
-			will never have chance to reach right pointer since right pointer is always running.
+			will never have chance to reach right pointer since right pointer is always running faster.
+			
+			The above statement is only true if t is not empty...
+			
+			So, actually for leetcode test cases don't inlcude the case like ["ABC", ""] or ["", ""]
 			*/
 			while (lent == cnt) {
 				if (r - l < ans1 - ans)ans = l, ans1 = r;
@@ -140,3 +144,35 @@ void TestMinimumWindowSubstring() {
 	assert("BANC" == so.minWindow("ADOBECODEBANC", "ABC"));
 	assert("NC" == so.minWindow("ADOBECODEBANC", "NC"));
 }
+/*
+Test cases:
+"a"
+"a"
+"ADOBECODEBANC"
+"ABC"
+"AAABBCTEWQATECBJ"
+"AABC"
+"AAABBCTEWQATECBJ"
+"AABCC"
+"AAABBCTEWQATECBJ"
+"AABCB"
+"AAABBCTEWQATECBJ"
+"AABCBZ"
+"ABC"
+""
+""
+"ABC"
+""
+""
+
+Results:
+"a"
+"BANC"
+"AABBC"
+"ABBCTEWQATEC"
+"AABBC"
+""
+""
+""
+""
+*/
