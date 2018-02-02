@@ -1,4 +1,5 @@
 #include <vector>
+#include <queue>
 
 using namespace std;
 
@@ -42,12 +43,50 @@ private:
 		dfs(grid, i - 1, j, m, n), dfs(grid, i + 1, j, m, n), dfs(grid, i, j - 1, m, n), dfs(grid, i, j + 1, m, n);
 	}
 public:
+	//DFS
 	int numIslands(vector<vector<char>>& grid) {
 		int ans = 0, m = (int)grid.size();
 		if (m < 1)return ans;
 		int n = (int)grid[0].size();
 		for (int i = 0; i < m; ++i)
 			for (int j = 0; j < n; ++j)if ('1' == grid[i][j])this->dfs(grid, i, j, m - 1, n - 1), ++ans;
+		return ans;
+	}
+	//BFS
+	int numIslands1(vector<vector<char>>& grid) {
+		int m = (int)grid.size(), ans = 0;
+		if (m < 1)return ans;
+		queue<std::pair<int, int> > q;
+		std::pair<int, int> p;
+		int n = (int)grid[0].size();
+		for (int i = 0; i < m; ++i) {
+			for (int j = 0; j < n; ++j) {
+				if ('1' == grid[i][j]) {
+					grid[p.first][p.second] = '0';
+					q.push(std::make_pair(i, j));
+					while (false == q.empty()) {
+						p = q.front(), q.pop();
+						if (p.first > 0 && '1' == grid[p.first - 1][p.second]) {
+							grid[p.first - 1][p.second] = '0';
+							q.push(std::make_pair(p.first - 1, p.second));
+						}
+						if (p.first + 1 < m && '1' == grid[p.first + 1][p.second]) {
+							grid[p.first + 1][p.second] = '0';
+							q.push(std::make_pair(p.first + 1, p.second));
+						}
+						if (p.second > 0 && '1' == grid[p.first][p.second - 1]) {
+							grid[p.first][p.second - 1] = '0';
+							q.push(std::make_pair(p.first, p.second - 1));
+						}
+						if (j + 1 < n && '1' == grid[p.first][p.second + 1]) {
+							grid[p.first][p.second + 1] = '0';
+							q.push(std::make_pair(p.first, p.second + 1));
+						}
+					}
+					++ans;
+				}
+			}
+		}
 		return ans;
 	}
 };
