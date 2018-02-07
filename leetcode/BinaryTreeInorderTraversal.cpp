@@ -20,7 +20,7 @@ return [1,3,2].
 
 Note: Recursive solution is trivial, could you do it iteratively?
 */
-namespace BinaryTreeInorderTraversal{
+namespace BinaryTreeInorderTraversal {
 	struct TreeNode {
 		int val;
 		TreeNode *left;
@@ -30,46 +30,62 @@ namespace BinaryTreeInorderTraversal{
 
 	class SolutionBinaryTreeInorderTraversal {
 	public:
-	    vector<int> inorderTraversal(TreeNode* root) {
-        	vector<int> ans;
-        	stack<TreeNode*> stk;
-        	while(false == stk.empty() || nullptr != root) {
-            	    while(nullptr != root) {
-                    stk.push(root);
-                    root = root->left;
-                    }
-            	    root = stk.top(), stk.pop();
-            	    ans.push_back(root->val);
-            	    root = root->right;
-        	}
-        	return ans;
-    	    }
-	    vector<int> inorderTraversal1(TreeNode* root) {
-		vector<int> ans;
-		if (nullptr == root)return ans;
-		stack<TreeNode*> stk;
-		TreeNode* node = root;
-		stk.push(root);
-		while (false == stk.empty())
-		{
-		    while (node)
-		    {
-			if (node->left != nullptr)
-			    stk.push(node->left);
-			node = node->left;
-		    }
-		    node = stk.top();
-		    stk.pop();
-		    ans.push_back(node->val);
-		    if (node->right)
-		    {
-			stk.push(node->right);
-			node = node->right;
-		    }
-		    else
-			node = nullptr;
+		vector<int> inorderTraversal(TreeNode* root) {
+			vector<int> ans;
+			stack<TreeNode*> stk;
+			while (false == stk.empty() || nullptr != root) {
+				while (nullptr != root) {
+					stk.push(root);
+					root = root->left;
+				}
+				root = stk.top(), stk.pop();
+				ans.push_back(root->val);
+				root = root->right;
+			}
+			return ans;
 		}
-		return ans;
-	    }
+		vector<int> inorderTraversal0(TreeNode* root) {
+			vector<int> ans;
+			stack<TreeNode*> stk;
+			while (nullptr != root || false == stk.empty()) {
+				if (nullptr != root) {
+					stk.push(root);
+					root = root->left;
+				}
+				else {
+					root = stk.top(), stk.pop();
+					ans.push_back(root->val);
+					root = root->right;
+				}
+			}
+			return ans;
+		}
+		vector<int> inorderTraversal1(TreeNode* root) {
+			vector<int> ans;
+			if (nullptr == root)return ans;
+			stack<TreeNode*> stk;
+			TreeNode* node = root;
+			stk.push(root);
+			while (false == stk.empty())
+			{
+				while (node)
+				{
+					if (node->left != nullptr)
+						stk.push(node->left);
+					node = node->left;
+				}
+				node = stk.top();
+				stk.pop();
+				ans.push_back(node->val);
+				if (node->right)
+				{
+					stk.push(node->right);
+					node = node->right;
+				}
+				else
+					node = nullptr;
+			}
+			return ans;
+		}
 	};
 }
