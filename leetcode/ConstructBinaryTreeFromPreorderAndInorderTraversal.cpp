@@ -28,10 +28,37 @@ Return the following binary tree:
 Observations:
 
 I started straightly from iterative solution. This is not my type of algorithm at all! After couple tries, I finally
-came out an "acceptable" solution, but I am still not happen with the exit condition of the while loop, (i < len - 1) looks
-sloppy!
+came out an "acceptable" solution...
 
-I will have to summarize the approach later...
+The tree will be rebuilt by the preorder traversal relations but the iteration is following the order of inorder traversal.
+
+The general idea resembles iterative Binary Tree DFS, which consider parent to left child as the dominate path.
+
+First, find the element in the inorder results from the preorder results. Any element passed in preoder result is pushed onto a stack.
+At meantime, those passed elements in the preorder result always follow a path from parent to left child. we honor that relation by
+linking them together. Note, the target element is NOT on the stack.
+
+After the target element is found on the preorder result, there are two possibilites in terms of its relationship with the next element in
+the inorder result:
+
+- The target element is the left child of the next element in the inorder result, then the next element in the inorder result has been pushed
+onto the stack already and currently resides on top of the stack.
+
+- The target element is not the left child of the next element in the inorder result, then the next element in the inorder result must be either the right child
+or the left most leaf node on the righthand subtree. Either way, since the scanning on the preorder result is currently on the target element as well, the next
+element on the preorder result must be the right child of the target element.
+
+For the first scenario, we pop up the top element on the stack and it guarantees to be the next target element in the inorder result.
+
+For the second case, we link the next element on the preorder result to the target element as the right child and then assign the right child as the current node in
+the preorder result. Note, no element is pushed onto stack at this moment.
+
+Considering a tree with a parent and left, right children, why we ignore the third case, which is that the target element is the rigth child or the left most leaf on the
+righthand subtree?
+
+That's unnecessary since the relationship among these three elements have been established already. That right child or the left most leaf element shall be examined using the
+two cases described above. In other words, it's either pushed onto stack since the next element on the inorder result is its left most grandchild; Or, it's discarded since it's
+a leaf node. In this case, the top element on the stack will be poped as the current node.
 */
 namespace ConstructBinaryTreeFromPreorderAndInorderTraversal {
 	//Definition for a binary tree node.
@@ -45,13 +72,13 @@ namespace ConstructBinaryTreeFromPreorderAndInorderTraversal {
 	class Solution {
 	public:
 		TreeNode* buildTree(const vector<int>& preorder, const vector<int>& inorder) {
-			int len = (int)preorder.size(), i = 0, j = 0;
+			int len = (int)preorder.size(), i = 1, j = 0;
 			TreeNode *ans = 1 > len ? nullptr : new TreeNode(preorder[0]), *cur = ans;
 			stack<TreeNode*> stk;
-			while (i < len - 1) {
+			while (i < len) {
 				if (inorder[j] != cur->val) {
 					stk.push(cur);
-					cur->left = new TreeNode(preorder[++i]);
+					cur->left = new TreeNode(preorder[i++]);
 					cur = cur->left;
 				}
 				else {
@@ -59,7 +86,7 @@ namespace ConstructBinaryTreeFromPreorderAndInorderTraversal {
 					if (false == stk.empty() && inorder[j] == stk.top()->val)
 						cur = stk.top(), stk.pop();
 					else {
-						cur->right = new TreeNode(preorder[++i]);
+						cur->right = new TreeNode(preorder[i++]);
 						cur = cur->right;
 					}
 				}
