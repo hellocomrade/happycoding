@@ -38,8 +38,9 @@ First, find the element in the inorder results from the preorder results. Any el
 At meantime, those passed elements in the preorder result always follow a path from parent to left child. we honor that relation by
 linking them together. Note, the target element is NOT on the stack.
 
-After the target element is found on the preorder result, there are two possibilites in terms of its relationship with the next element in
-the inorder result:
+After the target element is found on the preorder result, we are ready to examine the relations.
+
+There are two possibilites in terms of target element's relationship with the next element in the inorder result:
 
 - The target element is the left child of the next element in the inorder result, then the next element in the inorder result has been pushed
 onto the stack already and currently resides on top of the stack.
@@ -59,6 +60,27 @@ righthand subtree?
 That's unnecessary since the relationship among these three elements have been established already. That right child or the left most leaf element shall be examined using the
 two cases described above. In other words, it's either pushed onto stack since the next element on the inorder result is its left most grandchild; Or, it's discarded since it's
 a leaf node. In this case, the top element on the stack will be poped as the current node.
+
+This is a O(N) time and O(N) space solution.
+
+You can of course do this recursively. It can be done in average O(NlogN) time and O(N) space for the extra cost of recursion.
+See buildTree0.
+
+It's a divide and conquer: split on the inorder result based upon the preorder result that indicates the current parent node.
+After the partition, left and right subtree (on inorder result) can be recursively solved again.
+
+The first split element in the inorder result is pretty easy to find: the first element in the preorder result, which is
+the root of the tree. How about finding the root for following left and right subtrees?
+
+Given the last split point with index i on the preorder result:
+
+- Left subtree's parent is at i + 1, according to the nature of preorder traversal;
+
+- Parent index for the right subtree can be calculated by i + (number of nodes in left subtree) + 1. The number of nodes in
+left subtree can be calculated by checking the left partition of the inorder result after split by preordor[i];
+
+As usual for divide and conquer, two pointers are given to indicate the boundary on the inorder result. Integer i is
+for the index on the preorder result as the next parent.
 */
 namespace ConstructBinaryTreeFromPreorderAndInorderTraversal {
 	//Definition for a binary tree node.
@@ -70,7 +92,19 @@ namespace ConstructBinaryTreeFromPreorderAndInorderTraversal {
 	};
 
 	class Solution {
+	private:
+		TreeNode* aux(const vector<int>& preorder, const vector<int>& inorder, int l, int r, int i) {
+			if (i >= preorder.size() || i < 0 || l >= r)return nullptr;
+			TreeNode* root = new TreeNode(preorder[i]);
+			int idx = std::find(inorder.begin() + l, inorder.begin() + r, preorder[i]) - inorder.begin();
+			root->left = this->aux(preorder, inorder, l, idx, i + 1);
+			root->right = this->aux(preorder, inorder, idx + 1, r, i + (idx - l) + 1);
+			return root;
+		}
 	public:
+		TreeNode* buildTree0(vector<int>& preorder, vector<int>& inorder) {
+			return this->aux(preorder, inorder, 0, preorder.size(), 0);
+		}
 		TreeNode* buildTree(const vector<int>& preorder, const vector<int>& inorder) {
 			int len = (int)preorder.size(), i = 1, j = 0;
 			TreeNode *ans = 1 > len ? nullptr : new TreeNode(preorder[0]), *cur = ans;
@@ -150,6 +184,7 @@ namespace ConstructBinaryTreeFromPreorderAndInorderTraversal {
 }
 void TestConstructBinaryTreeFromPreorderAndInorderTraversal() {
 	ConstructBinaryTreeFromPreorderAndInorderTraversal::Solution so;
+	so.buildTree(vector<int>{3, 9, 20, 15, 7}, vector<int>{9, 3, 15, 20, 7});
 	so.buildTree(vector<int>{1, 2, 3, 4, 5}, vector<int>{2, 1, 4, 3, 5});
 	so.buildTree(vector<int>{1}, vector<int>{1});
 	so.buildTree(vector<int>{1, 2}, vector<int>{1, 2});
