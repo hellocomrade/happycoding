@@ -1,5 +1,7 @@
 //https://leetcode.com/problems/populating-next-right-pointers-in-each-node/
 /*
+116. Populating Next Right Pointers in Each Node
+
 Given a binary tree
 
 struct TreeLinkNode {
@@ -57,10 +59,24 @@ namespace PopulatingNextRightPointersInEachNode
 			aux(node->right, node->next == nullptr ? nullptr : node->next->left);
 		}
 	public:
-		void connect1(TreeLinkNode *root) {
+		void connect(TreeLinkNode *root) {
+			TreeLinkNode *leftmost = root;
+			root = nullptr;
+			while (nullptr != leftmost) {
+				if (nullptr == root) {
+					root = leftmost;
+					leftmost = root->left;
+					if (nullptr == leftmost)break;
+				}
+				root->left->next = root->right;
+				root->right->next = (nullptr != root->next) ? root->next->left : nullptr;
+				root = root->next;
+			}
+		}
+		void connect2(TreeLinkNode *root) {
 			aux(root, nullptr);
 		}
-		void connect(TreeLinkNode *root) {
+		void connect1(TreeLinkNode *root) {
 			if (nullptr == root)return;
 			TreeLinkNode *tn = nullptr;
 			while (root->left)
