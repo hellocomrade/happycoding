@@ -111,7 +111,7 @@ O(N^2) for sure.
 */
 class SolutionLargestPlusSign {
 public:
-	int orderOfLargestPlusSign(int N, vector<vector<int>>& mines) {
+	int orderOfLargestPlusSign(int N, const vector<vector<int>>& mines) {
 		int ans = 0;
 		vector<vector<int> > memo(N, vector<int>(N, N));
 		for (auto vec : mines)memo[vec[0]][vec[1]] = 0;
@@ -128,7 +128,7 @@ public:
 				ans = std::max(ans, memo[i][j]);
 		return ans;
 	}
-	int orderOfLargestPlusSign1(int N, vector<vector<int>>& mines) {
+	int orderOfLargestPlusSign1(int N, const vector<vector<int>>& mines) {
 		int ans = 0;
 		vector<vector<int> > memo(N, vector<int>(N, N));
 		for (auto vec : mines)memo[vec[0]][vec[1]] = 0;
@@ -151,7 +151,7 @@ public:
 				ans = std::max(ans, memo[i][j]);
 		return ans;
 	}
-	int orderOfLargestPlusSign2(int N, vector<vector<int>>& mines) {
+	int orderOfLargestPlusSign2(int N, const vector<vector<int>>& mines) {
 		int ans = 0;
 		vector<vector<int> > memo(N, vector<int>(N, N));
 		for (auto vec : mines)memo[vec[0]][vec[1]] = 0;
