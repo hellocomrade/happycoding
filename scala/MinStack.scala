@@ -1,4 +1,4 @@
-package leetcode.MinStack
+package leetcode
 
 import scala.math.min
 
