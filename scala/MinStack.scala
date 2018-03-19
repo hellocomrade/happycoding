@@ -4,6 +4,8 @@ import scala.math.min
 
 //https://leetcode.com/problems/min-stack/
 class MinStack {
+    /** initialize your data structure here. */
+    
     private var stk: List[(Int, Int)] = List()
   
     def push(x: Int) {
@@ -11,7 +13,7 @@ class MinStack {
     }
   
     def pop() {
-        stk = stk.drop(0)   
+        stk = stk.drop(1)
     }
   
     def top(): Int = {
