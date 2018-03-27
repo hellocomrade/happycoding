@@ -11,17 +11,17 @@ using namespace std;
 
 Given n non-negative integers representing the histogram's bar height where the width of each bar is 1, find the area of largest rectangle in the histogram.
 
-	  6
-	5 -
-    - -
-    - -   3
+6
+5 -
+- -
+- -   3
 2 1 - - 2 -
 -   - - - -
 - - - - - -
 
 Above is a histogram where width of each bar is 1, given height = [2,1,5,6,2,3].
 
-  6
+6
 5 -
 - -
 - -
@@ -43,8 +43,10 @@ Then, how should we take advantage of stack?
 
 Take a close look on the definition of largest rectangle: it's formed by the common least heights. For example:
 
-Given [1,3,4,2] [3, 4] can forms a rectangle with height of 3 and width of 2;
-But [1, 3, 4, 2] can only forms a rectangle with height of 1 and width of 3
+Let's leave alone the "largest" for the time being,
+
+Given [3, 4] can forms a rectangle with height of 3 and width of 2;
+But [1, 3, 4, 2] can only forms a rectangle with height of 1 and width of 4;
 
 - Maintain the minimum heights so far in an ascending order on the stack, put the index of heights on the stack, therefore we can access the height on the stack by heights[stk.top()];
 
@@ -70,7 +72,7 @@ I saw other people solving this by prepending or appending elements onto heights
 This is a linear solution with O(N) space that can be considered as greedy algorithm. I also saw others using divide and conquer, which is interesting but probably suffers
 a penalty on time complexity.
 */
-class SolutionLargestRectangeleInHistogram {
+class SolutionLargestRectangleInHistogram {
 public:
 	int largestRectangleArea(const vector<int>& heights) {
 		stack<int> stk;
@@ -86,7 +88,7 @@ public:
 	}
 };
 void TestLargestRectangeleInHistogram() {
-	SolutionLargestRectangeleInHistogram so;
+	SolutionLargestRectangleInHistogram so;
 	assert(10 == so.largestRectangleArea(vector<int>{2, 1, 5, 6, 2, 3}));
 	assert(16 == so.largestRectangleArea(vector<int>{2, 1, 2, 2, 2, 5, 6, 2, 3, 2}));
 	assert(3 == so.largestRectangleArea(vector<int>{2, 1, 2}));
