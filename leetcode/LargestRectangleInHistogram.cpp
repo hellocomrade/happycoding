@@ -11,10 +11,10 @@ using namespace std;
 
 Given n non-negative integers representing the histogram's bar height where the width of each bar is 1, find the area of largest rectangle in the histogram.
 
-6
-5 -
-- -
-- -   3
+      6
+    5 -
+    - -
+    - -   3
 2 1 - - 2 -
 -   - - - -
 - - - - - -
