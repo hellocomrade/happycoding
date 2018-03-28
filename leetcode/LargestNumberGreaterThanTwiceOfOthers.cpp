@@ -1,6 +1,6 @@
 #include <vector>
 using namespace std;
-//https://leetcode.com/problems/largest-number-greater-than-twice-of-others/
+//https://leetcode.com/problems/largest-number-at-least-twice-of-others/
 /*
 747. Largest Number Greater Than Twice of Others
 
