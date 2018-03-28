@@ -11,10 +11,10 @@ using namespace std;
 
 Given n non-negative integers representing the histogram's bar height where the width of each bar is 1, find the area of largest rectangle in the histogram.
 
-      6
-    5 -
-    - -
-    - -   3
+6
+5 -
+- -
+- -   3
 2 1 - - 2 -
 -   - - - -
 - - - - - -
@@ -45,23 +45,30 @@ Take a close look on the definition of largest rectangle: it's formed by the com
 
 Let's leave alone the "largest" for the time being,
 
-Given [3, 4] can forms a rectangle with height of 3 and width of 2;
-But [1, 3, 4, 2] can only forms a rectangle with height of 1 and width of 4;
+Given [1, 3, 4, 2] can forms a rectangle with the width of 2 if the height of the rectangle is 3;
+However, if starting from index 0, height = 1, [1, 3, 4, 2] can forms a rectangle with the width of 4;
 
-- Maintain the minimum heights so far in an ascending order on the stack, put the index of heights on the stack, therefore we can access the height on the stack by heights[stk.top()];
+Therefore, if we apply greedy approach here by checking on how far each bar can go in terms of width to form a rectangle with the height of this bar, we
+shall have a solution. By using Bar A's height H as the edge (height) of the rectangle, such a rectangle can be extended as much as it can till
+a new bar B, with a height H1, which H1 < H. At this moment, the largest rectangle starting from A is found and it ends at the bar before B.
 
-- If the new height is less than the top of the stack, pop any element that is greater than the new height;
+Stack appears to be perfect for this job since we can't tell if B is discovered for A when we reach A in the loop.
 
-- While poping from the stack, calculate the max area, this is the tricky part.
+- Put bar onto the stack as long as it's height is no less than the top of the stack. Therefore, the heights on the stack maintains in an ascending order on the stack,
+we actually only need to put the index of heights on the stack, so we can access the height on the stack by heights[stk.top()];
 
-Given current index i, the possible largest rectangle is calculated by (i - the index of the next to the top of the stack - 1) * heights[the index on top of the stack]
+- If the current bar's height is less than the top of the stack, "largest rectangles" can be concluded now. Therefore pop any element that is greater than
+the current bar's height and caculate their area; This pop operation is done once the remaining bars on the stack is no greater than current height. Then,
+we push current height onto the stack. Why? We use greedy here, those heights on the bar may form larger rectangles if the bar down the road is higher.
 
-In plain language: each minimum heights can form the rectangle with the width from its current index till the index of the previous minimum.
+- While poping from the stack, calculate the max area, this is the tricky part. With the height decided, now it's time to find out the width:
+
+Given current index i that meets heights[i] < heights[stack.top()], the possible largest rectangle is calculated by (i - the index of the next to the top of the stack - 1) * heights[stack.top()]
+
+In plain language: each height on the stack can form the largest rectangle with the width from its current index till the index of the previous minimum.
 
 In case of the index at the bottom of the stack, say k, heights[k] is the smallest height till index i, in this case, its width is i no matter where index k is, of course, k < i.
 
-Every time we discover a new minimum, any heights greater than it on the stack will be examined and the possible rectangle will be calculated. Then, it's safe to
-discard them. Why? coz the height of the rectangle is always decided by the smallest height.
 
 In terms of implementation, after pushing the last element in heights onto stack, we will have to examine the stack after the loop exits, which looks ugly. The way
 I solved this is by intentionally allowing loop running till len(heights). At i = len(heights), we know the elements on the stack is in ascending order for sure. Therefore,
