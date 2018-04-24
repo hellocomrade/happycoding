@@ -107,10 +107,43 @@ Without checking if (i == m) is on A, which is unnecessary, or a B, which is new
 
 Last but not least: None of the solutions above tracking on task names, which is not necessary at all. Each task is "identified" by count. Duplicated count is not
 a concern in this one at all.
+
+Updated on 4/24/2018:
+
+The shortest timespan is always decided by the most frequent task in task list.
+
+Then we put empty slots required by cooling rule N, and fill them with less frequent tasks.
+
+So if the FAT is task A and it has M count, then we will have (M - 1) * N empty slots plus M slots for task A
+
+(M - 1) * N + M
+
+The caveats are:
+
+1. Multiple FAT tasks, in this case, you will have to count how many FATs are and they can be put at the tail. If there are K FATs,
+we need to add extra (K - 1) at tail:
+
+(M - 1) * N + M + K - 1
+
+2. No empty slot needed, for example: ["A","A","A","A","B","B","B","B","C","C","Z"], given cooling interval is 1, we could do
+"ABCABCABZAB", 11 intervals, no empty slot ever needed. However, if you calculate the timespan using the formula above, you
+get 8, which is even less than the length of task list. So, in this case, we pick the length of the task list as answer.
+
+In order to justify the correctness of our approach here, you could see it this way: if N is the cooling time, put more than N
+tasks between FATs is totally fine. This doesn't affect the way we count the timespan, just some extra slots to consider...
 */
 class SolutionTaskScheduler {
 public:
-	int leastInterval(const vector<char>& tasks, int n) {
+	int leastInterval(vector<char>& tasks, int n) {
+		int cnts[26] = { 0 }, len = (int)tasks.size(), maxcnt = 0, cnt = 0, i = 0;
+		for (char t : tasks) {
+			i = t - 'A', ++cnts[i];
+			if (maxcnt == cnts[i]) ++cnt;
+			else if (maxcnt < cnts[i]) maxcnt = cnts[i], cnt = 1;
+		}
+		return std::max(len, n * (maxcnt - 1) + maxcnt + cnt - 1);
+	}
+	int leastInterval0(const vector<char>& tasks, int n) {
 		vector<int> taskCnts(26, 0);
 		int len = (int)tasks.size(), ans = 0, m = 0;
 		for (int i = 0; i < len; ++i) {
