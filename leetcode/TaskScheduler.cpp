@@ -134,7 +134,7 @@ tasks between FATs is totally fine. This doesn't affect the way we count the tim
 */
 class SolutionTaskScheduler {
 public:
-	int leastInterval(vector<char>& tasks, int n) {
+	int leastInterval(const vector<char>& tasks, int n) {
 		int cnts[26] = { 0 }, len = (int)tasks.size(), maxcnt = 0, cnt = 0, i = 0;
 		for (char t : tasks) {
 			i = t - 'A', ++cnts[i];
