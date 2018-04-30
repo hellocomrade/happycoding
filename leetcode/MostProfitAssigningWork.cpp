@@ -92,7 +92,7 @@ public:
 		int len = (int)profit.size(), ans = 0;
 		vector<std::pair<int, int> > jobs(len, std::make_pair(0, 0));
 		for (int i = 0; i < len; ++i) jobs[i].first = difficulty[i], jobs[i].second = profit[i];
-		std::sort(jobs.begin(), jobs.end(), [](const auto &j1, const auto &j2) { return j1.second > j2.second; });
+		std::sort(jobs.begin(), jobs.end(), [](const auto &j1, const auto &j2) -> bool { return j1.second > j2.second; });
 		std::sort(worker.begin(), worker.end());
 		auto stop = worker.end();
 		for (const auto &job : jobs) {
