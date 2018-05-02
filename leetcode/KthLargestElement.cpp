@@ -18,6 +18,12 @@ Note:
 You may assume k is always valid, 1 ≤ k ≤ array's length.
 
 https://en.wikipedia.org/wiki/Quickselect
+
+Update on 5/2/2018:
+
+Add iterative solution. It appears the randomaization for pivot point is a must otherwise you will get really bad performance against leetcode test cases.
+
+This makes sense tough, coz the worst case is still O(N^2) for quick select, O(N) is only guaranteed if randomization is applied.
 */
 class SolutionKthLargestElement {
 private:
@@ -36,12 +42,36 @@ private:
 		else return this->aux(nums, r + 1, end, k);
 	}
 public:
+	//Iterative
 	int findKthLargest(vector<int>& nums, int k) {
+		srand(time(nullptr));
+		int len = (int)nums.size(), ans = 0, l = 0, r = len - 1, i = 0, j = 0;
+		while (l <= r) {
+			i = l, j = r;
+			std::swap(nums[l], nums[l + rand() % (r - l + 1)]);
+			do {
+				while (i <= j && nums[i] >= nums[l]) ++i;
+				while (nums[j] < nums[l]) --j;
+				if (i < j) std::swap(nums[i++], nums[j--]);
+			} while (i <= j);
+			std::swap(nums[l], nums[j]);
+			if (j + 1 == k) break;
+			else if (j + 1 < k) l = j + 1;
+			else r = j - 1;
+		}
+		return nums[j];
+	}
+	//Recursive
+	int findKthLargest0(vector<int>& nums, int k) {
 		return this->aux(nums, 0, nums.size() - 1, k - 1);
 	}
 };
 void TestKthLargestElement() {
 	SolutionKthLargestElement so;
+	vector<int> vec99{ 3, 1, 2, 4 };
+	assert(3 == so.findKthLargest(vec99, 2));
+	vector<int> vec0{ 3, 2, 1, 5, 6, 4 };
+	assert(5 == so.findKthLargest(vec0, 2));
 	vector<int> vec1 = { 1 };
 	assert(1 == so.findKthLargest(vec1, 1));
 	vector<int> vec2 = { 3, 2, 1, 5, 6, 4 };
