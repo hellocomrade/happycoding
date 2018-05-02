@@ -3,7 +3,8 @@
 #include <vector>
 #include <algorithm>
 #include <limits>
-
+#include <tuple>
+#include <iostream>
 using namespace std;
 
 //https://leetcode.com/problems/median-of-two-sorted-arrays/
@@ -62,6 +63,41 @@ start2 by k / 2 accordingly. So, start index always increase and at mean time, c
 - start1 | start2 > len1 | len2 - 1, then it guaranteed we can find the answer at start2 | start1 + k - 1;
 - 1 == k, then returns min(nums1[start1], nums[start2]);
 - (start1 + k / 2 - 1) >= len1 or (start2 + k / 2 - 1) >= len2, in this case, t1 or t2 will be assigned to INT_MAX;
+
+Update on 5/2/2018:
+
+Added iterative solution running in O(log(MIN(M, N))). Here are the thoughts:
+
+- If we have a generalized function that is able to identify the Kth element in two sorted array, we can solve the problem easily. In leetcode 215, we've practised the
+classic Quick Select in a sorted array in O(N) time. Now we need a variation that is able to cover two sorted array.
+
+- Since both arrays are sorted, we don't need to examine all elements in the array. Given an array A and K, we only need to check from index -1 up to MIN(K - 1, len(A) - 1).
+Index -1 here is the edge case that picking K elements from the other array, none from A at all.
+
+- Instead of Divide-and-Conquer approach on Quck Select, we try Binary Search here: Given two sorted arrays A, B and number K, we start from index l = 0 and index r = len(A) - 1.
+Then the index in A will be i = (l + r) / 2, in B index will be j = (K - i - 2), we have a valid hit on B only if (j >= -1 and j <= MIN(K - 1, len(A) - 1)), -1 == j is the edge case that
+all K elements are selected from B.
+Here it's worthy to examine how far j could be out of range giving the fact that i is guaranteed in [-1, MIN(K - 1, len(A) - 1)], j would be in [-1, K - 2]. Out of range occurs
+when (K - 2 > len(B) -1). We can tell that j will only be potentially out of range on right side. So, if that happend, we need to move index l on A to the right at (l + r) / 2 + 1.
+
+- If j is in [-1, MIN(K - 1, len(A) - 1)], we have m = A[i] and n = B[j] if j > -1 else NEGATIVE_INFINITE (NEGATIVE_INFINITE is used to mark the right boundary (exclusive) in case picking K from A and none from B),
+we will have the following:
+
+1. The current candidate for the Kth element is always MAX(m, n). Then among all possible candidates, we pick the smallest one: ans = MIN(ans, MAX(m, n));
+
+2. If m < n, l = i + 1, cut index range in half toward right to see if it's possible to find a A[X] that can be the candidate: A[X] >= m and A[X] <= n, just try to find a smaller candidate;
+
+3. If m >= n, r = i - 1, cut index range in half toward left to see if it's possible to find a A[Y] that can be the candidate: A[Y] <= m, just try to find a smaller candidate;
+
+- Since we always use array A as the primary search target, the above algorith runs in O(log(len(A))), if we always assign the smaller array as A between two given arrays, we will
+have O(log(MIN(len(A), len(B))))
+
+- Couple edge cases:
+1. Both arrays are empty;
+2. Smaller array is empty;
+3. Smaller array doesn't have the Kth element, all first K elements are in the larger array;
+
+In fact edge cases 2 and 3 can be handled by the same code just before return.
 */
 class SolutionMedianOfTwoSortedArrays {
 private:
@@ -151,8 +187,30 @@ private:
 		}
 		return -1;//we should never reach here!
 	}
+	//O(log(MIN(M, N)))
+	int aux(const vector<int> &v1, const vector<int> &v2, const long long k) {
+		if (1 > k || (0 == v1.size() && 0 == v2.size())) return 0;
+		long long i, j, l1 = 0LL, r1 = std::min(k - 1, (long long)v1.size() - 1), cr2 = std::min(k - 1, (long long)v2.size() - 1), m, n, infinite = numeric_limits<int>::max() + 1LL, ans = infinite;
+		while (l1 <= r1) {
+			i = (l1 + r1) / 2, j = k - i - 2, m = v1[i], n = infinite;
+			if (j >= -1 && j <= cr2) {
+				n = j > -1 ? v2[j] : -1 * infinite;
+				ans = std::min(ans, std::max(m, n));
+				if (m < n) l1 = i + 1;
+				else r1 = i - 1;
+			}
+			else l1 = i + 1;
+		}
+		return static_cast<int>(std::min(ans, (v2.size() >= k ? (long long)v2[k - 1] : infinite)));
+	}
 public:
 	double findMedianSortedArrays(const vector<int>& nums1, const vector<int>& nums2) {
+		long long k = ((long long)nums1.size() + (long long)nums2.size()) / 2LL;
+		const vector<int> &rn1 = nums1.size() <= nums2.size() ? nums1 : nums2;
+		const vector<int> &rn2 = nums1.size() <= nums2.size() ? nums2 : nums1;
+		return (1 == ((nums1.size() & 1) ^ (nums2.size() & 1))) ? this->aux(rn1, rn2, k + 1) : (this->aux(rn1, rn2, k) + this->aux(rn1, rn2, k + 1)) / 2.0;
+	}
+	double findMedianSortedArrays0(const vector<int>& nums1, const vector<int>& nums2) {
 		double ans = 0.0;
 		size_t len1 = nums1.size(), len2 = nums2.size();
 		size_t targetCnt = std::min(len1, len2) + abs((int)(len1 - len2)) / 2 + 1;
@@ -225,6 +283,7 @@ public:
 };
 void TestMedianOfTwoSortedArrays() {
 	SolutionMedianOfTwoSortedArrays so;
+	assert(6.0 == so.findMedianSortedArrays(vector<int>{1, 3, 6, 8, 10}, vector<int>{1, 1, 1, 1, 2, 7, 7, 8, 10, 12}));
 	assert(9.0 == so.findMedianSortedArrays(vector<int>{3, 4, 7, 9, 12, 19, 28}, vector<int>{2, 5, 18, 21}));
 	assert(0.0 == so.findMedianSortedArrays(vector<int>{}, vector<int>{}));
 	assert(1.0 == so.findMedianSortedArrays(vector<int>{1, 1}, vector<int>{1, 2}));
