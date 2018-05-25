@@ -67,10 +67,28 @@ pushDominoes1, follows the intuition in official solution, approach #1:
 https://leetcode.com/problems/push-dominoes/solution/
 
 approach #2 is fun to implement :)
+
+Updated on 5/25/2018
+
+Just realize that the ans array is not necessary at all. We could modify dominoes in place. Therefore, we shall have
+an O(N) time and O(1) space solution here.
 */
 class SolutionPushDominoes {
 public:
 	string pushDominoes(string dominoes) {
+		int lastFallIdx = -1, lastFallDir = -1, len = (int)dominoes.length();
+		for (int i = 0, j = 0; i < len; ++i) {
+			if ('L' == dominoes[i]) {
+				j = ('R' == lastFallDir) ? (i + lastFallIdx) / 2 : lastFallIdx;
+				std::fill(dominoes.begin() + j + 1, dominoes.begin() + i + 1, 'L');
+				if ('R' == lastFallDir && (0 == (1 & (i + lastFallIdx)))) dominoes[j] = '.';
+			}
+			if ('.' != dominoes[i]) lastFallIdx = i, lastFallDir = dominoes[i];
+			if ('R' == lastFallDir) dominoes[i] = 'R';
+		}
+		return dominoes;
+	}
+	string pushDominoes0(string dominoes) {
 		int lastFallIdx = -1, lastFallDir = -1, len = (int)dominoes.length();
 		string ans(len, '.');
 		for (int i = 0, j = 0; i < len; ++i) {
