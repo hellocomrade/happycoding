@@ -44,6 +44,21 @@ buckets sort, radix sort. All of them achieve linear time complexity by using ex
 maximumGap0 is a least-significant-digit-first radix sorting using counting sort for every digit. It's straightforward but has to copy
 between two arrays, like merge sort.
 
+https://en.wikipedia.org/wiki/Radix_sort
+
+This was first time I ever implement radix sorting. It's worth to mention that:
+
+http://staff.ustc.edu.cn/~csli/graduate/algorithms/book6/chap09.htm
+
+"
+It is essential that the digit sorts in this algorithm be stable. The sort performed by a card sorter is stable,
+but the operator has to be wary about not changing the order of the cards as they come out of a bin, even though all the cards
+in a bin have the same digit in the chosen column.
+"
+
+LSD works better comparing with MSD, because it's natural ordering from sorting lower significant digits will help solve the tie
+on current digit for sorting purpose. Therefore, it's very important to choose a stable sorting algorithm on per digit sorting.
+
 Another approach that was explained well in official solution takes advantage of one fact that the smallest max gap is
 
 k = (max_val - min_val) / n - 1, given max_val and min_val are the max and min value in given array and n is the length of the array.
