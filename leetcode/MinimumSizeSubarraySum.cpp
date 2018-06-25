@@ -25,26 +25,46 @@ reusing the input array for prefix sum.
 
 However, if you take a close look, again all elements are positive, you could solve this using two pointers
 in O(N) time and O(1) space.
+
 At beginning, both left and right pointers are at index 0, then increase right point until the sum between
 left poniter and right pointer is no less than s. We then examine if this right - left is smaller. Then, we
 increase the left pointer, which give we a small sum and see if this smaller sum is still no less than s. If so,
 we find a closer interval. Keep this going until right pointer is equal to the lengh of the array.
+
+Note, in the inner while loop, we didn't bother to check if pointer l exceeds i or len because s is guaranteed to be
+positive and all elements in nums are positive. Therefore, when l catches up with i, the sum for sliding window is zero.
+The loop will exit.
+
+Update on 6/25/2018
+
+Other than using sliding window template, we could use prefix sum plus binary search as I mentioned above.
+We could take advantage of std::lower_bound. Prefix sum can be done in place which ignore the possibility of integer overflow though.
+This is a O(NLogN) solution with O(1) space.
 */
-class SolutionMinimumSizeSubarraySum{
+class SolutionMinimumSizeSubarraySum {
 public:
 	int minSubArrayLen(int s, vector<int>& nums) {
-	    int len = (int)nums.size();
-            int ans = len + 1, sum = 0, l = 0;
-            for(int i = 0; i < len; ++i) {
-                sum += nums[i];
-                while(sum >= s) {
-                    ans = std::min(ans, i - l + 1);
-               	    sum -= nums[l++];
-            	}
-       	    }
-            return ans == len + 1 ? 0 : ans;	
+		int len = (int)nums.size(), ans = len + 1, l = 0;
+		long long sum = 0LL;
+		for (int i = 0; i < len; ++i) {
+			sum += nums[i];
+			while (sum >= s) {
+				ans = std::min(ans, i - l + 1);
+				sum -= nums[l++];
+			}
+		}
+		return ans == len + 1 ? 0 : ans;
 	}
 	int minSubArrayLen1(int s, vector<int>& nums) {
+		int len = (int)nums.size(), ans = len + 1;
+		for (int i = 1; i < len; ++i) nums[i] += nums[i - 1];
+		for (int i = 0; i <= len; ++i) {
+			auto itor = std::lower_bound(nums.begin() + i, nums.end(), s + (0 == i ? 0 : nums[i - 1]));
+			if (itor != nums.end()) ans = std::min(ans, (int)std::distance(nums.begin() + i, itor + 1));
+		}
+		return len + 1 == ans ? 0 : ans;
+	}
+	int minSubArrayLen2(int s, vector<int>& nums) {
 		int len = nums.size(), ans = len + 1;
 		long long sum = 0;
 		if (len < 1)return 0;
