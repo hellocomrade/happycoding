@@ -25,18 +25,9 @@ As for KMP, the definition of "proper prefix" is the prefixes of a string except
 the prefixes are: "A", "AB", "ABC", "ABCD"
 the proper prefixes, on the other hand, are: "A", "AB", "ABC".
 
-Why we don't need "ABCD"? Well, simply put: KMP avoids unnecessary comparisons by moving the head of the pattern directly to the next matching position.
-It achieves this by a theorm: at given index i on haystack, we apply pattern for comparison, if the match fails on index j of pattern, of course,
-i < j, we could jump couple position if and only if there is a longest proper prefix plus suffix available in pattern from 0 to j on pattern. For example:
-EEABCABFEEEEEE
-  ABCABD
+Why we don't need "ABCD"? Well, if a prefix like "ABCD" is matched in haystack, we have an answer already, no need to further check.
 
-It fails on 'F' vs 'D', instead of aligning pattern to 'B'(index 3), we could jump to index 5 on haystack. This is because in "ABCAB" (before failed 'D'),
-we can find a lpps: "AB". Such a substring is a prefix and also suffix of "ABCAB". In other words, we try to use the existing match on the end of pattern
-to see if such match also exist at the begining of pattern, if scuh thing exist, we can safely jump over multiple characters on haystack, which guarantees
-safe.
-
-Therefore, KMP needs to preprocess the pattern and calculate the longest "proper prefix and suffix" from 0 to i - 1 and store the length in an array
+Actually, KMP needs to preprocess the pattern and calculate the longest "proper prefix and suffix" from 0 to i - 1 and store the length in an array
 at index i. This process can be done in O(N).
 
 At any given index i, lpps[i] means the longest "proper prefix and suffix" from 0 to i - 1 in the pattern. In such an array, lpps[0] = -1 and lpps[1] = 0.
@@ -52,15 +43,27 @@ If such a nextMatchIndex is 0, we know there is no more fallback, we do lpps[i] 
 */
 class SolutionImplstrStr {
 private:
+	/*
+	This version is inspired by <Competitive Programming 3>, I modified a little bit by initializing pointer r to 1
+	instead of 0 so it explicitly indicats the fact lpps[r] is for substring from 0 to r - 1: pattern[l] != pattern[r - 1]
+	*/
 	vector<long long> longestProperPrefixAndSuffix(string &pattern) {
+		long long len = (long long)pattern.length(), l = -1, r = 1;
+		vector<long long> lpps(len, -1);
+		while (r < len) {
+			while (l >= 0 && pattern[l] != pattern[r - 1]) l = lpps[l];
+			lpps[r++] = ++l;
+		}
+		return lpps;
+	}
+	vector<long long> longestProperPrefixAndSuffix1(string &pattern) {
 		size_t len = pattern.length(), i = 2, nextMatchIndex = 0;
 		/*
 		lpps stands for longest proper prefix and suffix.
-		It stores the immediate fallback index value at position (i - 1) for possible match, given index i, assuming pattern[i] and haystack[i] are 
-		different, but match occurs at pattern[i - 1] and haystack[i - 1].
+		It stores the next possible match index value at position (i - 1) given index i.
 		Or you can say it's the longest substring that is both a proper prefix and suffix of string from [0 to i - 1]
 
-		i		0	1	2	3	4	5	6	7	8
+		i			0	1	2	3	4	5	6	7	8
 		pattern[i]	A	B	A	C	A	B	A	B	C
 		lpps[i]		-1	0	0	1	0	1	2	3	2
 
@@ -84,14 +87,50 @@ private:
 					lpps[i++] = 0;
 			}
 		}
-		//Copy elision: http://en.cppreference.com/w/cpp/language/copy_elision
 		return lpps;
 	}
 public:
+	/*
+	Use lambda as anonymous function for lpps
+	*/
 	int strStr(string haystack, string needle) {
+		long long lenh = (long long)haystack.length(), lenn = (long long)needle.length(), i = 0, j = 0;
+		if (lenh >= lenn && lenn > 0) {
+			vector<long long> lpps = [lenn](const string &pattern) {
+				long long l = -1, r = 1;
+				vector<long long> ans(lenn, -1);
+				while (r < lenn) {
+					while (l >= 0 && pattern[l] != pattern[r - 1]) l = ans[l];
+					ans[r++] = ++l;
+				}
+				return ans;
+			}(needle);
+			while (i < lenh) {
+				while (j >= 0 && haystack[i] != needle[j]) j = lpps[j];
+				++i, ++j;
+				if (j == lenn) return i - j;
+			}
+		}
+		return 0 == lenn ? 0 : -1;
+	}
+	int strStr0(string haystack, string needle) {
+		size_t lenh = haystack.length(), lenn = needle.length();
+		long long i = 0, j = 0;
+		if (lenh >= lenn && lenn > 0) {
+			vector<long long> lpps = this->longestProperPrefixAndSuffix(needle);
+			while (i < lenh) {
+				while (j >= 0 && haystack[i] != needle[j]) j = lpps[j];
+				++i, ++j;
+				if (j == lenn)
+					return i - j;
+			}
+		}
+		return 0 == lenn ? 0 : -1;
+	}
+	int strStr1(string haystack, string needle) {
 		size_t lenh = haystack.length(), lenn = needle.length(), i = 0, j = 0;
 		if (lenh >= lenn) {
-			vector<long long> lpps = this->longestProperPrefixAndSuffix(needle);
+			vector<long long> lpps = this->longestProperPrefixAndSuffix1(needle);
 			while (i <= lenh - lenn) {
 				while (j < lenn && haystack[i + j] == needle[j])++j;
 				if (j == lenn)
@@ -114,8 +153,12 @@ public:
 void TeststrStr() {
 	SolutionImplstrStr so;
 	assert(0 == so.strStr("", ""));
+	assert(0 == so.strStr("hello", ""));
+	assert(-1 == so.strStr("", "hello"));
 	assert(0 == so.strStr("a", "a"));
 	assert(-1 == so.strStr("a", "b"));
+	assert(2 == so.strStr("hello", "ll"));
+	assert(2 == so.strStr("baabc", "ab"));
 	assert(15 == so.strStr("ABC ABCDAB ABCDABCDABDE", "ABCDABD"));
 	assert(22 == so.strStr("ABC ABADABABC ABCDABCDABACABABCDBABACABABCEGA", "ABACABABC"));
 }
