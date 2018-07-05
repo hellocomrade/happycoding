@@ -26,6 +26,21 @@ Levenshtein distance: https://en.wikipedia.org/wiki/Levenshtein_distance
 Given len(word1) = N and len(word2) = M, WF algorithm takes O(M*N) time and O(N) space. Original algorithm takes
 O(M*N) space (the entir matrix) as well. By a closer look, we only need keep the previous row. We need 2 extra variables to track the upper left and "current" values on the previous row.
 
+***Update on 7/5/2018***
+
+For the notes I made previously (in the next paragraph), I'd like to scratch them. Even though they might make sense, they are way to complicated to remember
+and repeat. The "correct" way to read the code is: there is a phony character for both word1 and word2 to represent the cases: from 0 char in word2 to word1
+and from word2 to word1 with 0 char. For example:
+0 B A D C
+0 0 1 2 3 4 <--Insertion
+A 1
+B 2
+C 3
+D 4
+/\
+|
+Deletion
+
 Comparing with LCS, this one has 3 picky edge cases due to the way we grab previous result.
 
 1. 0 == j:
