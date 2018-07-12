@@ -155,6 +155,31 @@ public:
 		}
 		return ans;
 	}
+	/*
+	Same LSD Radix sort, but the way to calculate prefix sum is different, therefore,
+	in this case, we could populate sorted array from 0 to len - 1.
+	prefixSum[0] = 0, prefixSum[1] = digitCounter[0], prefixSum[1] = digitCounter[0] + digitCounter[1]...
+
+	prefixSum stores the start index value for each bucket.
+	*/
+	int maximumGap00(vector<int>& nums) {
+		int ans = 0, len = (int)nums.size();
+		if (len < 1) return 0;
+		int max_val = *std::max_element(nums.begin(), nums.end()), base = 1;
+		vector<int> tmparr(nums.size(), 0), digitCounter(10, 0);
+		while (base <= max_val) {
+			for (int i : nums) ++digitCounter[i / base % 10];
+			for (int i = 0, sum = 0, t = 0; i < 10; sum += t, ++i)
+				t = digitCounter[i], digitCounter[i] = sum;
+			for (int i : nums)
+				tmparr[digitCounter[i / base % 10]++] = i;
+			std::fill(digitCounter.begin(), digitCounter.end(), 0);
+			std::copy(tmparr.begin(), tmparr.end(), nums.begin());
+			base *= 10;
+		}
+		for (int i = 1; i < len; ++i) ans = std::max(ans, nums[i] - nums[i - 1]);
+		return ans;
+	}
 	//LSD Radix sort using counting sort for each digit
 	int maximumGap0(vector<int>& nums) {
 		int len = (int)nums.size(), base = 1, ans = 0;
