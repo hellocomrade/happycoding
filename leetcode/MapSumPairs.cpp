@@ -54,6 +54,11 @@ diff = new_sum_value - previous_sum_value
 In this "aa" case, diff = -1.
 
 For the regular cases, diff = new_sum_value since previous_sum_value is 0. So this approach can cover both regular and edge cases.
+
+In terms of C++ implementation, unordered_map can't be a member variable with the class itself as the value type. Compiler complains
+on imcompleted type. This is covered for vector, linkedlist and map, but not for unordered_map...
+
+Standard work around would be using pointer. Here, I use shared_ptr instead, therefore, no need to implement destructor.
 */
 namespace MapSumPairs {
 	class TrieNode {
