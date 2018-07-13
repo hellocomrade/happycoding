@@ -76,8 +76,8 @@ namespace ImplementTrie {
 	private:
 		class TrieNode {
 		private:
-			std::shared_ptr<TrieNode> children[26];
 			bool isLeaf;
+			std::shared_ptr<TrieNode> children[26];
 		public:
 			TrieNode(bool isEnd) : isLeaf(isEnd), children{ std::shared_ptr<TrieNode>(nullptr) } {}
 			TrieNode* getChild(const char key) {
@@ -135,8 +135,8 @@ namespace ImplementTrie0 {
 	private:
 		class TrieNode {
 		private:
-			std::shared_ptr<TrieNode> children[26];
 			bool isLeaf;
+			std::shared_ptr<TrieNode> children[26];
 		public:
 			TrieNode(bool isEnd) : isLeaf(isEnd), children{ std::shared_ptr<TrieNode>(nullptr) } {}
 			std::shared_ptr<TrieNode> getChild(const char key) {
@@ -202,7 +202,7 @@ namespace ImplementTrie1 {
 				return 1 == this->children.count(key) ? this->children[key] : nullptr;
 			}
 			std::shared_ptr<TrieNode> insert(const char key, bool isEnd) {
-				if (0 == this->children.count(key)) this->children.emplace(key, new TrieNode(isEnd));
+				if (0 == this->children.count(key)) this->children.emplace(key, std::make_shared<TrieNode>(isEnd));
 				if (true == isEnd) this->children[key]->isLeaf = isEnd;
 				return this->children[key];
 			}
@@ -211,7 +211,7 @@ namespace ImplementTrie1 {
 		std::shared_ptr<TrieNode> root;
 	public:
 		/** Initialize your data structure here. */
-		Trie() : root(new TrieNode(false)) {}
+		Trie() : root(std::make_shared<TrieNode>(false)) {}
 
 		/** Inserts a word into the trie. */
 		void insert(string word) {
