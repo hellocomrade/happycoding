@@ -71,7 +71,7 @@ namespace MapSumPairs {
 			if (1 == this->map.count(c))
 				this->map[c]->val += value;
 			else
-				this->map.emplace(c, std::shared_ptr<TrieNode>(new TrieNode(value)));
+				this->map.emplace(c, std::make_shared<TrieNode>(value));
 			return this->map[c];
 		}
 		std::shared_ptr<TrieNode> getChild(const char c) {
