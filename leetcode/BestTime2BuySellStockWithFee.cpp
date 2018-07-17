@@ -69,8 +69,16 @@ public:
 		}
 		return ans;
 	}
+	int maxProfit0(vector<int>& prices, int fee) {
+        	long long ans = 0LL, buyAt = numeric_limits<int>::min();
+        	for(int p : prices) {
+            		buyAt = std::max(buyAt, ans - p - fee);
+            		ans = std::max(ans, p + buyAt);
+       	 	}
+        	return static_cast<int>(ans);
+    	}
 	//Greedy, fee is charged when buy
-	int maxProfit0(const vector<int>& prices, int fee) {
+	int maxProfit1(const vector<int>& prices, int fee) {
 		int ans = 0, t = 0, bestBuy = numeric_limits<int>::min();
 		for (int p : prices) {
 			t = ans;
@@ -80,7 +88,7 @@ public:
 		return ans;
 	}
 	//Greedy with overflow possibility if fee is charged on sale (p - fee - numeric_limits<int>::max())
-	int maxProfit1(const vector<int>& prices, int fee) {
+	int maxProfit2(const vector<int>& prices, int fee) {
 		long long ans = 0, t = 0, bestBuy = numeric_limits<int>::max();
 		for (int p : prices) {
 			t = ans;
