@@ -104,6 +104,24 @@ public:
 	int longestSubstring(string s, int k) {
 		return this->aux(s, 0, s.length() - 1, k);
 	}
+	//This version using recursive lambda to avoid extra aux.
+	int longestSubstring00(string s, int k) {
+		int len = (int)s.length();
+		auto fun = [&s, k](int l, int r, auto &f) {
+			if (r - l + 1 < k) return 0;
+			int cnts[26] = { 0 }, ans = 0, p = l;
+			for (int i = l; i <= r; ++i) ++cnts[s[i] - 'a'];
+			for (int i = l; i <= r; ++i) {
+				if (cnts[s[i] - 'a'] < k) {
+					ans = std::max(ans, f(p, i - 1, f));
+					while (i <= r &&s[i + 1] == s[i]) ++i;
+					p = i + 1;
+				}
+			}
+			return std::max(ans, l == p ? r - l + 1 : f(p, r, f));
+		};
+		return fun(0, len - 1, fun);
+	}
 	int longestSubstring0(string s, int k) {
 		int len = (int)s.length();
 		if (len < k || k < 1) return 0;
