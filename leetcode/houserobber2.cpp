@@ -4,21 +4,33 @@
 using namespace std;
 //https://leetcode.com/problems/house-robber-ii/
 /*
-Note: This is an extension of House Robber.
+213. House Robber II
 
-After robbing those houses on that street, the thief has found himself a new place for his thievery so 
-that he will not get too much attention. This time, all houses at this place are arranged in a circle. 
-That means the first house is the neighbor of the last one. Meanwhile, the security system for these houses remain the same as for those in the previous street.
+You are a professional robber planning to rob houses along a street. Each house has a certain amount of money stashed. All houses at this place are arranged in a circle. That means the first house is the neighbor of the last one. Meanwhile, adjacent houses have security system connected and it will automatically contact the police if two adjacent houses were broken into on the same night.
 
-Given a list of non-negative integers representing the amount of money of each house, determine the 
-maximum amount of money you can rob tonight without alerting the police.
+Given a list of non-negative integers representing the amount of money of each house, determine the maximum amount of money you can rob tonight without alerting the police.
+
+Example 1:
+
+Input: [2,3,2]
+Output: 3
+Explanation: You cannot rob house 1 (money = 2) and then rob house 3 (money = 2),
+because they are adjacent houses.
+Example 2:
+
+Input: [1,2,3,1]
+Output: 4
+Explanation: Rob house 1 (money = 1) and then rob house 3 (money = 3).
+Total amount you can rob = 1 + 3 = 4.
 
 Observations:
+
 Since this is an extension of houserobber, it's intutive to apply the same approach on this one. However, since
 all houses are in a circle, there is one more constraint: the house at index 0 and index len - 1 can not be robbed
 together.
 
 After a closer look, this is what you can try:
+
 House with index len - 1 will not be robbed, therefore DP from index 0 to index len - 2 to get the maxVal1;
 House wih index 0 will not be robbed, therefore DP from index 1 to index len - 1 to get the maxVal2;
 Finally, we pick the greater one between maxVal1 and maxVal2;
@@ -27,6 +39,41 @@ using LL_Pair = std::pair<long long, bool>;
 class SolutionHouseRobber2
 {
 public:
+	int rob(const vector<int>& nums) {
+		size_t len = nums.size();
+		auto f = [&nums, len](int l, int r) {
+			long long prev = 0LL, ans = 0LL, t;
+			for (int i = l; i <= r; ++i) {
+				t = ans;
+				ans = std::max(ans, prev + nums[i]);
+				prev = t;
+			}
+			return ans;
+		};
+		return 1 == len ? nums[0] : std::max(f(0, len - 2), f(1, len - 1));
+	}
+	/*int rob(const vector<int>& nums)
+	{
+	int len = nums.size();
+	if (0 == len)return 0;
+	else if (1 == len)return nums[0];
+	int i = -2, cnt = len / 2, tmp = cnt;
+	long long even = 0, odd = 0, maxVal = 0;
+	while (tmp-- > 0)
+	{
+	even += nums[(i + 2) % len];
+	odd += nums[(i + 3) % len];
+	i += 2;
+	}
+	maxVal = std::max(odd, even);
+	for (i = 0; i < len - 1; ++i)
+	{
+	even = even - nums[i] + nums[(i + cnt * 2) % len];
+	odd = odd - nums[i + 1] + nums[(i + 1 + cnt * 2) % len];
+	maxVal = std::max(odd, std::max(even, maxVal));
+	}
+	return maxVal;
+	}*/
 	//O(N^2), watching TV is banned while doing algorithm!
 	int rob1(const vector<int>& nums)
 	{
@@ -89,7 +136,7 @@ public:
 		}
 		return maxVal;
 	}
-	int rob(const vector<int>& nums)
+	int rob0(const vector<int>& nums)
 	{
 		int len = nums.size();
 		if (0 == len)return 0;
@@ -120,3 +167,28 @@ void testHouseRobber2()
 	cout << "Expect 6: " << robber.rob(vector<int>{ 1, 2, 3, 4 }) << endl;
 	cout << "Expect 10: " << robber.rob(vector<int>{ 2, 2, 4, 3, 2, 5 }) << endl;
 }
+/*
+Test cases:
+
+[2,3,2]
+[]
+[1]
+[1,2]
+[2,1]
+[1,2,3]
+[3,2,1,0,5]
+[5,2,1,0,3]
+[9,6,5,6,4,5,5,6,8,5,2,3,0,6,1,1,1,5,7,3,4]
+
+Outputs:
+
+3
+0
+1
+2
+2
+3
+7
+6
+49
+*/

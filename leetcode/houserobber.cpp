@@ -4,7 +4,9 @@
 using namespace std;
 //https://leetcode.com/problems/house-robber/
 /*
-*You are a professional robber planning to rob houses along a street. Each house has a certain amount of
+198. House Robber
+
+You are a professional robber planning to rob houses along a street. Each house has a certain amount of
 money stashed, the only constraint stopping you from robbing each of them is that adjacent houses have
 security system connected and it will automatically contact the police if two adjacent houses were broken
 into on the same night.
@@ -13,6 +15,7 @@ Given a list of non-negative integers representing the amount of money of each h
 maximum amount of money you can rob tonight without alerting the police.
 
 Observation:
+
 Since no adjancent houses can be robbed on the same night,
 at house i:
 you can either rob maxVal[i - 2] + ValAtHouse[i] or skip house i, that is maxVal[i - 1]
@@ -26,6 +29,15 @@ Therefore, this is a linear DP with O(1) extra space
 class SolutionHouseRobber
 {
 public:
+	long long rob(const vector<int>& nums) {
+		long long prev = 0, ans = 0, t = 0;
+		for (int i : nums) {
+			t = ans;
+			ans = std::max(prev + i, ans);
+			prev = t;
+		}
+		return ans;
+	}
 	//O(N^2)
 	//you can't watch TV while doing algorithm...
 	/*
@@ -55,7 +67,7 @@ public:
 	}
 	//O(N)
 	//Only the last two results at i -1 and i - 2 are necessary to be kept
-	int rob(const vector<int>& nums)
+	int rob0(const vector<int>& nums)
 	{
 		int len = nums.size();
 		if (0 == len)return 0;
