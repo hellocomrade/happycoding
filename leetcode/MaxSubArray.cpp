@@ -17,22 +17,23 @@ Observations:
 So classic, have done multiple times here and there. But once for a while, I could easily forget the subtle details and take more than 15
 minutes to get this done, which is a shame...
 */
-class SolutionMaxiumuSubArray {
+class SolutionMaximumSubArray {
 public:
 	int maxSubArray(vector<int>& nums) {
-		long long maxSofar = numeric_limits<int>::min(), maxHere = 0;
-		for (int i : nums) {
-			maxHere = std::max((long long)i, maxHere + i);
-			maxSofar = std::max(maxSofar, maxHere);
-		}
-		return maxSofar;
-	}
-	int maxSubArray1(vector<int>& nums) {
 		size_t len = nums.size();
-		long long maxSofar = numeric_limits<long long>::min(), maxHere = 0;
+		long long ans = numeric_limits<long long>::min(), prevContri2Max = 0;
 		for (int i : nums) {
-			maxSofar = std::max(maxSofar, maxHere + i);
-			maxHere = std::max(0LL, maxHere + i);
+			ans = std::max(ans, prevContri2Max + i);
+			prevContri2Max = std::max(0LL, prevContri2Max + i);
+		}
+		return 0 == len ? 0 : static_cast<int>(ans);
+	}
+	int maxSubArray0(vector<int>& nums) {
+		size_t len = nums.size();
+		long long maxSofar = numeric_limits<int>::min(), maxEndingHere = 0;
+		for (int i : nums) {
+			maxEndingHere = std::max((long long)i, maxEndingHere + i);
+			maxSofar = std::max(maxSofar, maxEndingHere);
 		}
 		return 0 == len ? 0 : static_cast<int>(maxSofar);
 	}
