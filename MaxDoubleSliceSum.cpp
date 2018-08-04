@@ -1,6 +1,8 @@
 #include <cassert>
 #include <vector>
 #include <iostream>
+#include <algorithm>
+#include <limits>
 using namespace std;
 //https://codility.com/programmers/task/max_double_slice_sum
 /*
@@ -29,11 +31,45 @@ int solutionMaxDoubleSliceSum(const vector<int>& A)
     for (int i = 1; i < len; ++i)
 	maxFromLeft[i] = std::max(maxFromLeft[i - 1] + A[i], 0);
     for (int i = len-2; i >= 0; --i)
-	maxFromRight[i] = std::max(maxFromRight[i + 1 ] + A[i], 0);
+	maxFromRight[i] = std::max(maxFromRight[i + 1] + A[i], 0);
     int max = 0;
     for (int i = 1; i < len - 1; ++i)
 	max = std::max(max, maxFromLeft[i - 1] + maxFromRight[i + 1]);
     return max;
+}
+//Update on 2018-08-03
+//https://app.codility.com/demo/results/trainingETVTKH-3VF/
+/*
+First attempt failed on [0,10,-5,-2,0], correct answer is 10
+
+maxsum1 storing max sum ends at index i from left, maxsum1[0] = maxsum1[len - 1] = 0
+maxsum2 storing max sum ends at index i from right, maxsum2[0] = maxsum2[len - 1] = 0
+
+Final answer is:
+
+ans = std::max(ans, std::max(std::max(maxsum1[i - 1], maxsum2[i + 1]), maxsum1[i - 1] + maxsum2[i + 1]));
+
+Given i in [1, len - 2].
+
+I am not sure if this solution is perfect coz it handle the case like [-1,-2,-3,-4] by chance...
+
+maxsum1: [0,-2,-3,0]
+maxsum2: [0,-2,-3,0]
+
+In fact since triple [i, i + 1, i + 2] results in sum 0, there will be no chance for any negative slice max.
+*/
+int solution1(vector<int> &A) {
+    size_t len = A.size();
+    vector<long long> maxsum1(len, 0), maxsum2(len, 0);
+    long long maxContriPrev1 = 0LL, maxContriPrev2 = 0LL, ans = numeric_limits<int>::min();
+    for(size_t i = 1; i < len - 1; ++i) {
+        maxsum1[i] = maxContriPrev1 + A[i];
+        maxsum2[len - i - 1] = maxContriPrev2 + A[len - i - 1];
+        maxContriPrev1 = std::max(0LL, maxContriPrev1 + A[i]);
+        maxContriPrev2 = std::max(0LL, maxContriPrev2 + A[len - i - 1]);
+    }
+    for(size_t i = 1; i < len - 1; ++i) ans = std::max(ans, std::max(std::max(maxsum1[i - 1], maxsum2[i + 1]), maxsum1[i - 1] + maxsum2[i + 1]));
+    return static_cast<int>(ans);
 }
 void testMaxDoubleSliceSum()
 {
