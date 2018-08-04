@@ -58,7 +58,7 @@ maxsum2: [0,-2,-3,0]
 
 In fact since triple [i, i + 1, i + 2] results in sum 0, there will be no chance for any negative slice max.
 */
-int solution1(vector<int> &A) {
+int solutionMaxDoubleSliceSum1(const vector<int> &A) {
     size_t len = A.size();
     vector<long long> maxsum1(len, 0), maxsum2(len, 0);
     long long maxContriPrev1 = 0LL, maxContriPrev2 = 0LL, ans = numeric_limits<int>::min();
