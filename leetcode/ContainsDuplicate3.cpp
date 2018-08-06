@@ -29,10 +29,85 @@ Say t = 10 and k = 1, [1, 10, 1, 10, 1, 10, 1, 10], after sort: [1, 1, 1, 1, 10,
 
 Then the algorithm degrades to O(N^2). since every pair's diff is less than 10 and k is greater than 1. But the test case on Leetcode missed it...
 
+***Update on 8/6/2018***
 
+Corrected the flaw in containsNearbyAlmostDuplicate1.
+
+I happened to use std::lower_bound instead of Set::lower_bound, which led to a TLE. Then I learnt that std::lower_bound
+
+"On non-random-access iterators, the iterator advances produce themselves an additional linear complexity in N on average."
+
+Set generates non-random-access iterators and std::lower_bound doesn't take advantage of BST at all. Therefore, Set::lower_bound
+should be used.
 */
 class SolutionContainsDuplicate3 {
 public:
+	/*
+	Use Set(BST), NlogK
+	Maintaining a window in BST with size of k, as for t,
+	in containsNearbyAlmostDuplicate1, the search on (nums[i] + t) is WRONG and should be removed.
+	Searching on (nums[i] - t) gives the left boudary of possible match, if the right boudary can be
+	secured by checking *candidate - nums[i] <= t, then true shall be returned.
+	*/
+	bool containsNearbyAlmostDuplicate(const vector<int>& nums, int k, int t) {
+		set<long long> kset;
+		int len = (int)nums.size();
+		for (int i = 0; k > 0 && i < len; ++i) {
+			if (i - k > 0) kset.erase(nums[i - k - 1]);
+			auto candidate = kset.lower_bound(nums[i] * 1LL - t);
+			if (kset.end() != candidate && nums[i] * 1LL + t >= *candidate) return true;
+			kset.insert(nums[i]);
+		}
+		return false;
+	}
+	//use BST
+	bool containsNearbyAlmostDuplicate1(const vector<int>& nums, int k, int t) {
+		int len = nums.size();
+		if (0 == len)return 0;
+		set<long long> st;
+		auto end = st.end();
+		long long m = 0, lt = t;
+		//int cnt = 0;
+		for (int i = 0; i < len; ++i)
+		{
+			m = nums[i];
+			/*
+			Here is the tricky part:
+			lower_bound returns the element not before given val, which means the return is ethier equal to or
+			greater than m - lt, however, the return could be actually even greater than m + lt, if there
+			is no other element in between, so you still have to check the difference between returned value and m.
+			*/
+			auto ret1 = st.lower_bound(m - lt);
+			auto ret2 = st.lower_bound(m + lt);
+			if ((ret1 != end && abs(*ret1 - m) <= lt) || (ret2 != end && abs(*ret2 - m) <= lt))
+				return true;
+			st.insert(m);
+			//BST shall have most k + 1 nodes
+			if (st.size() > k)
+				st.erase(nums[i - k]);
+		}
+		return false;
+	}
+	//sort and then scan, O(NlogN) due to sorting
+	bool containsNearbyAlmostDuplicate0(const vector<int>& nums, int k, int t) {
+		int len = nums.size();
+		if (0 == len)return 0;
+		vector<std::pair<int, int> > vec;
+		for (int i = 0; i < len; ++i)
+			vec.emplace_back(nums[i], i);
+		std::sort(vec.begin(), vec.end());
+		long long m = 0;
+		int im = 0;
+		for (int i = 0; i < len; ++i)
+		{
+			m = vec[i].first;
+			im = vec[i].second;
+			for (int j = i + 1; j < len && vec[j].first - m <= t; ++j)
+				if (abs(im - vec[j].second) <= k)
+					return true;
+		}
+		return false;
+	}
 	/*
 	There is an attempt of using unordered_multimap, it works but will fails on the case like
 	{-1, 2147483647}, 1, 2147483647
@@ -74,54 +149,6 @@ public:
 			h = std::min(i + k + 1, len);
 			for (int j = i + 1; j < h; ++j)
 				if (abs((long long)nums[j] - (long long)m) <= (long long)t && j - i <= k)
-					return true;
-		}
-		return false;
-	}
-	//use BST
-	bool containsNearbyAlmostDuplicate1(const vector<int>& nums, int k, int t) {
-		int len = nums.size();
-		if (0 == len)return 0;
-		set<long long> st;
-		auto end = st.end();
-		long long m = 0, lt = t;
-		//int cnt = 0;
-		for (int i = 0; i < len; ++i)
-		{
-			m = nums[i];
-			/*
-			Here is the tricky part:
-			lower_bound returns the element not before given val, which means the return is ethier equal to or
-			greater than m - lt, however, the return could be actually even greater than m + lt, if there
-			is no other element in between, so you still have to check the difference between returned value and m.
-			*/
-			auto ret1 = st.lower_bound(m - lt);
-			auto ret2 = st.lower_bound(m + lt);
-			if ((ret1 != end && abs(*ret1 - m) <= lt) || (ret2 != end && abs(*ret2 - m) <= lt))
-				return true;
-			st.insert(m);
-			//BST shall have most k + 1 nodes
-			if (st.size() > k)
-				st.erase(nums[i - k]);
-		}
-		return false;
-	}
-	//sort and then scan
-	bool containsNearbyAlmostDuplicate(const vector<int>& nums, int k, int t) {
-		int len = nums.size();
-		if (0 == len)return 0;
-		vector<std::pair<int, int> > vec;
-		for (int i = 0; i < len; ++i)
-			vec.emplace_back(nums[i], i);
-		std::sort(vec.begin(), vec.end());
-		long long m = 0;
-		int im = 0;
-		for (int i = 0; i < len; ++i)
-		{
-			m = vec[i].first;
-			im = vec[i].second;
-			for (int j = i + 1; j < len && vec[j].first - m <= t; ++j)
-				if (abs(im - vec[j].second) <= k)
 					return true;
 		}
 		return false;
