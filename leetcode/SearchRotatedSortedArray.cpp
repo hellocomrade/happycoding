@@ -53,26 +53,67 @@ conduct BS in a reversed way. It looks elegant, but it's actually not coz you ca
 Since we know target value is not in range and know which range target value belongs to, we can simply move toward
 that direction and ignore the comparison between target value and mid value at all. This actually fits the logic of this
 algorithm better and actually closer to search00. Note: we don't compare with nums[0] here, instead, we compare with nums[l].
+
+***Update on 8/7/2018***
+
+https://leetcode.com/problems/search-in-rotated-sorted-array/discuss/14435/Clever-idea-making-it-simple
+
+The above solution comparing with nums[0] all the time. The implementation here though, comparing with nums[l], which is dynamic.
+Rule of thumb is: if both nums[m] and target are in a subarray that is sorted, regular BS can be conducted. Otherwise, one should
+use inverse BS.
+
+It appears to be shorter to write the condition that nums[m] and target are NOT on a sorted subarray:
+
+- (nums[m] < nums[l]) ^ (target < nums[l])
+
+- (nums[l] <= nums[m]) ^ (nums[l] <= target)
+
+Well, edge cases are subtle on whether equal should be applied...
+
+***Update on 8/8/2018***
+
+After some tough time on related problems, for example "Find Minimum in Rotated Sorted Array", it appears using nums[0] as the anchor
+is a more universal choice.
+
+- (nums[m] < nums[0]) ^ (target < nums[0])
+
+- (nums[0] <= nums[m]) ^ (nums[0] <= target)
 */
 class SolutionSearchRotatedSortedArray {
 public:
 	int search(const vector<int>& nums, int target) {
-		int len = (int)nums.size(), l = 0, r = len - 1, m = 0;
+		int l = 0, r = (int)nums.size() - 1, m = 0;
 		while (l <= r) {//cout << l << ',' << r << endl;
 			m = l + (r - l) / 2;
-			if (target == nums[m])return m;
-			if ((nums[m] < nums[l]) ^ (target < nums[l])) {
-				if (target >= nums[l])r = m - 1;
+			if (target == nums[m]) return m;
+			if ((nums[m] < nums[0]) ^ (target < nums[0])) {
+				if (target >= nums[m]) r = m - 1;
 				else l = m + 1;
 			}
 			else {
-				if (target > nums[m])l = m + 1;
+				if (target > nums[m]) l = m + 1;
 				else r = m - 1;
 			}
 		}
 		return -1;
 	}
 	int search0(const vector<int>& nums, int target) {
+		int l = 0, r = (int)nums.size() - 1, m;
+		while (l <= r) {
+			m = l + (r - l) / 2;
+			if (target == nums[m]) return m;
+			else if ((nums[l] <= nums[m]) ^ (nums[l] <= target)) {
+				if (target < nums[m]) l = m + 1;
+				else r = m - 1;
+			}
+			else {
+				if (target < nums[m]) r = m - 1;
+				else l = m + 1;
+			}//cout << l <<','<<r<<endl;
+		}
+		return -1;
+	}
+	int search00(const vector<int>& nums, int target) {
 		int len = (int)nums.size(), l = 0, r = len - 1, m = 0;
 		while (l <= r) {//cout << l << ',' << r << endl;
 			m = l + (r - l) / 2;
@@ -88,7 +129,7 @@ public:
 		}
 		return -1;
 	}
-	int search00(const vector<int>& nums, int target) {
+	int search000(const vector<int>& nums, int target) {
 		int len = (int)nums.size(), l = 0, r = len - 1, m = 0;
 		long lb = numeric_limits<int>::min() - 1L, ub = numeric_limits<int>::max() + 1L, mval;
 		while (l <= r) {
@@ -102,7 +143,7 @@ public:
 		return -1;
 	}
 	//I am still not happy with this...
-	int search000(const vector<int>& nums, int target) {
+	int search0000(const vector<int>& nums, int target) {
 		int len = (int)nums.size(), l = 0, r = len - 1, m = 0;
 		while (l <= r) {//cout << l << ',' << r << endl;
 			m = l + (r - l) / 2;
@@ -264,3 +305,100 @@ void TestSearchRotatedSortedArray()
 	assert(2 == so.search(vector<int>{8, 0, 1, 2, 3, 4}, 1));
 	assert(5 == so.search(vector<int>{8, 0, 1, 2, 3, 4}, 4));
 }
+/*
+Test cases:
+
+[4,5,6,7,0,1,2]
+0
+[4,5,6,7,0,1,2]
+1
+[4,5,6,7,0,1,2]
+2
+[4,5,6,7,0,1,2]
+4
+[4,5,6,7,0,1,2]
+5
+[4,5,6,7,0,1,2]
+6
+[4,5,0,1,2,3]
+4
+[4,5,0,1,2,3]
+5
+[4,5,0,1,2,3]
+0
+[4,5,0,1,2,3]
+1
+[4,5,0,1,2,3]
+2
+[4,5,0,1,2,3]
+3
+[5,1]
+1
+[5,1,2,3,4]
+1
+[4,5,6,7,8,0,1,2]
+8
+[4,0,1,2]
+4
+[5,1,2,3,4]
+1
+[4,5,6,7,0,1,2]
+0
+[0,1,2]
+0
+[0,1,2]
+2
+[5,1,3]
+3
+[4,5,6,7,8,1,2,3]
+8
+[1,2,3]
+2
+[1,2,3]
+3
+[1]
+2
+[1]
+1
+[]
+5
+[7,0,1,2,3]
+7
+[7,0,1,2]
+1
+[7,0,1,2]
+2
+
+Outputs:
+
+4
+5
+6
+0
+1
+2
+0
+1
+2
+3
+4
+5
+1
+1
+4
+0
+1
+4
+0
+2
+2
+4
+1
+2
+-1
+0
+-1
+0
+2
+3
+*/
