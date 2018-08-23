@@ -59,7 +59,7 @@ After duplicate removal, j > i, there is no chance anymore to discover 1. Theref
 */
 class SolutionSearchRotatedSortedArray2 {
 public:
-	bool search(vector<int>& nums, int target) {
+	bool search(const vector<int>& nums, int target) {
 		if (true == nums.empty()) return false;
 		int l = 0, r = (int)nums.size() - 1, m = 0, p;
 		while (l < r && nums[l] == nums[r]) {
