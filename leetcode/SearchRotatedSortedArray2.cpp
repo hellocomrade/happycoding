@@ -39,13 +39,49 @@ there is no way you can find duplicates in both A and B unless they are at the b
 All in all, only duplicates at beginning and end of array affect the algorithm in leetcode 33. We could solve it by moving pointers l and r
 inward if nums[l] == nums[r]. Then same algorithm in leetcode 33 can be applied.
 
-***Update on 8/8/2018***
+***Update on 8/23/2018***
 
-It appears using nums[0] as the anchor point is a more universal choice than nums[l], which may subject to change if l is changed.
+It appears using nums[k], k is the leftmost after duplicates removal as the anchor point is a simpler choice than nums[l], which may subject to change when l is changed.
+Original thought on using nums[0] as leetcode 33 (Search in Rotated Sorted Array) would work, but the inner branches are based upon unbalanced inner conditions.
+
+In fact nums[k] is equivalent to nums[0] in leetcode 33 since there is no duplicates in leetcode 33.
+
+An other edge case is: before duplicate removals, one may think using:
+
+target == nums[0]
+
+to take care the case th target is the first element in the nums. Then during duplicate removals, there is no need for this check anymore.
+It will fail the following case:
+
+[0,1,1,0]
+
+After duplicate removal, j > i, there is no chance anymore to discover 1. Therefore (target == nums[l]) has to be done in while loop.
 */
 class SolutionSearchRotatedSortedArray2 {
 public:
-	bool search(const vector<int>& nums, int target) {
+	bool search(vector<int>& nums, int target) {
+		if (true == nums.empty()) return false;
+		int l = 0, r = (int)nums.size() - 1, m = 0, p;
+		while (l < r && nums[l] == nums[r]) {
+			if (target == nums[l]) return true;
+			++l, --r;
+		}
+		p = nums[l];
+		while (l <= r) {
+			m = l + (r - l) / 2;
+			if (target == nums[m]) return true;
+			if ((nums[m] < p) ^ (target < p)) {
+				if (target > nums[m]) r = m - 1;
+				else l = m + 1;
+			}
+			else {
+				if (target > nums[m]) l = m + 1;
+				else r = m - 1;
+			}
+		}
+		return false;
+	}
+	bool search1(const vector<int>& nums, int target) {
 		int len = (int)nums.size(), l = 0, r = len - 1, m = 0;
 		while (l < r && nums[l] == nums[r]) {
 			if (target == nums[l]) return true;
