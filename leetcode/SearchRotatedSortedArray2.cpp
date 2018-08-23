@@ -107,3 +107,40 @@ void TestSearchRotatedSortedArray2() {
 	assert(true == so.search(vector<int>{1, 1, 3, 1}, 3));
 	assert(true == so.search(vector<int>{1, 3, 1, 1, 1}, 3));
 }
+/*
+Test cases:
+
+[1,3,1,1,1]
+3
+[9,5,6,7,8,9,9,9,9,9,9]
+8
+[0,1,1,0]
+1
+[1,1,3,1]
+3
+[4,4,4,5,5,6,1,1,2,3,4,4]
+4
+[4,4,4,5,5,6,1,1,2,3,4,4]
+5
+[4,4,4,5,5,6,1,1,2,3,4,4]
+6
+[4,4,4,5,5,6,1,1,2,3,4,4]
+1
+[4,4,4,5,5,6,1,1,2,3,4,4]
+2
+[4,4,4,5,5,6,1,1,2,3,4,4]
+7
+
+Outputs:
+
+true
+true
+true
+true
+true
+true
+true
+true
+true
+false
+*/
