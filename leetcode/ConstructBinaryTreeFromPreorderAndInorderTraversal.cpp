@@ -82,6 +82,18 @@ left subtree can be calculated by checking the left partition of the inorder res
 
 As usual for divide and conquer, two pointers are given to indicate the boundary on the inorder result. Integer i is
 for the index on the preorder result as the next parent.
+
+***Update on 9/4/2018***
+Based upon the new trick I learnt in leetcode 889 (Construct Binary Tree from Preorder and Postorder Traversal), I tried
+the same approach here, which creates new node according to preorder array then decide where to link it with the help from a stack.
+
+buildTree is actually pretty close to buildTree00, but a little bit better readability. Comparing with the implementation in leetcode 889,
+
+1. Stack here could go empty during the loop due to the nature of the inorder traversal;
+2. Still because of inorder traversal is used, if any node is poped from stack, the newly created node shall be poped node's right child. Otherwise,
+the new node is the left child of the top node on the stack;
+
+Note: the answer is given in BS's level traversal order.
 */
 namespace ConstructBinaryTreeFromPreorderAndInorderTraversal {
 	//Definition for a binary tree node.
@@ -103,10 +115,26 @@ namespace ConstructBinaryTreeFromPreorderAndInorderTraversal {
 			return root;
 		}
 	public:
-		TreeNode* buildTree0(vector<int>& preorder, vector<int>& inorder) {
+		TreeNode* buildTree(const vector<int>& preorder, const vector<int>& inorder) {
+			int len = (int)preorder.size();
+			if (1 > len) return nullptr;
+			TreeNode *pnode = nullptr, *prev = nullptr, *root = new TreeNode(preorder[0]);
+			if (1 == len) return root;
+			stack<TreeNode*> stk;
+			stk.push(root);
+			for (int i = 1, j = 0; i < len; prev = nullptr, ++i) {
+				pnode = new TreeNode(preorder[i]);
+				while (false == stk.empty() && inorder[j] == stk.top()->val) prev = stk.top(), stk.pop(), ++j;
+				if (nullptr == prev) stk.top()->left = pnode;
+				else prev->right = pnode;
+				stk.push(pnode);
+			}
+			return root;
+		}
+		TreeNode* buildTree0(const vector<int>& preorder, const vector<int>& inorder) {
 			return this->aux(preorder, inorder, 0, preorder.size(), 0);
 		}
-		TreeNode* buildTree(const vector<int>& preorder, const vector<int>& inorder) {
+		TreeNode* buildTree00(const vector<int>& preorder, const vector<int>& inorder) {
 			int len = (int)preorder.size(), i = 1, j = 0;
 			TreeNode *ans = 1 > len ? nullptr : new TreeNode(preorder[0]), *cur = ans;
 			stack<TreeNode*> stk;
@@ -198,6 +226,8 @@ void TestConstructBinaryTreeFromPreorderAndInorderTraversal() {
 Test cases:
 [3,9,20,15,7]
 [9,3,15,20,7]
+[1,2,3,4,5,6,7,8]
+[4,3,5,2,6,1,8,7]
 [1,2]
 [2,1]
 [1,2]
@@ -206,20 +236,27 @@ Test cases:
 [4,3,5,2,1,6]
 [1,2,3]
 [3,2,1]
+[1,2,3]
+[2,1,3]
+[1,2,3]
+[1,2,3]
 [1]
 [1]
 []
 []
-[1,2,3,4,5,7,6,8]
-[4,3,5,2,7,1,8,6]
+[1,2,3,4,6,5]
+[1,2,4,6,3,5]
 
 Results:
 [3,9,20,null,null,15,7]
+[1,2,7,3,6,8,null,4,5]
 [1,2]
 [1,null,2]
 [1,2,6,3,null,null,null,4,5]
 [1,2,null,3]
+[1,2,3]
+[1,null,2,null,3]
 [1]
 []
-[1,2,6,3,7,8,null,4,5]
+[1,null,2,null,3,4,5,null,6]
 */
