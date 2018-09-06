@@ -69,8 +69,46 @@ namespace BalancedBinaryTree {
 			else return std::max(lh, rh) + 1;
 		}
 	public:
+		//A compact version using lambda
 		bool isBalanced(TreeNode* root) {
+			bool ans = true;
+			auto f = [&ans](TreeNode* root, auto& fun) {
+				if (false == ans || nullptr == root) return 0;
+				int l = fun(root->left, fun);
+				int r = fun(root->right, fun);
+				if (1 < std::abs(l - r)) ans = false;
+				return std::max(l, r) + 1;
+			};
+			f(root, f);
+			return ans;
+		}
+		bool isBalanced0(TreeNode* root) {
 			return -1 != this->height(root);
 		}
 	};
 }
+/*
+Test cases:
+
+[3,9,20,null,null,15,7]
+[1,2,2,3,3,null,null,4,4]
+[]
+[1]
+[1,2,3]
+[1,2,3,4,5,null,6,7]
+[1,2]
+[1,2,null,3]
+[1,2,3,4,null,null,5,null,null,null,6]
+
+Outputs:
+
+true
+false
+true
+true
+true
+true
+true
+false
+false
+*/
