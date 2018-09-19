@@ -39,7 +39,7 @@ namespace PlusOneLinkedList {
 		ListNode *next;
 		ListNode(int val) {
 			this->val = val;
-			this->next = NULL;
+			this->next = nullptr;
 		}
 	};
 
