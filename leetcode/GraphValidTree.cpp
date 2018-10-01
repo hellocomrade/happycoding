@@ -92,11 +92,11 @@ public:
 			if (root1 == root2) return false;
 			if (roots[root1].second >= roots[root2].second) {
 				roots[root2].first = root1;
-				roots[root1].second = roots[root2].second;
+				roots[root1].second += roots[root2].second;
 			}
 			else {
 				roots[root1].first = root2;
-				roots[root2].second = roots[root1].second;
+				roots[root2].second += roots[root1].second;
 			}
 			return true;
 		};
