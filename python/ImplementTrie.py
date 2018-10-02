@@ -29,7 +29,7 @@ class Trie:
     
     def _dfs(self, word):
         if word is None:
-            return False
+            return None
         tnode = self._root
         for c in word:
             if c not in tnode.buckets:
