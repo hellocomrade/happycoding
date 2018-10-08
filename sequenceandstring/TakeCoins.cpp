@@ -50,7 +50,10 @@ They are actually one to one mapping, say if you pick [5, 4] from left, then def
 
 Then the question is transformed to:
 
-Finding the max sum of: FromLeft[i] + FromRight[k - i]
+Finding the max sum of: FromLeft[0 to i] + FromRight[0, k - i - 2], i in [0, k - 2], FromLeft and FromRight are prefix sums from left and right.
+
+and finally comparing the max above with max(FromLeft[k - 1], FromRight[k - 1]), the latter two are the situation that the max
+may come entirely from left or right
 
 This is a two pointers with prefix sum, which can be done in linear time and O(K) space.
 */
