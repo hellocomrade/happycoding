@@ -32,13 +32,14 @@ Take two coins from the left and one from the right.
 
 Observations:
 
-I thought this can be done using DP by the following state transformation:
+The naive approach will be:
 
 F[i][j][cnt] = MAX(F[i + 1][j][cnt - 1], F[i][j - 1][cnt - 1])
 
-This will work using a 3D memo array, which gave me a MLE; Then I replaced vector with hash table,
-but still get a TLE. So, that clearly indicates that there is an alternative that requires way less
-space and time.
+Even though it looks like DP, there is actually no overlap at all. For every element in the array,
+the subarray starting from that element with length from 1 to k will be examined. This will take (kN)
+time and therefore O(N^2).
+
 
 Given an array [5, 4, 2, 1, 1, 1, 3, 6], and k = 6, since one can only take element from two ends sequentially:
 
@@ -50,7 +51,9 @@ They are actually one to one mapping, say if you pick [5, 4] from left, then def
 
 Then the question is transformed to:
 
-Finding the max sum of: FromLeft[i] + FromRight[k - i]
+Finding the max sum of: FromLeft[0 to i] + FromRight[0, k - i - 2], i in [0, k - 2], FromLeft and FromRight are prefix sums from left and right.
+and finally comparing the max above with max(FromLeft[k - 1], FromRight[k - 1]), the latter two are the situation that the max
+may come entirely from left or right
 
 This is a two pointers with prefix sum, which can be done in linear time and O(K) space.
 */
