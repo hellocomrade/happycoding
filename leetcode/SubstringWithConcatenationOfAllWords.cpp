@@ -12,21 +12,29 @@ using namespace std;
 You are given a string, s, and a list of words, words, that are all of the same length. Find all starting indices of substring(s) in s that is a concatenation of each word in words exactly once and without any intervening characters.
 
 For example, given:
+
 s: "barfoothefoobarman"
+
 words: ["foo", "bar"]
 
 You should return the indices: [0,9].
+
 (order does not matter).
 
 Observations:
+
 I did leetcode 76 first, then it's natural for me to try to mimic the same approach here. First try is findSubstring1, it runs O(MN), given
 M as the length of vector words and N as the length of string s. The complication is the overlap of word on s, in order to deal with that, the
 algorithm has to scan from every index on string s and we will NOT be able to tell exactly if a candidate sliding window is the "Concatenation of All Words".
 due to overlap. Therefore, a linear scan costed O(M) has to be conducted every time on a potential fit.
 
 Then I took a look on O(N) solutions posted on leetcode, most of them are very long and use lots of extra storage to support the linear scan, which
-are not very leetcode. However, I did notice one fact that I missed: the number of starting points for scan is only P, given P as the length of word in vector words,
-coz every word in words having the same length! This solved overlap issue naturally as well! Since we are now only scanning with interval P, there is no need to
+are not very leetcode. However, I did notice one fact that I missed: since each iteration goes to the end of the string s, only the first P indexes
+is necessary to be examined as the start point, given P as the size of the word in vector words.
+
+Each iteration runs (N / P) times and there are P indexes to start. (N / P) * P = N;
+
+This solved overlap issue naturally as well! Since we are now only scanning with interval P, there is no need to
 worry the overlap.
 
 Also, I managed to reuse hashmap for storing word count by the knowledage we learned in leetcode 76, by the time the left pointer meets the right pointer,
@@ -40,20 +48,20 @@ public:
 		unordered_map<string, int> wordCount;
 		vector<int> ans;
 		int l = 0, r = 0, cnt = 0, lens = s.length(), lenw = words.size(), len = words[0].length();
-		for (auto w : words)++wordCount[w];
+		for (auto w : words) ++wordCount[w];
 		for (int i = 0; i < len; ++i) {
 			l = r = i;
 			while (r <= lens - len) {
-				if (--wordCount[s.substr(r, len)] >= 0)++cnt;
+				if (--wordCount[s.substr(r, len)] >= 0) ++cnt;
 				r += len;
 				while (cnt == lenw) {
-					if (r - l == lenw * len)ans.push_back(l);
-					if (++wordCount[s.substr(l, len)] > 0)--cnt;
+					if (r - l == lenw * len) ans.push_back(l);
+					if (++wordCount[s.substr(l, len)] > 0) --cnt;
 					l += len;
 				}
 			}
 			while (l <= lens - len) {
-				if (++wordCount[s.substr(l, len)] > 0)--cnt;
+				if (++wordCount[s.substr(l, len)] > 0) --cnt;
 				l += len;
 			}
 		}
@@ -92,3 +100,31 @@ void TestSubstringWithConcatenationOfAllWords() {
 	ret = {};
 	assert(ret == so.findSubstring("abababab", vector<string>{"ab", "ba"}));
 }
+/*
+Test cases:
+
+"barfoothefoobarman"
+["foo","bar"]
+"barfoobfoobar"
+["bar","arf", "foo","oob"]
+"abcbbarffoob"
+["bar","arf", "foo","oob"]
+"abcbbarffoobcd"
+["bar","arf", "foo","oob"]
+"aaaaaa"
+["aaa","aaa"]
+"ababaabab"
+["ab","ab","ba","ba"]
+"abbaccaaabcabbbccbabbccabbacabcacbbaabbbbbaaabaccaacbccabcbababbbabccabacbbcabbaacaccccbaabcabaabaaaabcaabcacabaa"
+["cac","aaa","aba","aab","abc"]
+
+Outputs:
+
+[0,9]
+[1]
+[]
+[]
+[0]
+[1]
+[97]
+*/
