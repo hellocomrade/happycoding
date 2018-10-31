@@ -97,6 +97,12 @@ Comparing between first half and second half, it's like mirroring the first half
 The edge case is: when N = 0, the answer is [0].
 
 The "standard" solution is in grayCode: i ^ (i >> 1), given i in [0, 2^n)
+
+***Update on 2018-10-31***
+
+In order to output the "default" outcome, grayCode1 has to start from MSB which is the bit being manipulated first.
+In the problem statement, it has been mentioned that "a gray code sequence may not be uniquley defined". So, the alternative
+result is actually a complete mirror of the default outcome, see grayCode11. In there, the program starts on LSB.
 */
 class SolutionGrayCode {
 public:
@@ -131,6 +137,21 @@ public:
 			}
 		};
 		bt(n - 1, bt);
+		return ans;
+	}
+	//"Backtracing-like" without backtracing, alternative results
+	vector<int> grayCode11(int n) {
+		bitset<32> bits;
+		vector<int> ans;
+		auto bt = [&bits, &ans, n](int i, const auto& fun) -> void {
+			if (n == i) ans.push_back((int)bits.to_ulong());
+			else {
+				fun(i + 1, fun);
+				bits.flip(i);
+				fun(i + 1, fun);
+			}
+		};
+		bt(0, bt);
 		return ans;
 	}
 };
