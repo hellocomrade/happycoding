@@ -189,7 +189,8 @@ Above equation is: A^(C - 1) % C = 1 % C => A^(C - 1) % C = 1, then A^(C - 2) % 
 
 Therefore, A^(C - 2) is A's modular multiplicative inverse since A^(C - 2) * A = 1 (mod C).
 
-This is not the end yet since C is a huge number, A^(C - 2) will be extremely large. Efficently calculating pow(m, n)
+This is not the end yet since C is a huge number, A^(C - 2) will be extremely large.
+Efficently calculating pow(m, n) takes advantage of "Exponetiation by Squaring" and
 takes O(log(n)) time and is given as lambda function "auto modpow" with proper modulo.
 
 Even with all these, my submittal still failed two test cases. The problem is at:

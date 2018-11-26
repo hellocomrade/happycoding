@@ -29,6 +29,9 @@ Wiki for Exponetiation by Squaring:
 
 https://en.wikipedia.org/wiki/Exponentiation_by_squaring
 
+***Update on 2018-11-26***
+
+New version of myPow is given to better reflect the theory of Exponentiation by Squaring.
 */
 class SolutionPow {
 private:
@@ -38,8 +41,17 @@ private:
 		return m * m * (1 == n % 2LL ? x : 1.0);
 	}
 public:
-	//Iterative
 	double myPow(double x, int n) {
+		long nn = std::abs((long)n);
+		double ans = 1.0;
+		for (long i = 1; i <= nn; i <<= 1) {
+			if (0 != (i & nn)) ans *= x;
+			x *= x;
+		}
+		return n < 0 ? 1.0 / ans : ans;
+	}
+	//Iterative
+	double myPow0(double x, int n) {
 		//Possible integer overflow if INT_MIN, abs(-2147483648)
 		long long nl = std::abs((long long)n);
 		double ret = 1;
