@@ -104,10 +104,31 @@ static int mergeSort(vector<int> &A, vector<int> &B, int start, int end)
 	return cnt;
 }
 
-int solutionArrayInversionCount(vector<int> &A)
+int solutionArrayInversionCount0(vector<int> &A)
 {
 	vector<int> B(A.size(), 0);
 	return mergeSort(A, B, 0, A.size() - 1);
+}
+//https://app.codility.com/demo/results/training4T7V5N-BBV/
+//Redo after 3 years
+int solutionArrayInversionCount(vector<int> &A) {
+    int len = (int)A.size();
+    vector<int> aux(len, 0);
+    long long ans = 0LL;
+    auto merge = [&A, &aux](int l, int mid, int r) -> long long {
+        int lr = mid, i = l;
+        long long cnt = 0;
+        while(l < mid && lr < r) aux[i++] = (A[l] <= A[lr]) ? A[l++] : (cnt += (mid - l), A[lr++]);
+        while(l < mid) aux[i++] = A[l++];
+        while(lr < r) aux[i++] = A[lr++];
+        return cnt;
+    };
+    for(int i = 1; i < len; std::copy(aux.begin(), aux.end(), A.begin()), i <<= 1)
+        for(int j = 0; j + i < len; j += 2 * i) {
+            ans += merge(j, j + i, std::min(len, j + 2 * i));
+            if(ans > 1000000000) return -1;
+        }
+    return static_cast<int>(ans);
 }
 void testArrayInversionCount()
 {
