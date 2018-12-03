@@ -4,7 +4,59 @@
 #include <iostream>
 
 using namespace std;
+
+//https://app.codility.com/programmers/lessons/99-future_training/array_inversion_count/
+/*
+ArrayInversionCount
+
+An array A consisting of N integers is given. An inversion is a pair of indexes (P, Q) such that P < Q and A[Q] < A[P].
+
+Write a function:
+
+int solution(int A[], int N);
+
+that computes the number of inversions in A, or returns −1 if it exceeds 1,000,000,000.
+
+For example, in the following array:
+
+ A[0] = -1 A[1] = 6 A[2] = 3
+ A[3] =  4 A[4] = 7 A[5] = 4
+
+there are four inversions:
+
+   (1,2)  (1,3)  (1,5)  (4,5)
+
+so the function should return 4.
+
+Write an efficient algorithm for the following assumptions:
+
+- N is an integer within the range [0..100,000];
+- Each element of array A is an integer within the range [−2,147,483,648..2,147,483,647].
+*/
+//https://app.codility.com/demo/results/trainingSJYVE6-H4Y/
+//Redo after 3 years
+int solutionArrayInversionCount(vector<int> &A) {
+    int len = (int)A.size();
+    vector<int> aux(len, 0);
+    long long ans = 0LL;
+    auto merge = [&A, &aux](int l, int mid, int r) -> long long {
+        int lr = mid, i = l;
+        long long cnt = 0;
+        while(l < mid && lr < r) aux[i++] = (A[l] <= A[lr]) ? A[l++] : (cnt += (mid - l), A[lr++]);
+        while(l < mid) aux[i++] = A[l++];
+        while(lr < r) aux[i++] = A[lr++];
+        return cnt;
+    };
+    for(int i = 1; i < len; std::copy(aux.begin(), aux.end(), A.begin()), i <<= 1)
+        for(int j = 0; j + i <= len; j += 2 * i) {
+            ans += merge(j, j + i, std::min(len, j + 2 * i));
+            if(ans > 1000000000) return -1;
+        }
+    return static_cast<int>(ans);
+}
+
 using IntPair = std::pair<int, int>;
+
 static int arrayInversionCountAux1(const vector<int> &A, const vector<IntPair> &Sorted, int idx, int start, int end)
 {
 	if (start > end || idx == A.size())return 0;
@@ -109,27 +161,7 @@ int solutionArrayInversionCount0(vector<int> &A)
 	vector<int> B(A.size(), 0);
 	return mergeSort(A, B, 0, A.size() - 1);
 }
-//https://app.codility.com/demo/results/training4T7V5N-BBV/
-//Redo after 3 years
-int solutionArrayInversionCount(vector<int> &A) {
-    int len = (int)A.size();
-    vector<int> aux(len, 0);
-    long long ans = 0LL;
-    auto merge = [&A, &aux](int l, int mid, int r) -> long long {
-        int lr = mid, i = l;
-        long long cnt = 0;
-        while(l < mid && lr < r) aux[i++] = (A[l] <= A[lr]) ? A[l++] : (cnt += (mid - l), A[lr++]);
-        while(l < mid) aux[i++] = A[l++];
-        while(lr < r) aux[i++] = A[lr++];
-        return cnt;
-    };
-    for(int i = 1; i < len; std::copy(aux.begin(), aux.end(), A.begin()), i <<= 1)
-        for(int j = 0; j + i < len; j += 2 * i) {
-            ans += merge(j, j + i, std::min(len, j + 2 * i));
-            if(ans > 1000000000) return -1;
-        }
-    return static_cast<int>(ans);
-}
+
 void testArrayInversionCount()
 {
 	vector<int> foo{ 1, 2, 3, 4 };
