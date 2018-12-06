@@ -1,6 +1,6 @@
 include Makefile.inc
 OBJS:=$(patsubst %.cpp,%.o,$(wildcard *.cpp))
-SUBS = leetcode binarysearch bitwise cplusplus dynamicprogramming hash list matrix numbers sequenceandstring sorting stackandqueue tree greedy graph backtracing hackerrank
+SUBS = leetcode binarysearch bitwise cplusplus dynamicprogramming hash list matrix numbers sequenceandstring sorting stackandqueue tree greedy graph backtracing hackerrank number_theory
 
 .PHONY:all $(SUBS) clean #subdir
 
