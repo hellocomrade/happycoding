@@ -35,7 +35,7 @@ the length of S is within the range [0..2,000,000].
 Redo after 2 years
 */
 //https://app.codility.com/demo/results/trainingMJ4TE4-WCN/
-int solutionStrSymmetryPoint(string &S) {
+int solutionStrSymmetryPoint(const string &S) {
 	int len = (int)S.length(), l = 0, r = len - 1;
 	if (0 == (1 & len)) return -1;
 	while (l < r) if (S[l++] != S[r--]) return -1;
