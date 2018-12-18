@@ -41,13 +41,36 @@ Post-order traversal is ideal. flatten1 is such an implementation using recursio
 A way smarter solution is still using post-order recursively. But, it traverses right child tree first and keeps tracking
 the last visited node coz the next visited node's right child is current visited node in such a traversal order. See flatten.
 
-You can also do this in an iterative way with O(1) space. I did it by reconstructing trees while traversal, sort of like Morris Traversal.
+You can also do this in an iterative way with O(1) space and O(N) time. I did it by reconstructing trees while traversal, sort of like Morris Traversal.
 See flatten0. An extra tree is maintained from breaking right child tree from original tree. If all remaining nodes on the original tree
-is visited, the extra tree is the next root to parse. This process continues until no extra tree is available.
+is visited, the extra tree is the next root to parse. This process continues until no extra tree is available. See flatten000.
+
+flatten00 is also O(N) time and O(1) space. But it follows a different idea:
+Given any no-null node root->right, it should be reattched onto a place in the left branch of root:
+
+1. The rightmost leaf node on the closest right branch to root->left;
+2. If such a node doesn't exist, the leftmost leaf node will do (Either on the nearest right branch or not);
+
+Once the move is done, being moved right branch is set.
 
 But there is actually a more elegant solution:
 
 https://leetcode.com/problems/flatten-binary-tree-to-linked-list/discuss/37010/Share-my-simple-NON-recursive-solution-O(1)-space-complexity!
+
+See flatten0, comparing with my flatten00, it doesn't pursue relocating the right branch to the correct location by one move. Instead,
+
+1. If root->left has right branch, move root->right to the rightmost leaf node of root->left->right;
+2. Otherwise, temporarily move root->right as root->left->right;
+
+The operation 2 is very clever: it doesn't solve the problem but it defer the problem to root->left->left. So root->right will keep sinking
+till a right branch on root->left's subtree emerges or it will be eventually hooked up with leftmost leaf node of root->left.
+
+One may question the time complexity of these three iterative solutions. It appears the inner while loop might scan at least half of the node on the branch
+repeatly so the overall time complexity could be O(N^2). However, after a closer look, one should realize this is not true. Those inner while loop is only
+triggered in certain condition, i.e., root->left is not None or root->right is not None. So, a node will be visited at most twice if it's a left child.
+Therefore, O(N) time.
+
+leetcode 114 is a really interesting problem coz it can be implemented using different approaches and ideas.
 */
 namespace FlattenBinaryTree2LinkedList {
 	/**
@@ -74,7 +97,39 @@ namespace FlattenBinaryTree2LinkedList {
 			prev = root;
 		}
 		//Iterative, no stack
+		/*
+
+		*/
 		void flatten0(TreeNode* root) {
+			TreeNode *pnode = nullptr;
+			while (nullptr != root) {
+				if (nullptr != root->left) {
+					pnode = root->left;
+					while (nullptr != pnode->right) pnode = pnode->right;
+					pnode->right = root->right;
+					root->right = root->left;
+					root->left = nullptr;
+				}
+				root = root->right;
+			}
+		}
+		//Iterative, no stack
+		void flatten00(TreeNode* root) {
+			TreeNode *pnode = nullptr;
+			while (nullptr != root) {
+				if (nullptr != root->left) {
+					pnode = root->left;
+					while (nullptr != pnode->left || nullptr != pnode->right)
+						pnode = nullptr != pnode->right ? pnode->right : pnode->left;
+					pnode->right = root->right;
+					root->right = root->left;
+					root->left = nullptr;
+				}
+				root = root->right;
+			}
+		}
+		//Iterative, no stack
+		void flatten000(TreeNode* root) {
 			TreeNode *proot1 = nullptr, *prev = nullptr, *tmp = nullptr;
 			while (nullptr != root) {
 				if (nullptr != root->right) {
