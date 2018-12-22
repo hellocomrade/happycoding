@@ -28,6 +28,10 @@ the end time of newInterval comparing with intervals[i].start. Be aware, always 
 coz they hare in non-descending order.
 
 Merging on overlapping intervals: Interval(std::min(newInterval.start, intervals[i].start), std::max(newInterval.end, intervals[i].end))
+
+***Update on 2018-12-21***
+
+This time, I'd like to have a shorter version, see insert. One loop, O(N) time and O(N) space.
 */
 namespace InsertInterval {
 	/**
@@ -42,6 +46,21 @@ namespace InsertInterval {
 	class Solution {
 	public:
 		vector<Interval> insert(vector<Interval>& intervals, Interval newInterval) {
+			vector<Interval> ans;
+			bool done = false;
+			if (1 > intervals.size()) return ans.push_back(newInterval), ans;
+			for (const auto& i : intervals) {
+				if (i.start <= newInterval.end && i.end >= newInterval.start)
+					newInterval.start = std::min(i.start, newInterval.start), newInterval.end = std::max(i.end, newInterval.end);
+				else {
+					if (false == done && newInterval.end < i.start) ans.push_back(newInterval), done = true;
+					ans.push_back(i);
+				}
+			}
+			if (false == done) ans.push_back(newInterval);
+			return ans;
+		}
+		vector<Interval> insert1(vector<Interval>& intervals, Interval newInterval) {
 			int len = (int)intervals.size();
 			int mid = 0, l = 0, h = len - 1;
 			vector<Interval> ans;
@@ -69,3 +88,34 @@ namespace InsertInterval {
 		}
 	};
 }
+/*
+Test cases:
+
+[[1,3],[6,9]]
+[2,5]
+[[1,2],[3,5],[6,7],[8,10],[12,16]]
+[4,8]
+[]
+[1,1]
+[[1,2]]
+[0,0]
+[[1,2]]
+[3,3]
+[[1,5]]
+[2,3]
+[[0,2],[3,9]]
+[6,8]
+[[3,5],[12,15]]
+[6,6]
+
+Outputs:
+
+[[1,5],[6,9]]
+[[1,2],[3,10],[12,16]]
+[[1,1]]
+[[0,0],[1,2]]
+[[1,2],[3,3]]
+[[1,5]]
+[[0,2],[3,9]]
+[[3,5],[6,6],[12,15]]
+*/
