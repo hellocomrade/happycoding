@@ -48,7 +48,6 @@ namespace InsertInterval {
 		vector<Interval> insert(vector<Interval>& intervals, Interval newInterval) {
 			vector<Interval> ans;
 			bool done = false;
-			if (1 > intervals.size()) return ans.push_back(newInterval), ans;
 			for (const auto& i : intervals) {
 				if (i.start <= newInterval.end && i.end >= newInterval.start)
 					newInterval.start = std::min(i.start, newInterval.start), newInterval.end = std::max(i.end, newInterval.end);
