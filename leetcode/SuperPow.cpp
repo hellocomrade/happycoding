@@ -98,6 +98,6 @@ public:
 		};
 		int e = b.back();
 		b.pop_back();
-		return b.size() > 0 ? mod_pow(a, e, 1337) * mod_pow(superPow1(a, b), 10, 1337) % 1337 : mod_pow(a, e, 1337);
+		return b.size() > 0 ? mod_pow(a, e, 1337) * mod_pow(superPow2(a, b), 10, 1337) % 1337 : mod_pow(a, e, 1337);
 	}
 };
