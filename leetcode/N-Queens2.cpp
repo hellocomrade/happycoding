@@ -37,9 +37,9 @@ This question only asks the number of valid solutions, not solutions themselves.
 better than backtracing, say DP. But for this particular one, it appears the algorithm using 3 tracking arrays in
 leetcode 51 (N-Queens) is the best solution for this so far.
 
-O(N^2) time and O(N) space, even a DP solution exists, it's probably hard to beat O(N^2) anyway.
+O(N!) time and O(N) space.
 
-The algorithm using the exactly same implementation in leetcode 51 is given in totalNQueens1, which is obviously slower
+The algorithm using the exactly same implementation in leetcode 51 is given in totalNQueens1, which is slower
 due to the O(N) checking inside the loop.
 */
 class SolutionNQueens2 {

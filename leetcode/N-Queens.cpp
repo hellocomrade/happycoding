@@ -66,7 +66,7 @@ Instead of using three boolean flags and checking their status after the loop, t
 fails. After the loop, simply checking if j has reached rowIdx will do.
 
 The biggest issue about this implementation is that checking the validity of putting a queen at current cell will have to examine all
-related cells (same column, same diagonals) above current row. This will take O(N^3) time. Is there a way that the check can be done
+related cells (same column, same diagonals) above current row. This will take O(N) time on each cell. Is there a way that the check can be done
 in O(1) without breaking the essense of backtracing?
 
 solveNQueens is such an implementation. It achieves the goal by tracking all columns, diagonals on a N by N grid. One may laugh: wait, does it
@@ -79,7 +79,7 @@ Another concern one may have is: will maintaining these status trackers break th
 Each tracker only has 2 status and due to the nature of DFS, they can be turned on and off at each iteration during recursion without breaking
 anything what so ever.
 
-Now, we have a O(N^2) time solution without sacrificing too much on space, still O(N^2) space.
+Now, we have a sub O(N!) time solution without sacrificing too much on space, still O(N^2) space.
 
 In terms of mapping between cell index [i, j] to trackers respectively, it's very straightforward for column trackers, j.
 As for two diagonals, if one considers the column-base as the X-axis, the 45 degree diagonals (top-left 0 based) has the following mapping
