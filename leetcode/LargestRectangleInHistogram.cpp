@@ -76,12 +76,30 @@ same logic can be applied for the case (false == stk.empty() && heights[i] < hei
 
 I saw other people solving this by prepending or appending elements onto heights...
 
-This is a linear solution with O(N) space that can be considered as greedy algorithm. I also saw others using divide and conquer, which is interesting but probably suffers
+***Update on 2018-12-27***
+
+This is a linear O(N) time (Each bar is pushed and then popped exactly once only) solution with O(N) space that can be considered as greedy algorithm. I also saw others using divide and conquer, which is interesting but probably suffers
 a penalty on time complexity.
+
+New largestRectangleArea is a little bit shorter and supposely faster if test cases are full of arrays with lots of zero.
+By setting k = 0 while i == len, the while loop will NOT be executed if the top of the stack is 0. In other words, at the
+end of the loop on heights, remaining zero sitting on the stack can be safely ignored.
 */
 class SolutionLargestRectangleInHistogram {
 public:
 	int largestRectangleArea(const vector<int>& heights) {
+		int ans = 0, len = (int)heights.size();
+		stack<int> stk;
+		for (int i = 0, j = 0, k = 0; i <= len; stk.push(i++)) {
+			k = i < len ? heights[i] : 0;
+			while (false == stk.empty() && heights[stk.top()] > k) {
+				j = stk.top(), stk.pop();
+				ans = std::max(ans, heights[j] * (i - 1 - (false == stk.empty() ? stk.top() : -1)));
+			}
+		}
+		return ans;
+	}
+	int largestRectangleArea0(const vector<int>& heights) {
 		stack<int> stk;
 		int ans = 0, len = (int)heights.size();
 		for (int i = 0, j = 0; i <= len; ++i) {
