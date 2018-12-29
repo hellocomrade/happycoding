@@ -1,4 +1,5 @@
 #include <queue>
+#include <vector>
 
 using namespace std;
 
@@ -60,6 +61,12 @@ Given any node N, function numberSum to calculate the sum the number sum at N is
 numberSum(N) = numberSum(N->left) + numberSum(N->right)
 
 Of course, N->val shall be passed into numberSum(N->left) and numberSum(N->right)
+
+***Update on 2018-12-29***
+
+This problem can be solved using various approaches. sumNumbers3 is a solution using back tracing.
+It's kind of overkill coz it carries all possible root to leaf paths and accumulates the result if
+a leaf is reached. However, this approach would be preferred if the full path is needed as answer.
 */
 namespace SumRoot2LeafNumbers {
 	/*
@@ -112,6 +119,19 @@ namespace SumRoot2LeafNumbers {
 					}
 				}
 			}
+			return ans;
+		}
+		int sumNumbers3(TreeNode* root) {
+			int ans = 0;
+			vector<int> memo;
+			auto bt = [&memo, &ans](const TreeNode* pnode, const auto& fun) {
+				if (nullptr == pnode) return;
+				memo.push_back(pnode->val);
+				if (nullptr == pnode->left && nullptr == pnode->right) for (int i = memo.size() - 1, j = 1; i > -1; j *= 10, --i) ans += memo[i] * j;
+				else fun(pnode->left, fun), fun(pnode->right, fun);
+				memo.pop_back();
+			};
+			bt(root, bt);
 			return ans;
 		}
 	};
