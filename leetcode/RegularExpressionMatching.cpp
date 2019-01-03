@@ -145,6 +145,13 @@ C. 'p[m - 1]*' means multiple p[m - 1], in this case, one shall look at the prev
 Time complexity: O(len(s)*len(p)), space complexity: O(len(s)*len(p))
 
 How to explain: "" vs "c**"? It's not a match.
+
+***Update on 2019-01-03***
+
+Inspired by <Beautiful Code> Charpter 1: A Regular Expression Matcher, here you go the recursive solution. It's slower than DP but
+still a very elegant solution. See isMatch00
+
+In this implementation, two functions have to call each other. Since lambda function defined through auto may not support forward delcaration at all, have to pass the function as an argument.
 */
 class SolutionRegularExpressionMatching {
 public:
@@ -184,6 +191,24 @@ public:
 			if (i != slen - 1)std::copy(cur.begin(), cur.end(), prev.begin());
 		}
 		return 0 == slen ? prev[plen] : cur[plen];
+	}
+	//Recursive
+	bool isMatch00(string s, string p) {
+		int slen = (int)s.length(), plen = (int)p.length();
+		auto matchHere = [&s, &p, slen, plen](int i, int j, const auto& f, const auto& self) -> bool {
+			if (plen == j && slen == i) return true;
+			if (j + 1 < plen && '*' == p[j + 1]) return f(p[j], i, j + 2, self, f);
+			if (s[i] == p[j] || '.' == p[j]) return self(i + 1, j + 1, f, self);
+			return false;
+		};
+		auto matchStar = [&s, &p, slen, plen](char c, int i, int j, const auto& f, const auto& self) -> bool {
+			if (plen == j && slen == i) return true;
+			do {
+				if (true == f(i, j, self, f)) return true;
+			} while (i < slen && (s[i++] == c || '.' == c));
+			return false;
+		};
+		return matchHere(0, 0, matchStar, matchHere);
 	}
 };
 void TestRegularExpressionMatching() {
