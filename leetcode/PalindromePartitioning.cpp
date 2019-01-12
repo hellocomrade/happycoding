@@ -37,6 +37,16 @@ given [i, j] index range for a string:
 - 2, substring[i, j] is NOT a palindrome;
 
 This idea comes from those palindrome problems solved by DP, a 2D array is used to store substring status.
+
+***Update on 2019-01-12***
+After completing leetcode 132, which made me revisit leetcode 5 (Longest Palindromic Substring), a simpler
+BT solution is given here.
+
+In this solution, all possible palindrome substring are calculated up front and stored in a 2D array memo.
+This process takes O(N^2) time.
+
+Then regular BT is conducted and time complexity is up to the possible partition in the given string and
+in the worst case, it could be 2^n, say s = "aaaaaaaaaaaaaaaaaaaaaaaaaaa".
 */
 class SolutionPalindromePartitioning {
 private:
@@ -71,6 +81,34 @@ private:
 	}
 public:
 	vector<vector<string>> partition(string s) {
+		int len = (int)s.length();
+		vector<std::pair<int, int>> pairs;
+		vector<vector<string>> ans;
+		vector<vector<bool>> memo(len, vector<bool>(len, false));
+		for (int i = 0, j, k; i < len; ++i) {
+			j = k = i;
+			while (-1 < j && len > k && s[j] == s[k]) memo[j--][k++] = true;
+			j = i, k = i + 1;
+			while (-1 < j && len > k && s[j] == s[k]) memo[j--][k++] = true;
+		}
+		auto bt = [&s, &memo, &ans, &pairs, len](int idx, const auto& f) -> void {
+			if (idx == len) {
+				ans.push_back(vector<string>());
+				for (auto p : pairs) ans[ans.size() - 1].push_back(s.substr(p.first, p.second));
+			}
+			else {
+				for (int i = idx; i < len; ++i)
+					if (true == memo[idx][i]) {
+						pairs.push_back(std::make_pair(idx, i - idx + 1));
+						f(i + 1, f);
+						pairs.pop_back();
+					}
+			}
+		};
+		bt(0, bt);
+		return ans;
+	}
+	vector<vector<string>> partition1(string s) {
 		int len = (int)s.length();
 		vector<vector<string> > ans;
 		vector<string> ret(len);

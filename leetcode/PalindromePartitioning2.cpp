@@ -48,6 +48,9 @@ By moving to next char, index from i to j = i + 1 and search any palindrome S[k 
 
 cuts[j] = MIN(cuts[j], cuts[k] + 1)
 
+It's convenient to initialize cuts[0] = -1, so when palindrome S[k : j], k = 0, cuts[j] = cuts[0] + 1 = 0.
+No extra code for this condition.
+
 If the bottom-up approach is taken, we start from S[i : i], single char and expand to len(S) - 1.
 From [0, i], cuts[i + 1] is examined. During this process, there will be lots of duplication on finding
 palindrome. Therefore, a 2D array memo[i][j] is used to track whether [i, j] is a palindrome. By doing so,
