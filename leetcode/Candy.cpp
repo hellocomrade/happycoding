@@ -1,5 +1,6 @@
 #include <cassert>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
 
@@ -57,6 +58,24 @@ public:
 		}
 		return ans;
 	}
+	// Tried to minic official solution after a peek, but still not the same :)
+	int candy0(const vector<int>& ratings) {
+            int len = (int)ratings.size(), ans = len;
+            if(2 > len) return 0 == len ? 0 : ans;
+            auto sum = [](int n) -> int { return n >= 0 ? static_cast<int>(n * (n + 1L) / 2L) : 0; };
+            for(int i = 1, status = -1, prev_status = -1, cntUp = 0, prevUp = 0, cntDown = 0; i <= len; prev_status = status, ++i) {
+                if(i < len) status = ratings[i] < ratings[i - 1] ? 0 : (ratings[i] == ratings[i - 1] ? 1 : 2);
+                if(1 == i) prev_status = status;
+                if(prev_status != status || i == len) {
+                    ans += sum(cntDown) + sum(cntUp) + (0 < prevUp ? std::max(0, cntDown - prevUp + 1) : 0);
+                    prevUp = (0 == status) ? cntUp : 0;
+                    cntUp = 0, cntDown = 1 == prev_status ? 0 : -1;
+                }
+                if(0 == status) ++cntDown;
+                else if(2 == status) ++cntUp;
+            }
+            return ans;
+        }
 };
 void TestCandy() {
 	SolutionCandy so;
