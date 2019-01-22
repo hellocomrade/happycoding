@@ -1,4 +1,5 @@
 #include <vector>
+#include <numeric>
 
 using namespace std;
 
@@ -34,12 +35,35 @@ The answer is 4, but leetcode gives 2.
 */
 class SolutionGasStation {
 public:
+	//Redo after 1 yr
+	int canCompleteCircuit(vector<int>& gas, vector<int>& cost) {
+		int len = (int)gas.size(), ans = -1;
+		long tank = 0L, diff = 0L;
+		for (int i = 0, d = 0; i < len; ++i) {
+			d = gas[i] - cost[i], diff += d, tank += d;
+			if (tank < 0) ans = -1, tank = 0L;
+			else if (-1 == ans) ans = i;
+		}
+		return 0 == len ? 0 : (diff >= 0 ? ans : -1);
+	}
+	//Redo after 1 yr, demonstrate the idea but accumulate is not necessary and slower
+	int canCompleteCircuit00(vector<int>& gas, vector<int>& cost) {
+		int len = (int)gas.size(), ans = -1;
+		if (std::accumulate(gas.begin(), gas.end(), 0) < std::accumulate(cost.begin(), cost.end(), 0)) return ans;
+		long tank = 0L;
+		for (int i = 0; i < len; ++i) {
+			tank += gas[i] - cost[i];
+			if (tank < 0) ans = -1, tank = 0L;
+			else if (-1 == ans) ans = i;
+		}
+		return 0 == len ? 0 : ans;
+	}
 	/*
 	Almost as same as canCompleteCircuit1, for the case:
 	[], []
 	leetcode returns -1, therefore correct that here.
 	*/
-	int canCompleteCircuit(vector<int>& gas, vector<int>& cost) {
+	int canCompleteCircuit0(vector<int>& gas, vector<int>& cost) {
 		int len = (int)gas.size(), ans = 0;
 		long long gasInTank = 0, total = 0;
 		for (int i = 0; i < len; total += gas[i] - cost[i], ++i) {
@@ -87,3 +111,40 @@ public:
 		return diff >= 0 ? start : -1;
 	}
 };
+/*
+Test cases:
+
+[2,4]
+[3,4]
+[2,4]
+[3,4]
+[4]
+[5]
+[1,1,3,1]
+[2,2,1,1]
+[5,1,6,1,10]
+[3,4,3,6,1]
+[1,3,2,5,4,2]
+[2,2,3,2,5,2]
+[3,5,3,0,4,1,6]
+[1,3,2,2,2,3,4]
+[]
+[]
+[2]
+[1]
+[2,1]
+[1,2]
+
+Outputs:
+
+-1
+-1
+-1
+2
+4
+1
+0
+-1
+0
+0
+*/
