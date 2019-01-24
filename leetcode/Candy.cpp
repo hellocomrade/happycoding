@@ -58,6 +58,23 @@ public:
 		}
 		return ans;
 	}
+	//This is the official solution. It's not very intutive to me though. The way it counts overlap at peak
+	//is not intutive...
+	int candy1(const vector<int>& ratings) {
+            int len = (int)ratings.size(), ans = 0, up = 0, down = 0;
+            auto sum = [](int n) -> int { return static_cast<int>(n * (n + 1L) / 2L); };
+            for(int i = 1, slope = -1, prev_slope = -1; i < len; prev_slope = slope, ++i) {
+                slope = ratings[i] < ratings[i - 1] ? 0 : (ratings[i] > ratings[i - 1] ? 2 : 1);
+                if((0 == prev_slope && 0 < slope) || (2 == prev_slope && 1 == slope)) {
+                    ans += sum(up) + sum(down) + std::max(up, down);
+                    up = down = 0;
+                }
+                if(0 == slope) ++down;
+                else if(2 == slope) ++up;
+                else ++ans;
+            }
+            return 1 > len ? 0 : ans + sum(up) + sum(down) + std::max(up, down) + 1;
+        }
 	// Tried to minic official solution after a peek, but still not the same :)
 	int candy0(const vector<int>& ratings) {
             int len = (int)ratings.size(), ans = len;
