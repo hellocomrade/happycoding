@@ -1,6 +1,8 @@
 #include <vector>
 #include <unordered_set>
+#include <unordered_map>
 #include <algorithm>
+#include <functional>
 
 using namespace std;
 
@@ -66,6 +68,9 @@ array is necessary for memorization.
 My second attempt failed because I didn't notice that the memo[k] with True value could be overwritten.
 Therefore, write should happen only if memo[k] == False.
 
+As a follow-up, this problem requires to recover all combinations. A typical Backtracing. Actually,
+this is the first time I ever had a leetcode DP problem that requires returning all solutions.
+
 Well, the first attempt failed because of the case "a", []...
 
 The third attempt,see wordBreak, is an iterative DP plus regular BT from index 0. The flaw of this implemention
@@ -78,15 +83,40 @@ However, MEL was thrown due to the edge case like:
 "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 ["a","aa","aaa","aaaa","aaaaa","aaaaaa","aaaaaaa","aaaaaaaa","aaaaaaaaa","aaaaaaaaaa"]
 
-As a follow-up, this problem requires to recover all combinations. A typical Backtracing. Actually,
-this is the first time I ever had a leetcode DP problem that requires returning all solutions.
+This is a cons of a bottom-up DP: if there are M states in this DP, all of them will be examined in a bottom-up DP.
+It's usually ok. But for this case, since all possible substrs are stored in an exponential way, it blows the memory.
+Sometimes, one may see TEL as well. That's because concatenating string in C++ is very expensive as well.
 
-Recursion might be a better fit for this one. Or one may call it Backtracing with memorization as long as it can get
-around the above edge case.
+Recursion might be a better fit for this one. It's actually the advantage of top-down DP: it only computes the valid path
+due to the nature of recursion. Only the one reached the end get stored, sort of like BT. That has been said, comparing with
+bottom-up DP + BT, this approach takes more time since it's a recursion. But, that could be the bias of leetcode test cases
+as well.
 */
 class SolutionWordBreakII {
 public:
-	// MEL
+	// 8ms top down DP, no BT needed
+	vector<string> wordBreak(string s, const vector<string>& wordDict) {
+		int len = (int)s.length(), maxlen = 0;
+		auto maxelems = std::max_element(wordDict.begin(), wordDict.end(), [](const string& s1, const string& s2) { return s1.length() < s2.length();});
+		if (wordDict.end() != maxelems) maxlen = (*maxelems).length();
+		unordered_set<string> set(wordDict.begin(), wordDict.end());
+		unordered_map<int, vector<string>> memo({ { len,{ "" } } });
+		function<vector<string>(int)> dp = [&](int i) {
+			if (0 == memo.count(i)) {
+				string str;
+				for (int j = i + 1; j <= len; ++j) {
+					str = s.substr(i, j - i);
+					if (1 == set.count(str)) {
+						for (const string& st : dp(j))
+							memo[i].push_back(str + ("" == st ? "" : " " + st));
+					}
+				}
+			}
+			return memo[i];
+		};
+		return dp(0);
+	}
+	// MEL, bottom up DP
 	vector<string> wordBreak11(string s, const vector<string>& wordDict) {
 		int len = (int)s.length(), maxlen = 0;
 		string str;
@@ -104,7 +134,8 @@ public:
 			}
 		return memo[len - 1];
 	}
-	vector<string> wordBreak(string s, const vector<string>& wordDict) {
+	// 4m bottom up DP + BT separately
+	vector<string> wordBreak0(string s, const vector<string>& wordDict) {
 		int len = (int)s.length(), maxlen = 0;
 		string empty;
 		vector<string> ans;
