@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <sstream>
 #include <unordered_map>
+#include <functional>
 #include <iostream>
 
 using namespace std;
@@ -64,6 +65,42 @@ it won't affect the final answer, just waste time...
 
 One more thing to point out is that hashing on double type might not be safe:
 https://stackoverflow.com/questions/7403210/hashing-floating-point-values
+
+***Update on 01/28/2019***
+Couple caveats if one decides to use slope in double as key for the hash table:
+
+1. Hashing on double might not be safe, see above;
+2. Using double in string is not safe either. See leetcode test case: [[0,0],[94911151,94911150],[94911152,94911151]]
+94911150.0 / 94911151.0 vs 94911151.0 / 94911152.0
+The difference can be found probably 100k digits after decimal point?
+3. Negative zero on double type, for example 0.0 / -1.0 = -0.0. This one can be solved by 0.0 / -1.0 + 0.0;
+
+Therefore, it's wise to store numerator/denominator of the slope:
+
+Either in slope/intercept form: y = mx + c => m = (y1 - y2) / (x1 - x2)
+
+Or general form: (y1 - y2)X + (x2 - x1)Y + (x1y2 - x2y1) = 0
+
+If (x1, y1) and (x2, y2) are given
+
+If slope m = a / b and c is the other const, shall all three parameters are necessary to decide if points are on the same line?
+
+The answer seems to be YES coz an intuitive example would be (0, 0), (1, 1) and (0, 1) and (1, 2). The two lines they form are actually
+parallel due to the fact that the intercept on Y axis is different.
+
+However, the above statement is true only if one does naive O(N^3), which involves finding all N^2 segments and then examine their relations.
+
+If goes with O(N^2) solution, in each loop, points[i] is fixed, therefore points[j], points[k] are on the same line with points[i] as long as
+slope(i, j) == slope(i, k). The intercept can be ignored. Still using (0, 0), (1, 1) and (0, 1) and (1, 2) as the example, even though (0, 0), (1, 1)
+and (0, 1), (1, 2), these two segments are not on the same line, if (0, 0) is fixed, from it one will get three different segments:
+[(0, 0), (1, 1)], [(0, 0), (0, 1)], [(0, 0), (1, 2)].
+
+Therefore, using slope only is sufficient to tell if two points are on the same line.
+
+Same theory works on general form as well.
+
+Yes, GCD is needed to dissolve 6 / 4 and 3 / 2 and GCD(a, b) = 0 if and only if both a and b are zeor, which means
+they are duplicated points.
 */
 namespace MaxPointsOnLine {
 	struct Point {
@@ -79,7 +116,24 @@ namespace MaxPointsOnLine {
 			return b == 0 ? a : gcd(b, a % b);
 		}
 	public:
+		//8ms, avoid using map.count() made the difference
 		int maxPoints(vector<Point>& points) {
+			function<int(int, int)> gcd = [&gcd](int a, int b) { if (0 == b) return a; return gcd(b, a % b); };
+			int len = (int)points.size(), ans = 0, a = 0, b = 0, c = 0;
+			for (int i = 0, maxhere = 0, dupCnt = 1; i < len; maxhere = 0, dupCnt = 1, ++i) {
+				unordered_map<int, unordered_map<int, int>> map;
+				for (int j = i + 1; j < len; ++j) {
+					a = points[i].y - points[j].y;
+					b = points[j].x - points[i].x;
+					c = gcd(a, b);
+					if (0 == c) { ++dupCnt; continue; }
+					maxhere = std::max(maxhere, ++map[a / c][b / c]);
+				}
+				ans = std::max(ans, maxhere + dupCnt);
+			}
+			return ans;
+		}
+		int maxPoints0(vector<Point>& points) {
 			long long ans = 1, maxsofar = 0, dupCnt = 0, a, b, g;
 			size_t len = points.size();
 			if (len > 1) {
@@ -217,3 +271,30 @@ void TestMaxPointsOnLine()
 	pnts5.emplace_back(Point(2, 2));
 	assert(4 == so.maxPoints(pnts5));
 }
+/*
+Test cases:
+
+[[1,1],[2,2],[3,3]]
+[[1,1],[3,2],[5,3],[4,1],[2,3],[1,4]]
+[[1,1]]
+[]
+[[1,1],[1,0]]
+[[0,0],[1,1],[0,0]]
+[[0,0],[0,0]]
+[[2,3],[3,3],[-5,3]]
+[[0,0],[94911151,94911150],[94911152,94911151]]
+[[1,1],[1,1],[2,3]]
+
+Outputs:
+
+3
+4
+1
+0
+2
+3
+2
+3
+2
+3
+*/
