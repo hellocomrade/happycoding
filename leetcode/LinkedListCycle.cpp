@@ -1,6 +1,7 @@
 namespace LinkedListCycle {
 /**
  * Definition for singly-linked list.
+*/
 struct ListNode {
      int val;
      ListNode *next;
