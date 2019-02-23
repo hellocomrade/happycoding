@@ -67,8 +67,7 @@ public:
 		return range;
 	}
 	//C++ lower_bound, upper_bound version
-	vector<int> searchRange(vector<int>& nums, int target) {
-            int l = 0, len = (int)nums.size(), r = len - 1, m = 0;
+	vector<int> searchRange0(vector<int>& nums, int target) {
             vector<int> ans {-1, -1};
             auto itor = std::lower_bound(nums.begin(), nums.end(), target);
             if (nums.end() != itor && target == *itor) {
@@ -78,7 +77,7 @@ public:
             }
             return ans;
         }
-	vector<int> searchRange00(vector<int>& nums, int target) {
+	vector<int> searchRange000(vector<int>& nums, int target) {
             int l = 0, len = (int)nums.size(), r = len - 1, m = 0;
             vector<int> ans(2, 0);
             ans[0] = len, ans[1] = -1;
@@ -111,7 +110,7 @@ public:
 		return ans;
 	}
 	//Doing one BS on left and one BS on right
-	vector<int> searchRange0(vector<int>& nums, int target) {
+	vector<int> searchRange00(vector<int>& nums, int target) {
 		int len = (int)nums.size(), l = 0, r = len - 1, m = 0;
 		vector<int> ans{ -1, -1 };
 		while (l <= r) {
