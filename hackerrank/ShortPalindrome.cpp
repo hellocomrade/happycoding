@@ -112,7 +112,8 @@ For c in range(0, 26):
 ans += Counter3[S[i] - 'a'][c][c][S[i] - 'a']
 Counter3[c][S[i] - 'a'][S[i] - 'a'] += Counter2[c][S[i] - 'a']
 Counter2[c][S[i] - 'a'] += Counter1[c]
-++Counter1[c]
+At last after the loop:
+++Counter1[S[i] - 'a']
 
 Notice that Counter3[c][d][d] can be really shrinked to Counter3[c][d] (the third dimension is useless), only 2 2D arrays are needed:
 
