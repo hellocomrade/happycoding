@@ -3,6 +3,7 @@
 #include <string>
 #include <sstream>
 #include <algorithm>
+#include <vector>
 #include <iostream>
 
 using namespace std;
@@ -41,7 +42,7 @@ will add some extra work, but guarantee to find the longest substring palindrome
 class SolutionShortestPalindrome {
 public:
 	//Works, fast, but not elegant
-	string shortestPalindrome1(string s) {
+	string shortestPalindrome11(string s) {
 		int len = s.length();
 		ostringstream os;
 		int loob = numeric_limits<int>::min(), uoob = numeric_limits<int>::max();
@@ -76,7 +77,7 @@ public:
 		return os.str() + s;
 	}
 	//more elegant, but slow, due to substr comparison, O(N^2)
-	string shortestPalindrome(string s) {
+	string shortestPalindrome1(string s) {
 		int n = s.size();
 		if (n == 0) return s;
 		int i = n;
@@ -92,6 +93,29 @@ public:
 		return os.str() + s;
 	}
 	//placeholder for kmp version
+	//After 3 years, my KMP version
+	string shortestPalindrome(string s) {
+            int len = (int)s.length();
+            vector<int> lpps(len +  1, 0); lpps[0] = -1;
+            int i = 0, j = -1, mlen = 0;
+            while(i < len) {
+                while(j >= 0 && s[i] != s[j]) j = lpps[j];
+                lpps[++i] = ++j;
+            }
+            i = len - 1, j = 0;
+            while(i > -1) {
+                while(j >= 0 && s[i] != s[j]) j = lpps[j];
+                --i, mlen = std::max(mlen, ++j);
+            }
+            i = 0, j = mlen - 1;
+            while(j > -1 && i != j) {
+                if(s[i] == s[j--]) ++i;
+                else i = 0, --mlen;
+            }
+            string t = (mlen == len) ? "" : s.substr(mlen);
+            std::reverse(t.begin(), t.end());
+            return t + s;
+        }
 };
 void TestShortestPalindrome()
 {
