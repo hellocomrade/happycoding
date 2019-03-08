@@ -38,6 +38,34 @@ For example: "aacecaaa"
 2. When the test breaks, end - begin == 1, because of odd, even number of elements thing, we could easily let the longest
 palidrome slips away. In this case, we have to move backward on end again to the last position where s[0] occurs. This
 will add some extra work, but guarantee to find the longest substring palindrome.
+
+***Update on 3/7/2019***
+Never thought it would take this long (3 years) to redo this problem. After 3 years, by reading the description,
+the first idea came out my mind is: lpps on KMP. However, my idea is bit off the best solution:
+
+https://leetcode.com/problems/shortest-palindrome/solution/
+
+My rationale:
+
+- This problem can be translated to: finding the longest palindrome in string s, which starts from the beginning of s.
+Then mirroring the remaining characters in s and prepend to string s, which is the shortest palindrome;
+- If looking at this from string matching perspective, defining s as the pattern and reversed s, s' as the text, one can
+use linear string matching algorithm, such as KMP or BM, to find the longest prefix in s that matches from beginning of s'.
+Since there is no built in matching method for the longest prefix, one may have to implement this based upon the standard KMP;
+- Next, one needs to extract the longest palindrome starting from the beginning of the prefix. For example:
+Given "abcba", the prefix that can be found is "ab". However, if one use this prefix as the center, mirroing the remaining,
+the result is "abcabcba", which is not a palindrome. The correct result is "abcbabcba", coz the longest palindrome in the prefix
+starting at 'a' is "a";
+- Finally, a new string is returned using the info gathered above;
+
+See shortestPalindrome0.
+
+A better solution, see shortestPalindrome, construct a new string combining s and s'. Therefore, the last
+lpps value is the longest palindrome of the prefix! The flaw is: sometimes, the values in lpps could greater
+than the len(s). For example, "aaa" -> "aaaaaa".
+
+In order to overcome this flaw, a separator that will never show up in the string shall be introduced. So
+"aaa" -> "aaa|aaa". Doing so to guarantee that no prefix as palindrome could be longer than len(s).
 */
 class SolutionShortestPalindrome {
 public:
@@ -94,28 +122,41 @@ public:
 	}
 	//placeholder for kmp version
 	//After 3 years, my KMP version
+	string shortestPalindrome0(string s) {
+		int len = (int)s.length();
+		vector<int> lpps(len + 1, 0); lpps[0] = -1;
+		int i = 0, j = -1, mlen = 0;
+		while (i < len) {
+			while (j >= 0 && s[i] != s[j]) j = lpps[j];
+			lpps[++i] = ++j;
+		}
+		i = len - 1, j = 0;
+		while (i > -1) {
+			while (j >= 0 && s[i] != s[j]) j = lpps[j];
+			--i, mlen = std::max(mlen, ++j);
+		}
+		i = 0, j = mlen - 1;
+		while (j > -1 && i != j) {
+			if (s[i] == s[j--]) ++i;
+			else i = 0, --mlen;
+		}
+		string t = (mlen == len) ? "" : s.substr(mlen);
+		std::reverse(t.begin(), t.end());
+		return t + s;
+	}
+	// KMP version inspired by official solution
 	string shortestPalindrome(string s) {
-            int len = (int)s.length();
-            vector<int> lpps(len +  1, 0); lpps[0] = -1;
-            int i = 0, j = -1, mlen = 0;
-            while(i < len) {
-                while(j >= 0 && s[i] != s[j]) j = lpps[j];
-                lpps[++i] = ++j;
-            }
-            i = len - 1, j = 0;
-            while(i > -1) {
-                while(j >= 0 && s[i] != s[j]) j = lpps[j];
-                --i, mlen = std::max(mlen, ++j);
-            }
-            i = 0, j = mlen - 1;
-            while(j > -1 && i != j) {
-                if(s[i] == s[j--]) ++i;
-                else i = 0, --mlen;
-            }
-            string t = (mlen == len) ? "" : s.substr(mlen);
-            std::reverse(t.begin(), t.end());
-            return t + s;
-        }
+		string str = s;
+		std::reverse(str.begin(), str.end());
+		str = s + "|" + str;
+		int i = 0, j = -1, len = (int)str.size();
+		vector<int> lpps(len + 1, 0); lpps[0] = -1;
+		while (i < len) {
+			while (j > -1 && str[i] != str[j]) j = lpps[j];
+			lpps[++i] = ++j;
+		}
+		return str.substr(s.size() + 1, len / 2 - lpps[len]) + s;
+	}
 };
 void TestShortestPalindrome()
 {
@@ -131,3 +172,26 @@ void TestShortestPalindrome()
 	assert("ababbabbbabbaba" == so.shortestPalindrome("babbbabbaba"));
 	so.shortestPalindrome("bnqbublqxugsxxeubvoiwjrngnwbqtnvadqsiydffvuy");
 }
+/*
+Test cases:
+
+"ababbbabbaba"
+"aacecaaa"
+"abcd"
+""
+"aaaaa"
+"aaabbb"
+"dabcba"
+"abcbad"
+
+Outputs:
+
+"ababbabbbababbbabbaba"
+"aaacecaaa"
+"dcbabcd"
+""
+"aaaaa"
+"bbbaaabbb"
+"abcbadabcba"
+"dabcbad"
+*/
