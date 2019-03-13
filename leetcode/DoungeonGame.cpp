@@ -34,7 +34,8 @@ Note:
 Observations:
 
 I failed this once because I was so used to start DP at top-left corner. This one though, is best to
-start at bottom-right corner...
+start at bottom-right corner...This is similar to leetcode 120 (Triangle), which can be done from either top or bottom.
+But starting from bottom is more elegant.
 
 First of one, the problem appears to be solved either using DP or Dijkstra's shortest path. DP seems to be
 more promising since this is a 2D grid and knight is only allowed to either move rightward or move downward.
