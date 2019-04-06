@@ -1,4 +1,6 @@
-﻿#include <vector>
+﻿#include "stdafx.h"
+#include <set>
+#include <vector>
 #include <queue>
 #include <numeric>
 #include <algorithm>
@@ -94,6 +96,46 @@ Since the array, buildings, is scanned only once and any operations on a max hea
 time complexity is O(NlogN).
 
 There should be a divide and conque algorithm for this as well. I should get it done later on.
+
+***Update on 4/5/2019***
+
+I found a solution using multiset, which I never used before. Multiset is an extention of set which allows duplicates
+on the node. It's still backed by BST. At beginning, I thought multiset is not necessary and can be
+replaced by set. But I was wrong: multiset is a must and part of the algorithm. See getSkyline1.
+
+Instead of using the original buildings array to drive the sweep line, this one extracts all edges and pairs
+them with the heights. Then sort them by edge X then height H. An insight here is: height is negated
+if the edge is left one. Two reasons:
+
+- It indicates this is a left edge;
+- It guarantees the pairs with same edge X will be sorted by height in a desecnding order. This means
+  the tallest edge is placed before the shorter one when their edge Xs are the same. This is necessary
+  for the case like [[1,2,1],[1,2,2],[1,2,3]]. All three buildings have the same left edges but different heights;
+
+Then iterating on this new array and based upon the side of edge, conduct operations on the multiset.
+Multiset here is used to stored visited building heights in order. If multiple buildings have same height,
+there will be more than one elements on the same node. This feature is needed for the algorithm to decide
+if a visited building with this height still hasn't reach its right edge. If two elements available on a
+multiset node, their identities are not important, only the count has value.
+
+- If a left edge is detected (height is negative), put it on multiset;
+- If a right edge is found, reduce the count of the node with the value of height by 1;
+
+It can be telled that mutliset might be replaced by a hash table, however, it won't reduce the overall time complexity
+due to the fact that std::sort takes O(NlogN).
+
+Next, based upon the largest element on the multiset (the tallest edge), current edge might be put onto
+the skyline if and only if: currrent tallest edge is different than the last iteration. This can be explained:
+
+1. If a left edge is inserted into multiset and it's taller than the tallest edge on the multiset,
+   it should be on the skyline;
+2. If a right edge is reached, since the count has been reduced (left edge with the same height), if such a removal
+   doesn't change the tallest edge on multiset, such a edge is inside a taller, wider building. Otherwise,
+   the current tallest edge on multiset is intersected with this right edge and the intersecting points shall
+   be on the skyline.
+
+This algorithm has larger memory profile and slower due to extra sort, but it's still elegant. It doesn't
+need the extra code to cover the edge case (len == i) in getSkyline. That negation idea is very clever!
 */
 class SolutionSkylineProblem {
 public:
@@ -115,6 +157,27 @@ public:
 					else ans.push_back(std::make_pair(buildings[i][0], buildings[i][2]));
 				}
 				heap.push(std::make_pair(buildings[i][2], buildings[i][1]));
+			}
+		}
+		return ans;
+	}
+	vector<pair<int, int>> getSkyline1(vector<vector<int>>& buildings) {
+		int prev_h = 0, cur_h = 0;
+		vector<pair<int, int>> ans, vlines;
+		multiset<int> hset;
+		for (const auto& b : buildings) {
+			vlines.push_back({ b[0], -b[2] });
+			vlines.push_back({ b[1], b[2] });
+		}
+		std::sort(vlines.begin(), vlines.end());
+		hset.insert(0);
+		for (const auto& line : vlines) {
+			if (line.second < 0) hset.insert(-line.second);
+			else hset.erase(hset.find(line.second));
+			cur_h = *hset.rbegin();
+			if (cur_h != prev_h) {
+				ans.push_back({ line.first, cur_h });
+				prev_h = cur_h;
 			}
 		}
 		return ans;
