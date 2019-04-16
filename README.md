@@ -1,4 +1,4 @@
-"Happy Coding!" -- By Chris
+Happy Coding!
 
 Solving algorithm challenges at leetcode/lintcode, Codility, and HackerRank.
 
