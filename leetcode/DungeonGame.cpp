@@ -37,7 +37,7 @@ I failed this once because I was so used to start DP at top-left corner. This on
 start at bottom-right corner...This is similar to leetcode 120 (Triangle), which can be done from either top or bottom.
 But starting from bottom is more elegant.
 
-First of one, the problem appears to be solved either using DP or Dijkstra's shortest path. DP seems to be
+First of all, the problem appears to be solved either using DP or Dijkstra's shortest path. DP seems to be
 more promising since this is a 2D grid and knight is only allowed to either move rightward or move downward.
 
 It appears to be very straightward to build a DP case with one assumption figured out up front: if knight wants to
@@ -68,7 +68,7 @@ to adopt new moving directions). This is due to the greedy nature of this proble
 HP is kept at any moment in a backward fashion.
 
 Besides, memo can be done using moving/rolling array. Since starting from bottom-right, extra HP dummy cell is at the tail, not the beginning. HP is
-prefilled with 1 at index len(doungeon[0]) - 1, whici indicates the minimum HP necessary before entering the doungeon.
+prefilled with 1 at index len(doungeon[0]) - 1, which indicates the minimum HP necessary before entering the doungeon.
 HP[len(doungeon[0])] along with all other cells filled with INT_MAX. Therefore, when doungeon[i][len(doungeon[0]) - 1]
 is visited, HP[len(doungeon[0]) - 1] will always be picked over HP[len(doungeon[0])].
 
@@ -76,8 +76,11 @@ This algorithm will take O(MN) time and O(N) space.
 
 leetcode tagged this with BS as well, which I don't get it. Did a quick look, it's actually a BS greedy. Search range is 1 to INT_MAX. Total time
 will be O(M*N*log(INT_MAX)), which is not that bad but still slower than DP. Since DP can solve this, BS greedy is really the last resort.
+
+calculateMinimumHP1 is a memory-saving solution. It doesn't even use the rolling array. Instead, value is written
+directly onto dungeon array. It may not be as elegant as calculateMinimumHP, but it serves the purpose
 */
-class SolutionDoungeonGame {
+class SolutionDungeonGame {
 public:
 	int calculateMinimumHP(vector<vector<int>>& dungeon) {
 		int rlen = (int)dungeon.size();
@@ -90,6 +93,21 @@ public:
 			for (int j = clen - 1; j > -1; --j)
 				memo[j] = std::max(1LL, std::min(memo[j], memo[j + 1]) - dungeon[i][j] * 1LL);
 		return static_cast<int>(memo[0]);
+	}
+	int calculateMinimumHP1(vector<vector<int>>& dungeon) {
+		int rlen = (int)dungeon.size();
+		if (1 > rlen) return 0;
+		int clen = (int)dungeon[0].size();
+		if (1 > clen) return 0;
+		//dungeon[rlen - 1][clen - 1] = std::max(1, 1 - dungeon[rlen - 1][clen - 1]);
+		for (int i = rlen - 1; i > -1; --i)
+			for (int j = clen - 1, x = 1; j > -1; --j) {
+				if (i < rlen - 1 && j < clen - 1) x = std::min(dungeon[i + 1][j], dungeon[i][j + 1]);
+				else if (i < rlen - 1) x = dungeon[i + 1][j];
+				else if (j < clen - 1) x = dungeon[i][j + 1];
+				dungeon[i][j] = std::max(1, x - dungeon[i][j]);
+			}
+		return dungeon[0][0];
 	}
 };
 /*

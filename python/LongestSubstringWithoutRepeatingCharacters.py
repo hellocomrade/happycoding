@@ -12,7 +12,7 @@ class SolutionLongestSubstringWithoutRepeatingCharacters(object):
             memo[ord(s[r])], r = r + 1, r + 1
         return ans
     
-    def lengthOfLongestSubstring(self, s):
+    def lengthOfLongestSubstring1(self, s):
         """
         :type s: str
         :rtype: int
