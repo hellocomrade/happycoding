@@ -76,8 +76,8 @@ The true BST node removal solution is here:
 
 https://leetcode.com/problems/delete-node-in-a-bst/solution/
 
-deleteNode, it will also introduce more than one removal but the overall time complexity is O(log(H)) due to BST.
-The idea is:
+deleteNodee, it will also introduce more than one removal but the overall time complexity is O(log(H)) due to BST.
+After removal, the tree should maintain its BST status. The idea is:
 
 1. Search key through BST;
 2. If key is found on current node, root and root is a leaf node, return nullptr;
@@ -87,6 +87,13 @@ The idea is:
 4. If key is found on current node, root and root->left is not nullptr but root->right is nullptr,
    set root->val to root's predecessor's val in in-order traversal and resume searching on root->val as key and it will hit
    root's predecessor for sure;
+
+The above "official" solution is not actually the most optimized even though it's more straightfoward. Again, the search on key
+should stop if the node is found.
+
+Therefore, a BST version of deleteNode0 or deleteNode should both be better than deleteNodee. They both only
+handle "successor" case if right child exists. "predecsssor" is NOT a must at all. Replacing root with root->left
+is just fine!
 
 That has been said, it's actually interesting to see that leetcode judge's code works for general BS. Therefore,
 its implementation is definitely not as same as deleteNode...
@@ -118,24 +125,24 @@ namespace DeleteBSTNode {
 		}
 	public:
 		TreeNode* deleteNode(TreeNode* root, int key) {
-			if (nullptr == root) return root;
+			if (nullptr == root) return nullptr;
+			TreeNode *pnode = root, *ppnode = root;
 			if (key > root->val) root->right = deleteNode(root->right, key);
 			else if (key < root->val) root->left = deleteNode(root->left, key);
 			else {
 				if (nullptr != root->right) {
-					root->val = this->successor(root)->val;
-					root->right = deleteNode(root->right, root->val);
+					pnode = root->right;
+					while (nullptr != pnode->left) ppnode = pnode, pnode = pnode->left;
+					if (ppnode != root) ppnode->left = pnode->right;
+					else ppnode->right = pnode->right;
+					root->val = pnode->val;
+					std::swap(pnode, root);
 				}
-				else if (nullptr != root->left) {
-					root->val = this->predecessor(root)->val;
-					root->left = deleteNode(root->left, root->val);
-				}
-				else {
-					delete root;
-					root = nullptr;
-				}
+				else
+					pnode = root->left;
+				delete root;
 			}
-			return root;
+			return pnode;
 		}
 		TreeNode* deleteNode0(TreeNode* root, int key) {
 			if (nullptr == root) return root;
@@ -156,6 +163,26 @@ namespace DeleteBSTNode {
 			else {
 				root->left = deleteNode0(root->left, key);
 				root->right = deleteNode0(root->right, key);
+			}
+			return root;
+		}
+		TreeNode* deleteNodee(TreeNode* root, int key) {
+			if (nullptr == root) return root;
+			if (key > root->val) root->right = deleteNode(root->right, key);
+			else if (key < root->val) root->left = deleteNode(root->left, key);
+			else {
+				if (nullptr != root->right) {
+					root->val = this->successor(root)->val;
+					root->right = deleteNode(root->right, root->val);
+				}
+				else if (nullptr != root->left) {
+					root->val = this->predecessor(root)->val;
+					root->left = deleteNode(root->left, root->val);
+				}
+				else {
+					delete root;
+					root = nullptr;
+				}
 			}
 			return root;
 		}
@@ -219,6 +246,8 @@ Test cases:
 
 [5,3,6,2,4,null,7,8,9,10,11]
 3
+[2,0,33,null,1,25,40,null,null,11,31,34,45,10,18,29,32,null,36,43,46,4,null,12,24,26,30,null,null,35,39,42,44,null,48,3,9,null,14,22,null,null,27,null,null,null,null,38,null,41,null,null,null,47,49,null,null,5,null,13,15,21,23,null,28,37,null,null,null,null,null,null,null,null,8,null,null,null,17,19,null,null,null,null,null,null,null,7,null,16,null,null,20,6]
+33
 [5,10,6,2,4,null,7,8,9,null,11]
 11
 [5,3,6,2,4,null,7]
@@ -271,6 +300,7 @@ Test cases:
 Outputs:
 
 [5,10,6,2,4,null,7,8,9,null,11]
+[2,0,34,null,1,25,40,null,null,11,31,35,45,10,18,29,32,null,36,43,46,4,null,12,24,26,30,null,null,null,39,42,44,null,48,3,9,null,14,22,null,null,27,null,null,38,null,41,null,null,null,47,49,null,null,5,null,13,15,21,23,null,28,37,null,null,null,null,null,null,null,null,8,null,null,null,17,19,null,null,null,null,null,null,null,7,null,16,null,null,20,6]
 [5,10,6,2,4,null,7,8,9]
 [5,4,6,2,null,null,7]
 [6,3,7,2,4]
