@@ -53,13 +53,45 @@ see calculate1.
 
 Based upon calculate1, the hypothesis is that operand stack will never has more than 3 elements, operator stack
 will has no more than 2 elements. Therefore, stack might be replaced by regular variables, which will
-potentially boost the performance by removing push/pop operations to none. This is actually a varation and
+potentially boost the performance by removing push/pop operations to none, See calculate0. This is actually a varation and
 local optimization against stack implementation in calculate1. The stack operations are still there, just
-replaced by shifting values among variables.
+replaced by shifting values among variables. Note, substraction should be converted to addition operation, which
+involves negating on the number and replacing the operator.
+
+In fact, there is a much elegant solution that doesn't consider stack at all. Of course, it would be hard to extend
+it to a more generic calculator case. But, it's good for this case. In this algorithm, exactly two variables are needed
+for storing operands and one variable is needed for storing current operator. The idea is:
+
+If current operator is '+' or '-', it can be safely said that the left operand (prev_opd) can be added to the final result.
+Then move right operand as left operand. If the operator is '-', the left operand (previous right operand) should be negated.
+
+If the operator is '*' or '-', accumulate the result on the left operand.
+
+' ' really creates trouble for this implementation. I had to filter them out before taking number token and operator
+token...
 */
 class SolutionBasicCalculator2 {
 public:
 	int calculate(string s) {
+		int prev_opd = 0, opd = 0, len = (int)s.length(), i = 0, ret = 0;
+		char opt = '+';
+		while (i < len) {
+			while (i < len && ' ' == s[i]) ++i;
+			while (i < len && 0 != isdigit(s[i])) opd = opd * 10 + (int)(s[i++] - '0');
+			switch (opt) {
+			case '+': ret += prev_opd, prev_opd = opd; break;
+			case '-': ret += prev_opd, prev_opd = -1 * opd; break;
+			case '*': prev_opd *= opd; break;
+			case '/': prev_opd /= opd; break;
+			default: break;
+			}
+			while (i < len && ' ' == s[i]) ++i;
+			if (i < len) opt = s[i++];
+			opd = 0;
+		}
+		return ret + prev_opd;
+	}
+	int calculate0(string s) {
 		int old_opd = 0, prev_opd = 0, opd = 0, ret = 0, len = (int)s.length(), i = -1;
 		char prev_opt = 0, opt = 0;
 		auto cal = [](int opd1, int opd2, char opera) {
