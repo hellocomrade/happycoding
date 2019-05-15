@@ -1,6 +1,8 @@
+#include <cassert>
 #include <ctype.h>
 #include <string>
 #include <stack>
+#include <algorithm>
 
 using namespace std;
 
@@ -47,10 +49,42 @@ negation on current immediate calculation result and then pop '-' and push '+' i
 Why this is necessary? For example: "18 + 17-25*7/3-45", if no above operation, the result of 25*7/3 will be
 substracted by 45 first then substracted against (18 + 17). The '-' in the middle is lost in this context.
 That explains why '-' has to be converted to '+' by negating the operand then replacing '-' with '+' on the stack.
+see calculate1.
+
+Based upon calculate1, the hypothesis is that operand stack will never has more than 3 elements, operator stack
+will has no more than 2 elements. Therefore, stack might be replaced by regular variables, which will
+potentially boost the performance by removing push/pop operations to none. This is actually a varation and
+local optimization against stack implementation in calculate1. The stack operations are still there, just
+replaced by shifting values among variables.
 */
-class SolutionBasicCalculator {
+class SolutionBasicCalculator2 {
 public:
 	int calculate(string s) {
+		int old_opd = 0, prev_opd = 0, opd = 0, ret = 0, len = (int)s.length(), i = -1;
+		char prev_opt = 0, opt = 0;
+		auto cal = [](int opd1, int opd2, char opera) {
+			if (1 > opera) return opd2;
+			switch (opera) {
+			case '+': return opd1 + opd2;
+			case '-': return opd1 - opd2;
+			case '*': return opd1 * opd2;
+			case '/': return opd1 / opd2;
+			}
+			return 0;
+		};
+		while (++i < len) {
+			if (' ' == s[i]) continue;
+			else if (0 != isdigit(s[i])) opd = opd * 10 + (int)(s[i] - '0');
+			else {
+				if (prev_opt > 0 && ('+' == opt || '-' == opt)) prev_opd = cal(old_opd, prev_opd, prev_opt);
+				else if ('*' == opt || '/' == opt || (opt > 0 && ('+' == s[i] || '-' == s[i]))) opd = cal(prev_opd, opd, opt), prev_opd = old_opd, opt = prev_opt;
+				prev_opt = opt, opt = s[i], old_opd = prev_opd, prev_opd = opd, opd = 0;
+				if ('-' == prev_opt) prev_opt = '+', prev_opd *= -1;
+			}
+		}
+		return cal(old_opd, cal(prev_opd, opd, opt), prev_opt);
+	}
+	int calculate1(string s) {
 		int len = (int)s.length(), i = -1, num = 0;
 		stack<int> operands;
 		stack<char> operators;
@@ -86,6 +120,18 @@ public:
 		return operands.top();
 	}
 };
+void TestBasicCalculator2() {
+	SolutionBasicCalculator2 so;
+	assert(5 == so.calculate("3+2"));
+	assert(7 == so.calculate("3+2*2"));
+	assert(3 == so.calculate("1 + 2"));
+	assert(1 == so.calculate(" 3/2 "));
+	assert(7 == so.calculate("3*2+1"));
+	assert(4 == so.calculate(" 3 -2 +3"));
+	assert(-3 == so.calculate("1+2-3*2"));
+	assert(-23 == so.calculate("18 + 17 - 25 * 7 / 3"));
+	assert(-68 == so.calculate("18 + 17-25*7/3-45"));
+}
 /*
 Test Cases:
 
