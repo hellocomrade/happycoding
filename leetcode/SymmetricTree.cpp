@@ -6,7 +6,7 @@ Given a binary tree, check whether it is a mirror of itself (ie, symmetric aroun
 
 For example, this binary tree [1,2,2,3,4,4,3] is symmetric:
 
-    1
+	1
    / \
   2   2
  / \ / \
@@ -14,11 +14,11 @@ For example, this binary tree [1,2,2,3,4,4,3] is symmetric:
 
 But the following [1,2,2,null,3,null,3] is not:
 
- 1
-/ \
-2  2
- \  \
-  3  3
+  1
+ / \
+2   2
+ \   \
+ 3    3
 
 Note:
 Bonus points if you could solve it both recursively and iteratively.
@@ -61,12 +61,12 @@ namespace SymmetricTree {
 		bool auxIn(TreeNode* root1, TreeNode* root2) {
 			if (nullptr == root1 && nullptr == root2) return true;
 			if (nullptr == root1 || nullptr == root2) return false;
-			return true == this->auxIn(root1->left, root2->right) && root1->val == root2->val && true == this->auxIn(root1->right, root2->left);
+			return root1->val == root2->val && true == this->auxIn(root1->left, root2->right) && true == this->auxIn(root1->right, root2->left);
 		}
 		bool auxPost(TreeNode* root1, TreeNode* root2) {
 			if (nullptr == root1 && nullptr == root2) return true;
 			if (nullptr == root1 || nullptr == root2) return false;
-			return true == this->auxPost(root1->left, root2->right) && true == this->auxPost(root1->right, root2->left) && root1->val == root2->val;
+			return root1->val == root2->val && true == this->auxPost(root1->left, root2->right) && true == this->auxPost(root1->right, root2->left);
 		}
 	public:
 		bool isSymmetric(TreeNode* root) {
