@@ -67,7 +67,7 @@ The basic idea is: keep 1 / 2 of the elements in the first heap and the second h
 half of the elements. Therefore adding it to the min heap. Otherwise, add it to the max heap.
 - At any moment, the different of the size of two heap can not be more than 1;
 - If the above condition can not be met, the rebalance has to be done by moving the top element from
-one heap with 2 more elements to another. Then the difference is down to 1 again. By doing so, the difference can never be
+one heap to another. Then the difference is down to 1 again. By doing so, the difference can never be
 more than one.
 - Depending on the total size of two heaps, if the size is odd, which means one heap having one more element than the other,
 pick the top element from the larger heap as the median. If the size is odd, which means two heap have the same size, pick
