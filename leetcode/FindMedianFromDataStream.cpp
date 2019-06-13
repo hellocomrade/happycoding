@@ -3,6 +3,7 @@
 #include <functional>
 #include <cstdlib>
 #include <limits>
+#include <set>
 
 using namespace std;
 
@@ -50,6 +51,15 @@ As same as: https://github.com/hellocomrade/happycoding/blob/master/hackerrank/F
 This is one of the best official solutions leetcode ever wrote:
 
 https://leetcode.com/problems/find-median-from-data-stream/solution/
+
+Other than the classic two-heaps solution, it introduces a solution based upon self-balanced BST's property:
+
+"The median always winds up in the root of the tree and/or one of its children. "
+
+I never noticed this at all!
+
+MedianFinder1 is my implementation (a bit simpler than the one in the official solution) using multiset,
+which I never used before either. It allows duplicates but still maintains the ascending order.
 */
 namespace FindMedianFromDataStream {
 	class MedianFinder {
@@ -80,7 +90,34 @@ namespace FindMedianFromDataStream {
 			else return lenmax > lenmin ? 1.0 * this->maxHeap.top() : 1.0 * this->minHeap.top();
 		}
 	};
+	class MedianFinder1 {
+	private:
+		std::multiset<int> balanced_tree;
+		std::multiset<int>::iterator lower;
+		std::multiset<int>::iterator upper;
+	public:
+		/** initialize your data structure here. */
+		MedianFinder1() : balanced_tree(), lower(balanced_tree.end()), upper(balanced_tree.end()) {}
 
+		void addNum(int num) {
+			int len = this->balanced_tree.size();
+			this->balanced_tree.insert(num);
+			std::multiset<int>::iterator itor;
+			if (0 == len) lower = upper = this->balanced_tree.begin();
+			else if (1 == (len & 1)) {//even, len = len + 1 now after insertion
+				if (num < *lower) upper = lower--;
+				else upper = std::next(lower);
+			}
+			else {//odd
+				if (num < *lower) lower = upper = lower;
+				else lower = upper = std::next(lower);
+			}
+		}
+
+		double findMedian() {
+			return (this->balanced_tree.end() == lower) ? numeric_limits<double>::min() : *lower + (*upper - *lower) / 2;
+		}
+	};
 	/**
 	 * Your MedianFinder object will be instantiated and called as such:
 	 * MedianFinder* obj = new MedianFinder();
@@ -88,3 +125,19 @@ namespace FindMedianFromDataStream {
 	 * double param_2 = obj->findMedian();
 	 */
 }
+/*
+Test cases:
+
+["MedianFinder","addNum","addNum","findMedian","addNum","findMedian"]
+[[],[1],[2],[],[3],[]]
+["MedianFinder","addNum","addNum","findMedian","addNum","findMedian"]
+[[],[1],[3],[],[2],[]]
+["MedianFinder","addNum","findMedian","addNum","findMedian","addNum","findMedian","addNum","findMedian"]
+[[],[1],[],[3],[],[2],[],[2],[]]
+
+Outputs:
+
+[null,null,null,1.5,null,2.0]
+[null,null,null,2.0,null,2.0]
+[null,null,1.0,null,2.0,null,2.0,null,2.0]
+*/
