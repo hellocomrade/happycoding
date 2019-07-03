@@ -58,6 +58,12 @@ Thank about [4,5,2,3,4] again: when we reach 3, second2min will be reassigned fr
 How about [4,5,2,3,6], well you have the answer: both [4,5,6] and [2,3,6] are valid, our algorithm catches latter, still good!
 
 You can also do this from right to left, the difference is we deal with maxsofar and second2max now.
+
+***Update on 2019-07-03***
+
+This question was asked on a Google phone screening:
+
+https://leetcode.com/discuss/interview-experience/324397/google-l3-gcp-sunnyvale-offer
 */
 class SolutionIncreasingTripletSubsequence {
 public:
