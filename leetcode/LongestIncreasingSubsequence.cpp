@@ -5,8 +5,6 @@ using namespace std;
 
 //https://leetcode.com/problems/longest-increasing-subsequence/
 /*
-300. Longest Increasing Subsequence
-
 Given an unsorted array of integers, find the length of longest increasing subsequence.
 
 For example,
@@ -43,10 +41,34 @@ Since nums[i], given i in [0, maxLen - 1], is a monotonic sequence (increasing).
 binary search. There should not be any duplicated value in this mono seq, any binary search shold work. I
 use lower_bound here to get the element that is no less than nums[k]:
 1. If all elements in nums[i], given i in [0, maxLen - 1], are smaller than nums[k], we get a longer LIS,
-so, maxLen++;
+   so, maxLen++;
 
 2. If returned index j from BS is from 0 to maxLen - 1 and nums[k] < nums[j], we know for LIS with size of j,
 we have a smaller ending element nums[k]. Then we update the nums[j] = nums[k];
+
+***Update on 2019-07-3***
+Even this is not necessary at all, I tried the DP using the matrix approach, lengthOfLIS5, which will do
+
+   2 3 8 7 1
+ 2 1 2 2 2 1
+ 3   2 3 3 1
+ 8     3 3 1
+ 7       3 1
+
+ wich is very popular in a lots of DPs involving an array or a string. But, again, it's not necessary at all for
+ LIS.
+
+ Instead of comparing backward, we compare forward here. By default, memo is filled with 1, which indicates LIS with length 1.
+ The number on Y axis represents the LIS ends at, say 3 means LIS ends at 3, wich is [2, 3], the size is 2. Then comparing 3
+ with all numbers on X axis, starting at 3. which is comparing [2, 3] from Y with [2, 3] from X, so the LIS is obvious: 2.
+ Doing this along X axis, if nums[k] on X is larger than 3 (LIS length in memo[1]), memo[k] = memo[1] + 1.
+
+ Along the process, keep tracking max len of LIS.
+
+ Actually, only the upper triangular matrix is filled, which exactly matched the fact that looking backward in lengthOfLIS1
+ is sufficient for this task.
+
+ Just for fun...:)
 */
 class SolutionLongestIncreasingSubsequence {
 public:
@@ -126,6 +148,18 @@ public:
 		}
 		return maxLen;
 	}
+	int lengthOfLIS5(vector<int>& nums) {
+		int len = (int)nums.size(), ans = 1;
+		vector<int> memo(len, 1);
+		for (int i = 0; i < len; ++i)
+			for (int j = i + 1; j < len; ++j) {
+				if (nums[i] < nums[j]) {
+					memo[j] = std::max(memo[j], memo[i] + 1);
+					ans = std::max(ans, memo[j]);
+				}
+			}
+		return 0 == len ? 0 : ans;
+	}
 };
 void TestlengthOfLIS()
 {
@@ -145,3 +179,22 @@ void TestlengthOfLIS()
 	vector<int> vec7{ 10, 9, 2, 5, 3, 4 };
 	assert(3 == lenLIS.lengthOfLIS(vec7));
 }
+/*
+Test cases:
+
+[10,9,2,5,3,7,101,18]
+[1,2,3,4,5]
+[5,4,3,2,1]
+[]
+[1]
+[1,2,2,3,4,4,5,5,10]
+
+Outputs:
+
+4
+5
+1
+0
+1
+6
+*/
