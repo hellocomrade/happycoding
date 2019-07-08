@@ -1,5 +1,6 @@
 #include <vector>
 #include <algorithm>
+#include <functional>
 
 using namespace std;
 
@@ -14,12 +15,20 @@ Your algorithm's runtime complexity must be in the order of O(log n).
 If the target is not found in the array, return [-1, -1].
 
 For example,
+
 Given [5, 7, 7, 8, 8, 10] and target value 8,
+
 return [3, 4].
 
 Observations:
+
 Required O(logN), therefore, conduct two one direction BS if target is found. One toward left and one
 toward right. If only single target is in the array, the returns will be the same.
+
+***Update on 2019-07-08***
+Has a similar problem in my job. searchRange99 was made to prove it works without flaw. When BS is run for the second
+time, no need to check if return is -1 coz if the first BS returns non -1, the second run will return at least as same
+as the first run coz [Target, Target], inclusive on both ends.
 */
 class SolutionSearch4Range {
 private:
@@ -66,41 +75,66 @@ public:
 		}
 		return range;
 	}
+	vector<int> searchRange99(vector<int>& nums, int target) {
+		vector<int> ans(2, -1);
+		int lidx = 0, ridx = 0;
+		function<int(bool)> bs = [&nums, target](bool isRightBound) -> int {
+			int l = 0, r = nums.size() - 1, m = 0, ans = -1;
+			while (l <= r) {
+				m = l + (r - l) / 2;
+				if (nums[m] < target || (true == isRightBound && nums[m] == target)) {
+					if (true == isRightBound) ans = m;
+					l = m + 1;
+				}
+				else {
+					if (false == isRightBound) ans = m;
+					r = m - 1;
+				}
+			}
+			return ans;
+		};
+		lidx = bs(false);
+		if (-1 != lidx && nums[lidx] == target) {
+			ans[0] = ans[1] = lidx;
+			ans[1] = bs(true);
+		}
+		return ans;
+	}
 	//C++ lower_bound, upper_bound version
 	vector<int> searchRange0(vector<int>& nums, int target) {
-            vector<int> ans {-1, -1};
-            auto itor = std::lower_bound(nums.begin(), nums.end(), target);
-            if (nums.end() != itor && target == *itor) {
-                ans[0] = itor - nums.begin();
-                itor = std::upper_bound(itor + 1, nums.end(), target);
-                ans[1] = itor - nums.begin() - 1;
-            }
-            return ans;
-        }
+		vector<int> ans{ -1, -1 };
+		auto itor = std::lower_bound(nums.begin(), nums.end(), target);
+		if (nums.end() != itor && target == *itor) {
+			ans[0] = itor - nums.begin();
+			itor = std::upper_bound(itor + 1, nums.end(), target);
+			ans[1] = itor - nums.begin() - 1;
+		}
+		return ans;
+	}
 	vector<int> searchRange000(vector<int>& nums, int target) {
-            int l = 0, len = (int)nums.size(), r = len - 1, m = 0;
-            vector<int> ans(2, 0);
-            ans[0] = len, ans[1] = -1;
-            while(l <= r) {
-                m = l + (r - l) / 2;
-                if(target >= nums[m]) {
-                    if(target == nums[m]) ans[1] = std::max(ans[1], m);
-                    l = m + 1;
-                }
-                else r = m - 1;
-            }
-            l = 0, r = len - 1;
-            while(l <= r) {
-                m = l + (r - l) / 2;
-                if(target <= nums[m]) {
-                    if(target == nums[m]) ans[0] = std::min(ans[0], m);
-                    r = m - 1;
-                }
-                else l = m + 1;
-            }
-            if(len == ans[0]) ans[0] = -1;
-            return ans;
-        }
+		int l = 0, len = (int)nums.size(), r = len - 1, m = 0;
+		vector<int> ans(2, 0);
+		ans[0] = len, ans[1] = -1;
+		while (l <= r) {
+			m = l + (r - l) / 2;
+			if (target >= nums[m]) {
+				if (target == nums[m]) ans[1] = std::max(ans[1], m);
+				l = m + 1;
+			}
+			else r = m - 1;
+		}
+		l = 0, r = len - 1;
+		while (l <= r) {
+			m = l + (r - l) / 2;
+			if (target <= nums[m]) {
+				if (target == nums[m]) ans[0] = std::min(ans[0], m);
+				r = m - 1;
+			}
+			else l = m + 1;
+		}
+		if (len == ans[0]) ans[0] = -1;
+		return ans;
+	}
 	vector<int> searchRange1(vector<int>& nums, int target) {
 		int len = (int)nums.size();
 		vector<int> ans{ -1, -1 };
@@ -131,7 +165,6 @@ public:
 };
 /*
 Test cases:
-
 [5,7,7,8,8,10]
 8
 [5,7,7,8,8,10]
@@ -168,9 +201,7 @@ Test cases:
 0
 [1]
 1
-
 Outputs:
-
 [3,4]
 [0,0]
 [5,5]
