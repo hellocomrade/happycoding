@@ -80,6 +80,8 @@ be calculated on the fly and substracted by memo1[i - 1] on the fly.
 
 How about memo3? Well, we could reuse memo1 by reversing the nums and re-calculate subarray sum at i
 in memo1.
+
+I don't think this is really DP, but since max subarray sum can be considered as DP, this should do :)
 */
 class SolutionMaximumSubarrayDifference {
 public:
