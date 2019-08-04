@@ -1,8 +1,8 @@
 #include <cassert>
 #include <stack>
-#include <vector>
 #include <string>
 #include <algorithm>
+#include <vector>
 
 using namespace std;
 
@@ -34,44 +34,100 @@ valid parentheses with the possible valid ones down the road because of this bar
 Since we reset last in the midde of every iteration, ans has to be examined at the beginning of each iteration, as well as after exit of the loop since
 it's possible to have a valid parentheses reaches the end of the string. The value is stored in last and will not be examined on ans since the loop is done.
 
+***Update on 2019-08-03***
 
+leetcode offerred solutions:
 
-OK, here we go the "DP" version: I was about to give up on DP since this is really not DP for me. However, leetcode setup a pretty tough test case that
-a Java with stack will get a TLE even I replaced stack with deque...
-Here is how "DP" works: create a memo array with with zero. If we meet a '(' at index i, we leave 0 at memo[i], if we see a ')', check
-the follow conditions:
-1. if the previous char is '(', then we can count 2 at least for memo[i];
-2. if the previous char is ')', say '(())', i = 3, previous index i = 2. In this case, memo[2] = 2, ')' with index i = 3 will actually be
-   checked against index i - memo[i - 1] - 1 = 0. By doing so, we solve the nested parentheses;
+https://leetcode.com/problems/longest-valid-parentheses/solution/
 
-With the above 2 steps, we count the total from '(' till matched ')', for the example '(())', we have the count from index 0 to index 3;
-
-3. Now, we need to find out if there is a valid parentheses ends just before the '(' we checked. Say '()(())' and we are at index i = 5.
-   In this case, we first get the length from i = 2 to 5. Then move the index one step backward, we check index i = 1. If the char at
-   index i = 1 is ')', then we need to add the length in memo[1] onto memo[5].
-   
-Adding 3 steps together, we have memo[i] = 2 + memo[i - 1] + memo[i - memo[i - 1] - 2] if and only if ')' == s[i] && i - memo[i - 1] - 1 >= 0 && '(' == s[i - memo[i - 1] - 1]
-Of course, if i - memo[i - 1] - 2 < 0, then no need to add it. Also, no need to check the char at index = i - memo[i - 1] - 2. Why? If it's '(',
-then memo[i - memo[i - 1] - 2] == 0
-
-In each iteration, we compare memo[i] with ans and keep the max in ans. This is a O(N) time and O(N) space algorithm. I would rather call
-it a memorization algorithm instead of DP though...
+Two of them are interesting:
+- One is using stack, which is no better than my longestValidParentheses1, but still an elegant solution with some very subtle setup;
+- The other one is an amazing O(N) time with constant space solution which comes with a cost: 1 time slower than other linear solutions;
 */
 class SolutionLongestValidParentheses {
 public:
+	int longestValidParentheses_leetcode_stack(string s) {
+		int len = (int)s.length(), ans = 0;
+		//stack will only store index for any '(' and any ')' that qualifies to mark the left boundary exclusively
+		stack<int> stk;
+		/*
+		pushing -1 is necessary since the length of a valid parentheses is calculated
+		using current index minus the index of the '(' before the leftmost '(' forming current
+		valid parenteses. For example:
+
+		"(()"
+
+		when i = 2, the value on top of the stack is 0, length = 2 - 0;
+
+		-1 for the case like "()".
+
+		Why doing this? This is designed specifically for continuously tracking max valid substring, for example "(()()"
+		When i = 4, the top of stack is with value 0. The max len at index 4 is (4 - 0) then.
+
+		This might not be intuitive: only '('s have not been matched by ')' remain on the stack. They mark the left boundary
+		for any max valid substring (exclusive). Furthermore, it also store ')' that can be used as the left boumdary marker
+		in the case there is no more left '(' and -1 is poped.
+
+		Comparing with DP solution, this looks more elegant but actually even harder to follow.
+		*/
+		stk.push(-1);
+		for (int i = 0; i < len; ++i) {
+			if ('(' == s[i]) stk.push(i);
+			else {
+				//Always pop '(' currently matches with s[i]
+				stk.pop();
+				/*
+				Pushing i when s[i] == ')' is to make sure:
+
+				1. len will be 0 in this case, which is that an extra ')' is discovered at i but no matching '('.
+				2. More importantly, in this case, we use ')' as the mark of left boundary on the stack.
+				*/
+				if (true == stk.empty()) stk.push(i);
+				ans = std::max(ans, i - stk.top());
+			}
+		}
+		return ans;
+	}
+	/*
+	Two pointers solution, constant space. Don't know why it works but it works:
+
+	1. Scan from left to right, at anytime, the number of '(' L, is equal to the nubmer of ')', R, a valid substring
+	   is found and its length is 2*R. If R is larger than L, reset both L and R to zero;
+	2. Scan from right to left, at anytime, the number of '(' L, is equal to the nubmer of ')', R, a valid substring
+	   is found and its length is 2*L. If L is larger than R, reset both L and R to zero;
+
+	Why have to scan from both ends? For example "(()" will not return anything if only scanning from left coz L is always
+	greater than R. This can be only solved if the scanning is done from right.
+	*/
+	int longestValidParentheses_leetcode_o1_space(string s) {
+		int len = (int)s.length(), ans = 0;
+		for (int i = 0, cntFromLeft = 0, cntFromRight = 0; i < len; ++i) {
+			if ('(' == s[i]) ++cntFromLeft;
+			else ++cntFromRight;
+			if (cntFromRight == cntFromLeft) ans = std::max(ans, cntFromRight * 2);
+			else if (cntFromRight > cntFromLeft) cntFromRight = cntFromLeft = 0;
+		}
+		for (int i = len - 1, cntFromLeft = 0, cntFromRight = 0; i > -1; --i) {
+			if ('(' == s[i]) ++cntFromLeft;
+			else ++cntFromRight;
+			if (cntFromLeft == cntFromRight) ans = std::max(ans, cntFromLeft * 2);
+			else if (cntFromLeft > cntFromRight) cntFromRight = cntFromLeft = 0;
+		}
+		return ans;
+	}
 	//A "DP" version. Store longest so far at each possible ')'
-        int longestValidParentheses(string s) {
-            long long len = (long long)s.length(), ans = 0;
-            if(len < 2)return 0;
-            vector<long long> memo(len, 0LL);
-            for(int i = 1; i < len; ++i) {
-                if(')' == s[i] && i - memo[i - 1] - 1 >= 0 && '(' == s[i - memo[i - 1] - 1]) {
-                    memo[i] = 2 + memo[i - 1] + ((i - memo[i - 1] - 2 >= 0) ? memo[i - memo[i - 1] - 2] : 0);
-                    ans = std::max(ans, memo[i]);
-                }
-            }
-            return (int)ans;
-        }
+	int longestValidParentheses(string s) {
+		int len = (int)s.length(), ans = 0;
+		if (len < 2)return 0;
+		vector<int> memo(len, 0);
+		for (int i = 1; i < len; ++i) {
+			if (')' == s[i] && i - memo[i - 1] - 1 >= 0 && '(' == s[i - memo[i - 1] - 1]) {
+				memo[i] = 2 + memo[i - 1] + ((i - memo[i - 1] - 2 >= 0) ? memo[i - memo[i - 1] - 2] : 0);
+				ans = std::max(ans, memo[i]);
+			}
+		}
+		return ans;
+	}
 	//Not DP, using stack, simplified
 	int longestValidParentheses1(string s) {
 		size_t last = 0, ans = 0;
