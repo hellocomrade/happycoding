@@ -17,22 +17,23 @@ For "(()", the longest valid parentheses substring is "()", which has length = 2
 Another example is ")()())", where the longest valid parentheses substring is "()()", which has length = 4.
 
 Observations:
-Doesn't look like a DP for me. Appears can be done with one stack and one extra variable. Stack only push if a '('  is met. The value
-we push onto stack depends on the position of '('. If the prior char is ')' and it happens to have a valid parentheses at ')', the value
-is store in variable last and we push the value of last onto stack when we see the first '(' then reset last = 0, so all following possible
-push of '(' will be 0.
 
-Therefore, for example "()(((", only '(' with index 2 is pushed onto stack with value (last) of 2, the following '('
-will be pushed with value of 0. The reason to do so is: only if the following count reach index 2, will the valid parentheses from index 0 to 1
-be counted, for example "()((()))", the longest one is the whole string, when we reach "((()))", . If we have "()((())", the last
-value (2) we store on stack when '(' at index 2 is met, will never be touched since there is no way to use this '(' to form any valid parentheses.
+Doesn't look like a DP for me. It can be done with one stack and an extra variable. Stack is only pushed if a '('  is met. The value
+that is pushed onto stack is either the length of the last max valid substring or zero depending on the position of '('.
+If the prior char is ')' and it happens to have a valid parentheses ends at ')', the value is store in variable last and we push the value of last onto stack.
+Otherwise 0 will be pushed. This is either because the prior char is '(' or ')' but no valid substring can be found there.
 
-If ')' is met, depending on the status of the stack (empty or not), we either count length and store it in variable last if the stack is not empty,
-or simply reset last to 0, which indicates there is no valid parentheses can be found at this location at all. So there is no way to connect previous
-valid parentheses with the possible valid ones down the road because of this barrier ')'.
+For example "()(((", push occurs at '(' (index 2) with value (last) of 2, the following '(' will be pushed with value of 0.
+The reason to do so is: only if any valid substring starts from index 2, will the valid parentheses from index 0 to 1
+be counted and therefore exends the valid substring, for example "()((()))", the longest one is the whole string, when we reach "((()))".
 
-Since we reset last in the midde of every iteration, ans has to be examined at the beginning of each iteration, as well as after exit of the loop since
-it's possible to have a valid parentheses reaches the end of the string. The value is stored in last and will not be examined on ans since the loop is done.
+If we have "()((())", the last value (2) we store on stack when '(' at index 2 is met, will never be touched since there is no way to use this '(' to form any valid parentheses.
+
+If ')' is met, depending on the status of the stack (empty or not), we could:
+1. The stack is not empty, count length and store it in variable last if the stack is not empty then pop the stack. The pop here will remove matched '(' with the value
+   of 0, which indicates there is no any valid substring before this '(' or a non-zero value which indicates otherwise.
+2. The stack is empty, then simply reset last to 0, which indicates there is no valid parentheses can be found at this location at all. So there is no way to connect previous
+   valid parentheses with the possible valid ones down the road because of this barrier ')'.
 
 ***Update on 2019-08-03***
 
@@ -133,7 +134,6 @@ public:
 		size_t last = 0, ans = 0;
 		stack<size_t> stk;
 		for (char c : s) {
-			ans = std::max(ans, last);
 			if ('(' == c) {
 				stk.push(last);
 				last = 0;
@@ -143,8 +143,9 @@ public:
 				stk.pop();
 			}
 			else last = 0;//')' == c && stk.empty()
+			ans = std::max(ans, last);
 		}
-		return (int)std::max(ans, last);
+		return ans;
 	}
 	//Not DP, using stack
 	int longestValidParentheses2(string s) {
