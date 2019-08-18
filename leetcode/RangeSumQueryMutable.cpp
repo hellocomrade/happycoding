@@ -139,7 +139,7 @@ namespace RangeSumQueryMutable {
 		vector<int> tree;
 		size_t len_n;
 	public:
-		NumArraySegmentTree(vector<int>& nums) : len_n(nums.size()), tree(std::pow(2, std::ceil(std::log2(std::max((size_t)1, 2 * nums.size() - 1)))) + 1, 0) {
+		NumArraySegmentTree(const vector<int>& nums) : len_n(nums.size()), tree(std::pow(2, std::ceil(std::log2(std::max((size_t)1, 2 * nums.size() - 1)))) + 1, 0) {
 			function<long long(int, int, int)> buildSegmenTree = [&, this](int start, int end, int idx) -> long long {
 				if (start == end)
 					this->tree[idx] = nums[start];
