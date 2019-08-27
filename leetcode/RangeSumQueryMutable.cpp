@@ -73,8 +73,33 @@ In the offical solutions, three solutions were dicussed and one were mentioned b
 
    How does above segment tree look in memory?
 
-   Segment Tree can be backed by a tree/tree node structure or as simple as an array. In an array representation, one may
-   feel confused between heap and segment tree. The difference here is, segment tree is not a complete binary tree as heap.
+   Segment Tree can be backed by a tree/tree node structure or as simple as an array.
+
+   - In a binary tree representation, see NumArrayBinaryTree:
+
+	 This is a very straightforward data structure as a segment tree. Segment tree is a full binary tree.
+
+	 A segment tree node has:
+	 1. Index range
+	 2. Value
+	 3. Left child
+	 4. Right child
+
+	 The two children nodes will always split the range of the parent node in half. Value on the node, for this case,
+	 it the sum of Values of two children node.
+
+	 Leaf nodes, from left to right, store elements in given nums respectively. On leaf node, index range is [i, i].
+	 This is actually the condition to terminate the recursion. Range is kept spliting till range.first == range.second.
+
+	 For a range sum query [i, j], three conditions can be met at any given node with range[l, m]:
+
+	 1. If i > m OR j < l: this node is out of query range, 0 is returned;
+	 2. If [l, m] is in [i, j], the range of the node is completed inside the range for query, the value on the node is returned;
+	 3. Otherwise, [l, m] and [i, j] are overlapped, digging into both children, return sum from the query results from both children;
+
+   - In an array representation, see NumArraySegmentTree:
+
+   one may feel confused between heap and segment tree. The difference here is, segment tree is not a complete binary tree as heap.
    It is rather a full binary tree (every node has 0 or 2 children) and all levels are filled except possibly the last level.
    Unlike Heap, the last level may have gaps between nodes. Why can't be just complete binary tree? That's because the relationship
    between internal node and leaf node is different here: the order of leaf nodes has to be maintained in segment tree. In order
@@ -182,6 +207,54 @@ namespace RangeSumQueryMutable {
 				}
 			};
 			return querySegmentTree(0, this->len_n - 1, 1);
+		}
+	};
+	class SegmentTreeNode {
+	public:
+		long long val;
+		std::pair<int, int> range;
+		SegmentTreeNode* left;
+		SegmentTreeNode* right;
+		SegmentTreeNode(int val, int left, int right, SegmentTreeNode* lchd = nullptr, SegmentTreeNode* rchd = nullptr) : val(val), range(std::make_pair(left, right)), left(lchd), right(rchd) {}
+	};
+	class NumArrayBinaryTree {
+	private:
+		SegmentTreeNode *root;
+		size_t len;
+	public:
+		NumArrayBinaryTree(const vector<int>& nums) : root(nullptr), len(nums.size()) {
+			function<SegmentTreeNode*(int, int)> buildTree = [&](int left, int right) -> SegmentTreeNode* {
+				SegmentTreeNode *pnode = new SegmentTreeNode(0, left, right);
+				if (left == right) pnode->val = nums[left];
+				else {
+					int mid = left + (right - left) / 2;
+					pnode->left = buildTree(left, mid);
+					pnode->right = buildTree(mid + 1, right);
+					pnode->val = pnode->left->val + pnode->right->val;
+				}
+				return pnode;
+			};
+			this->root = (0 < this->len) ? buildTree(0, this->len - 1) : nullptr;
+		}
+		void update(int i, int val) {
+			function<void(SegmentTreeNode*)> updateTree = [&, i, val](SegmentTreeNode *pnode) -> void {
+				if (pnode->range.first == pnode->range.second) pnode->val = val;
+				else {
+					int m = pnode->range.first + (pnode->range.second - pnode->range.first) / 2;
+					pnode->val -= (i <= m) ? pnode->left->val : pnode->right->val;
+					updateTree((i <= m) ? pnode->left : pnode->right);
+					pnode->val += (i <= m) ? pnode->left->val : pnode->right->val;
+				}
+			};
+			if (nullptr != this->root && i >= 0 && i < this->len) updateTree(this->root);
+		}
+		int sumRange(int i, int j) {
+			function<long long(SegmentTreeNode*)> rangeSum = [&, i, j](SegmentTreeNode* pnode) -> long long {
+				if (j < pnode->range.first || i > pnode->range.second) return 0;
+				if (pnode->range.first >= i && pnode->range.second <= j) return pnode->val;
+				else return rangeSum(pnode->left) + rangeSum(pnode->right);
+			};
+			return (nullptr != this->root && 0 <= i && i <= j && j < this->len) ? static_cast<int>(rangeSum(this->root)) : -1;
 		}
 	};
 	//https://www.geeksforgeeks.org/sqrt-square-root-decomposition-technique-set-1-introduction/
