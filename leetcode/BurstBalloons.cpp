@@ -31,9 +31,13 @@ Observations:
 
 This should be either DP or BT and since it only asks for the max value, usually that's a sign of DP.
 
-However, I failed to compose a solution using DP. I can kind of figuring out the sub-problem and tell that
-bottom-up DP should be a good fit for this. But I fell into the trap trying to solve this using combination of
-digits.
+However, I failed to compose a solution using DP. I can kind of figure out the sub-problem and tell that
+bottom-up DP should be a good fit for this. But I fell into the trap trying to solve this by exhausting
+all possible combination of elements in nums coz by bursting an element k, a new subarray is formed and
+adjacent elements of nums[k - 1] and nums[k + 1] are changed.
+
+Also, what should I use to index/lookup this combination if the max coins value has been found? A hash table
+with a string of all indexes separated by comma? Sounds too much work, doesn't it?
 
 By browsing the solutions in discussion section, I can tell this problem using some unusual tricks that have
 been seen in others:
@@ -41,22 +45,25 @@ been seen in others:
 1. Using a 2D array memo[i][j] to store max value in range of [i, j], which can be found in leetcode 5 (Longest Palindromic Substring);
 2. Think backward instead of forward, which can be found in leetcode 174 (Dungeon Game);
 
-The idea is: a 2D array memo[i][j] is used to store the max coins from range [i, j] in given nums. Starting
-from 1 ballon only, memo[1][1], memo[2][2], ... till memo[1][len], which should have the max coins for the problem.
+The idea is: a 2D array memo[i][j] is used to store the max coins from range [i, j] in given nums. It represents
+the max coin value in range [i, j], given the fact that nums[i - 1], nums[j + 1] remain same. How could this
+possible giving all shits discovered? Stay cool, let me finish.
 
-We will have to introduce two dummy elements 1 and patch them to the beginning and end of nums. This change
-makes the index range from [0, len(nums) - 1] to [1, len(nums)]
+Starting from 1 ballon only, memo[1][1], memo[2][2], ... till memo[1][len], which should have the max coins for the problem.
+
+We will have to introduce two dummy elements 1 as the problem hinted and they are patched to the beginning and end of nums.
+This "enhancement" makes the effective index range from [0, len(nums) - 1] to [1, len(nums)].
 
 Before moving forward, a mist has to be cleared: when we say memo[2][2], it appears to be only involved one element in nums. However,
 based upon the description of the problem: nums[left] * nums[i] * nums[right], in order to calculate memo[2][2], both
 nums[1] and nums[3] will be involved: memo[2][2] = nums[1] * nums[2] * nums[3]. For the edge case memo[1][1],
-memo[1][1] = nums[0] * nums[1] * nums[2], nums[0] = 1 is the dummy element prepended onto nums before hand.
+memo[1][1] = nums[0] * nums[1] * nums[2], nums[0] = 1 is the dummy element prepended onto nums before hand. Again, how could we get
+the max coin value of [i, j] without worrying the change of adjacent elements at nums[i - 1] and nums[j + 1]???
 
 By using bottom-up DP, we start with len = 1 till len = len(nums). We will examine every [i, j] that the length is len.
 for DP part, given any [i, j], the naive idea is: finding all possibilities of balloon bursting in range of [i, j].
 Starting with k in [i, j], split [i, j] into [i, k - 1] and [k + 1, j]. Then pick the next ones in [i, k - 1] and [k + 1, j].
-This sounds great but no easy way to implment this and take advantage of pre-calculated memo unless we try all combinations in nums
-coz any element can be picked and leaves the remaining elements forming a new sequence.
+This sounds great but no easy way to implment this due to the fact that adjacent elements can not be predicted.
 
 Now, we can go to the fun part, which has been well discussed here:
 
@@ -70,7 +77,9 @@ for (int k = i; k <= j; ++k)
 Instead of picking from the first balloon in [i, j], picking k in [i, j] as the last ballon, the coins gained
 for that is nums[k] * nums[i - 1] * nums[j + 1], the previous balloon burst should have memo[i][k - 1] + memo[k + 1][j].
 
-By doing so, we don't have to worry about element combinations if we start from picking the first balloon...
+By doing so, we don't have to worry about the adjacent elements coz k is the last element to burst, max coins in [i, k - 1] and [k + 1, j]'s adjacent elements
+nums[i - 1] and nums[j + 1] are never changed. nums[k] was not change since it is the last element to be removed. By
+the time [i, k - 1] and [k + 1, j] are calculated, nums[k] is still there.
 */
 class SolutionBurstBallons {
 public:
