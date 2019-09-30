@@ -23,10 +23,10 @@ Example 1 :
 
 Input: n = 4, edges = [[1, 0], [1, 2], [1, 3]]
 
-0
-|
-1
-/ \
+  0
+  |
+  1
+ / \
 2   3
 
 Output: [1]
@@ -37,11 +37,11 @@ Input: n = 6, edges = [[0, 3], [1, 3], [2, 3], [4, 3], [5, 4]]
 
 0  1  2
 \ | /
-3
-|
-4
-|
-5
+  3
+  |
+  4
+  |
+  5
 
 Output: [3, 4]
 
@@ -82,9 +82,43 @@ from the original leaf nodes, once they are removed, decrease leaf nodes' neighb
 Therefore non-leaf nodes could become leaf nodes now. Keep this process until the graph with leaf node(s)
 only. The remaining node(s) is(are) guaranteed to be the mid point(s) of the longest path due to the nature
 of BFS and therefore, they are the root for the MHT.
+
+***Update on 2019-09-30***
+Redo coz leetcode modified the signature of the function:
+
+Only one change made: leaf node should only have one neighor therefore, for loop is not necessary.
+
+for (int neighbor : adjMatrix[leaves.front()])
+
+can be replaced by neighbor = *adjMatrix[leaves.front()].begin();
+
+One may notice that the new leaf pushed onto the queue could be revisited coz it could be a neighbor of
+other leaves. Therefore, it's possible the degree of this new leaf could be down to zero before it's examined
+at next breadth level.
+
+That has been said, this problem comes with extra, hidden conditions to prevent the above issue from happening.
+Since there are at least 3 edges in the loop (n > 2), there is no way to decrease an edge degree to less than one
+unless n <= 2 at the end of the inner loop. Therefore, the leaves without any neighbor will never be examined.
+Actually, such a leaf/leaves is/are the root of the MHT.
 */
 class SolutionMinimumHeightTrees {
 public:
+	vector<int> findMinHeightTrees(int n, vector<vector<int>>& edges) {
+		vector<int> ans;
+		queue<int> leaves;
+		vector<unordered_set<int>> adjMatrix(n, unordered_set<int>());
+		for (auto p : edges) adjMatrix[p[0]].insert(p[1]), adjMatrix[p[1]].insert(p[0]);
+		for (int i = 0; i < n; ++i) if (1 == adjMatrix[i].size()) leaves.push(i);
+		while (2 < n) {
+			for (int i = 0, neighbor = 0, cnt = leaves.size(); i < cnt; --n, leaves.pop(), ++i) {
+				neighbor = *adjMatrix[leaves.front()].begin();
+				adjMatrix[neighbor].erase(leaves.front());
+				if (1 == adjMatrix[neighbor].size()) leaves.push(neighbor);
+			}
+		}
+		while (false == leaves.empty()) ans.push_back(leaves.front()), leaves.pop();
+		return 0 == edges.size() ? std::move(vector<int>{0}) : ans;
+	}
 	vector<int> findMinHeightTrees(int n, const vector<pair<int, int>>& edges) {
 		vector<int> ans;
 		queue<int> leaves;
@@ -124,6 +158,8 @@ Test cases:
 [[0, 3], [1, 3], [2, 3], [4, 3], [5, 4]]
 8
 [[0, 3], [6, 3], [1,3], [2, 3], [4, 3], [5, 4],[5, 7]]
+11
+[[0,1],[0,2],[2,3],[0,4],[2,5],[5,6],[3,7],[6,8],[8,9],[9,10]]
 
 Outputs:
 
@@ -132,4 +168,5 @@ Outputs:
 [1]
 [3,4]
 [4]
+[5,6]
 */
