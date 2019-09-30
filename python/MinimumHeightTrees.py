@@ -1,3 +1,4 @@
+# https://leetcode.com/problems/minimum-height-trees/
 class SolutionMinimumHeightTrees:
     def findMinHeightTrees(self, n: int, edges: List[List[int]]) -> List[int]:
         adj_matrix, leaf_q, m = dict(), list(), n
