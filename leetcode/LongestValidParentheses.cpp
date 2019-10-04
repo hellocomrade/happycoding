@@ -35,6 +35,28 @@ If ')' is met, depending on the status of the stack (empty or not), we could:
 2. The stack is empty, then simply reset last to 0, which indicates there is no valid parentheses can be found at this location at all. So there is no way to connect previous
    valid parentheses with the possible valid ones down the road because of this barrier ')'.
 
+***Update on 2019-10-04***
+
+In terms of DP, the sub optimzed solution is abvious: given an array memo, memo[i] represents the longest valid
+parentheses ends at index i of given string s.
+
+State transition equation is:
+
+If s[i] == '(', memo[i] = 0
+
+If s[i] == ')' and i - memo[i - 1] - 1 >= 0 and s[i - memo[i - 1] - 1] == '(':
+
+	memo[i] = 2 + memo[i - 1] + (i - memo[i - 1] - 2 >= 0 ? memo[i - memo[i - 1] - 2] : 0)
+
+	When s[i] is ')', s[i - 1] could be ')', '(' or nothing.
+
+	i - memo[i - 1] - 1 >= 0 and s[i - memo[i - 1] - 1] == '(' covers both cases like: '()' (i = 1) and '(())' (i = 3)
+	since memo[i - 1] is zero if s[i - 1] is '(', in that case i - 0 - 1, we are checking if s[i - 1] is '('.
+	If memo[i - 1] is not zero if s[i - 1] is ')', in such a case, i - memo[i - 1] -1 is searching for the index, k
+	before the longest valid parentheses ends at s[i - 1]. If such an index exists and s[k] happens to be '(',
+	we have a longer valid parenthese for memo[i] and it's at least memo[i - 1] + 2 unless index m = i - memo[i - 1] - 2
+	exists, this is like '()(())', i = 5, 5 - memo[5 - 1] - 2 = 5 - 2 - 2 = 1, memo[1] = 2.
+
 ***Update on 2019-08-03***
 
 leetcode offerred solutions:
@@ -119,7 +141,6 @@ public:
 	//A "DP" version. Store longest so far at each possible ')'
 	int longestValidParentheses(string s) {
 		int len = (int)s.length(), ans = 0;
-		if (len < 2)return 0;
 		vector<int> memo(len, 0);
 		for (int i = 1; i < len; ++i) {
 			if (')' == s[i] && i - memo[i - 1] - 1 >= 0 && '(' == s[i - memo[i - 1] - 1]) {
@@ -192,3 +213,28 @@ void TestLongestValidParentheses() {
 	assert(12 == so.longestValidParentheses(")()())()))()()((()))()"));
 	assert(12 == so.longestValidParentheses(")())()(()()(())))()(())))())()))"));
 }
+/*
+Test cases:
+
+""
+"("
+")"
+"()"
+")("
+"(()"
+")()())"
+"((())())"
+"((())(()"
+
+Outputs:
+
+0
+0
+0
+2
+0
+0
+4
+8
+0
+*/
