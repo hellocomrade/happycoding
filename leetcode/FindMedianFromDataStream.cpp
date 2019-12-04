@@ -60,6 +60,27 @@ I never noticed this at all!
 
 MedianFinder1 is my implementation (a bit simpler than the one in the official solution) using multiset,
 which I never used before either. It allows duplicates but still maintains the ascending order.
+
+***Update on 2019-12-04***
+
+MedianFinder is a simplified version of MedianFinder0.
+
+MedianFinder0 only guarantees that the max size difference between two heaps is 1.
+Therefore, MedianFinder0::findMedian() has to return the median based upon the sizes of heaps.
+
+What if maxHeap is at most 1 element more than minHeap? If so, it's guaranteed that the median is
+the top element of maxHeap if two heaps' sizes are not equal.
+
+In order to achieve this goal and reduce the size of code, a tricky ball juggling is implemented:
+
+- The new element is always added to maxHeap first. Then moving the top element from maxHeap to minHeap.
+  This will make sure that minHeap is always bigger than maxHeap after this step and the element is moved
+  to minHeap is always the max element in maxHeap;
+- If the size of maxHeap is smaller than minHeap after the first step, moving top element from minHeap to maxHeap.
+  This step will make sure that maxHeap is at most 1 element more than minHeap;
+
+Why have to juggling element to do push->pop->push between two heaps before comparing size? This will make sure
+that the element moved to maxHeap is the smallest element in minHeap if rebalancing between two heaps is necessary.
 */
 namespace FindMedianFromDataStream {
 	class MedianFinder {
@@ -69,6 +90,26 @@ namespace FindMedianFromDataStream {
 	public:
 		/** initialize your data structure here. */
 		MedianFinder() : maxHeap(), minHeap() {}
+
+		void addNum(int num) {
+			this->maxHeap.push(num);
+			this->minHeap.push(this->maxHeap.top()), this->maxHeap.pop();
+			if (this->maxHeap.size() < this->minHeap.size()) this->maxHeap.push(this->minHeap.top()), this->minHeap.pop();
+		}
+
+		double findMedian() {
+			if (true == this->maxHeap.empty() && true == this->minHeap.empty()) return numeric_limits<double>::min();
+			size_t lenmax = this->maxHeap.size(), lenmin = this->minHeap.size();
+			return (lenmax == lenmin) ? (1.0 * this->maxHeap.top() + 1.0 * this->minHeap.top()) / 2.0 : 1.0 * this->maxHeap.top();
+		}
+	};
+	class MedianFinder0 {
+	private:
+		priority_queue<int, std::vector<int>, std::less<int>> maxHeap;
+		priority_queue<int, std::vector<int>, std::greater<int>> minHeap;
+	public:
+		/** initialize your data structure here. */
+		MedianFinder0() : maxHeap(), minHeap() {}
 
 		void addNum(int num) {
 			int lenmax = this->maxHeap.size(), lenmin = this->minHeap.size();
