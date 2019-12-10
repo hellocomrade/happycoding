@@ -57,19 +57,24 @@ This "enhancement" makes the effective index range from [0, len(nums) - 1] to [1
 Before moving forward, a mist has to be cleared: when we say memo[2][2], it appears to be only involved one element in nums. However,
 based upon the description of the problem: nums[left] * nums[i] * nums[right], in order to calculate memo[2][2], both
 nums[1] and nums[3] will be involved: memo[2][2] = nums[1] * nums[2] * nums[3]. For the edge case memo[1][1],
-memo[1][1] = nums[0] * nums[1] * nums[2], nums[0] = 1 is the dummy element prepended onto nums before hand. Again, how could we get
-the max coin value of [i, j] without worrying the change of adjacent elements at nums[i - 1] and nums[j + 1]???
+memo[1][1] = nums[0] * nums[1] * nums[2], nums[0] = 1 is the dummy element prepended onto nums before hand.
 
 By using bottom-up DP, we start with len = 1 till len = len(nums). We will examine every [i, j] that the length is len.
 for DP part, given any [i, j], the naive idea is: finding all possibilities of balloon bursting in range of [i, j].
-Starting with k in [i, j], split [i, j] into [i, k - 1] and [k + 1, j]. Then pick the next ones in [i, k - 1] and [k + 1, j].
-This sounds great but no easy way to implment this due to the fact that adjacent elements can not be predicted.
+Starting with k in [i, j], split [i, j] into [i, k - 1] and [k + 1, j]. In a DP context, the transition function
+would be: memo[i, j] = num[k - 1] * num[k] * num[k + 1] + memo[i,..., k - 1, k + 1, j].
+
+As you can see, memo[i,..., k - 1, k + 1, j] breaks the meaning of memo[m, n], which is supposed to represent the max coin
+value between num[m, n]. [i, i + 1, ..., k - 1, k + 1,..., j] is not continueous, index k is missing!
+Is there a way we could keep the assumption on memo? It would be nice if we could take advantage of
+memo[i][k - 1] and memo[k + 1][j]!
 
 Now, we can go to the fun part, which has been well discussed here:
 
 https://leetcode.com/problems/burst-balloons/discuss/76229/For-anyone-that-is-still-confused-after-reading-all-kinds-of-explanations...
 
-"This transition function basically says in order to get the maximum value we can get for bursting all the balloons between [ i , j] , we just loop through each balloon between these two indexes and make them to be the last balloon to be burst,"
+"This transition function basically says in order to get the maximum value we can get for bursting all the balloons between [ i , j] ,
+we just loop through each balloon between these two indexes and make them to be the last balloon to be burst,"
 
 for (int k = i; k <= j; ++k)
 	memo[i][j] = std::max(memo[i][j], nums[k] * nums[i - 1] * nums[j + 1] + memo[i][k - 1] + memo[k + 1][j]);
@@ -77,9 +82,7 @@ for (int k = i; k <= j; ++k)
 Instead of picking from the first balloon in [i, j], picking k in [i, j] as the last ballon, the coins gained
 for that is nums[k] * nums[i - 1] * nums[j + 1], the previous balloon burst should have memo[i][k - 1] + memo[k + 1][j].
 
-By doing so, we don't have to worry about the adjacent elements coz k is the last element to burst, max coins in [i, k - 1] and [k + 1, j]'s adjacent elements
-nums[i - 1] and nums[j + 1] are never changed. nums[k] was not change since it is the last element to be removed. By
-the time [i, k - 1] and [k + 1, j] are calculated, nums[k] is still there.
+By doing so, we don't have to worry about the break in the index on memo plus nums[i - 1] and nums[j + 1] are constant while calculating memo[i][j].
 */
 class SolutionBurstBallons {
 public:
