@@ -38,7 +38,9 @@ Then swap nums[k] with either nums[l] if nums[k] == 0 or nums[r] if nums[k] == 2
 We use two pointers to make sure the elements in [0, l) and (r, len(nums) - 1] are sorted already.
 
 
-I saw a very elegant solution, so I copied it here, sortColors. It uses two-pointers plus one in a different way:
+I saw a very elegant solution, so I copied it here, sortColors. It uses two-pointers plus one in a different way, aka three-way partitioning:
+
+https://en.wikipedia.org/wiki/Dutch_national_flag_problem#Pseudocode
 
 - [0, l) defines the zone for 0s;
 
@@ -46,10 +48,14 @@ I saw a very elegant solution, so I copied it here, sortColors. It uses two-poin
 
 - In between, is supposed for 1s;
 
+At each iteration, l and r are pointing to an unchecked position and will be compared with nums[i]. But what can be sured is that
+nums[l - 1] is 0 and nums[r + 1] is 1 if l - 1 and r + 1 are valid.
+
 while loop ends if i > r since elements in (r, len(nums) - 1] are all 2s already;
 
 Pay attention on when ++i should apply! Since there are actually 3 pointers: l, r and i, a sorted subarray resides in range [0, i) and l <= i,
-when swap is done between nums[l] and nums[i], nums[i] will be either 0 or 1, either way there is no need to check nums[i], again since l <= i.
+when swap is done between nums[l] and nums[i], nums[i] will be either 0 or 1, either way there is no need to check nums[i] immediately. Since l <= i,
+if nums[i] is 1 and needed to be moved further right later since a new 0 is met, pointer l will pick that 1 it up and swap with the new 0.
 
 On the other hand, on the right side, when swap is done between nums[r] and nums[i], nums[i] could be 0, 1, and 2, therefore, has to check
 nums[i] on the next iteration. Since we have a branch that i doesn't increase, will it lead to a infinite loop? No, coz r is decreased everytime
@@ -131,3 +137,28 @@ void TestSortColors() {
 	vector<int> vec4 = { 1, 2, 2, 2, 1, 0, 1 };
 	so.sortColors(vec4);
 }
+/*
+Test cases:
+
+[2,0,2,1,1,0]
+[0]
+[1]
+[2]
+[0,1]
+[1,2]
+[0,1,2,0]
+[0,1,2,0,0]
+[0,1,2,0,0,1,1,2,1,2]
+
+outputs:
+
+[0,0,1,1,2,2]
+[0]
+[1]
+[2]
+[0,1]
+[1,2]
+[0,0,1,2]
+[0,0,0,1,2]
+[0,0,0,1,1,1,1,2,2,2]
+*/
