@@ -39,9 +39,25 @@ Worry about overwrite? Well, since all visited elements are relocated already, o
 Edge cases:
 
 1. If k runs out before j, all elements remaining at the beginning of nums1 are at the right places already.
-Nothing needs to be done;
+   Nothing needs to be done;
 2. If the number of elements in nums1 is less than nums2, it's also possible j could run out before k. In that case,
-one shall keep adding remaining elements in nums2 to nums1 according to pointer i;
+   one shall keep adding remaining elements in nums2 to nums1 according to pointer i;
+
+***Update on 2020-3-13***
+
+This question was asked during a FB phone interview:
+
+https://leetcode.com/discuss/interview-question/537801/facebook-phone-binary-tree-right-side-view-merge-sorted-array
+
+The general idea is a 3-pointers solution, i, j, k, repspectively tracks from the end of nums1 (the real nums1 without filling 0),
+the end of nums2 and the ends of nums1 (with filling 0). Then put element on the right place from right to left.
+
+Other than the original solution, there is an alternative that is worth mention because it appears not needing
+any extra variable. The idea is: since one of j and k will be decreased by 1 anyway, we could try to use j + k to
+represent i. Moreover, we could use input arguments m and n. Therefor all i, j, k can be saved.
+
+See code commented out below. One line version doesn't work because nums1[--m] : nums2[--n] will
+be evaulated first and therefore left side [m + n - 1] will be shorter by 1...Took me a while to find this out...
 */
 class SolutionMergeSortedArray {
 public:
@@ -50,4 +66,62 @@ public:
 		while (i > -1 && k > -1)
 			nums1[i--] = (j > -1 && nums1[j] >= nums2[k]) ? nums1[j--] : nums2[k--];
 	}
+	/*
+	void merge(vector<int>& nums1, int m, vector<int>& nums2, int n) {
+		while(m + n > 0 && n > 0) nums1[m + n - 1] = (m > 0 && nums1[m - 1] >= nums2[n - 1]) ? nums1[--m] : nums2[--n];
+	}
+	*/
+	void merge0(vector<int>& nums1, int m, vector<int>& nums2, int n) {
+		while (0 < m + n && 0 < n) {
+			if (0 < m && nums1[m - 1] >= nums2[n - 1]) nums1[m + n - 1] = nums1[m - 1], --m;
+			else nums1[m + n - 1] = nums2[n - 1], --n;
+		}
+	}
 };
+/*
+Test cases:
+
+[1,2,3,0,0,0]
+3
+[2,5,6]
+3
+[1,3,5,7,0,0,0,0]
+4
+[2,4,6,8]
+4
+[1,4,6,8,0,0,0,0,0]
+4
+[2,3,5,7,9]
+5
+[1]
+1
+[]
+0
+[]
+0
+[]
+0
+[0]
+0
+[1]
+1
+[-1,0,0,3,3,3,0,0,0]
+6
+[1,2,2]
+3
+[2,0]
+1
+[1]
+1
+
+Outputs:
+
+[1,2,2,3,5,6]
+[1,2,3,4,5,6,7,8]
+[1,2,3,4,5,6,7,8,9]
+[1]
+[]
+[1]
+[-1,0,0,1,2,2,3,3,3]
+[1,2]
+*/
