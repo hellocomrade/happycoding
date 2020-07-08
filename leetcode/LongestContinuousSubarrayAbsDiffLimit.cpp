@@ -79,10 +79,14 @@ max(nums[i,...j]) - min(nums[i,...j]) <= limit.
 
 So if we apply sliding window, we would need a way to always retrieve max and min inside a sliding window with any size in an efficient way.
 
-My first attempt, following the hint1, using a mutiset (to handle duplicates) which is able to track both min and max, see longestSubarray_multiset. Once the limit is broken,
+My first attempt, following the hint1, using a mutiset (to handle duplicates) which is able to track both min and max, see longestSubarray_multiset_naive. Once the limit is broken,
 left pointer needs to be moved after (plus 1) the max/min that is too big/small and therefore it's erased from the set. Any element with index
 betwenn previous left pointer and new left pointer should be erased as well. Each element will be inserted and removed from the set exactly once.
 However, due to the nature of set, the total time complexity is still O(NlogN).
+
+The code can be simplifed, see longestSubarray_multiset. Instead of explicitly looking for the new left pointer, simply increase the left pointer
+until the limit is met. During this iteration, remove all elements in the path from the set. This is still a O(NlogN) algorithm. However,
+by using a different data structure with a slightly different logic, we can improve the algorithm to linear.
 
 If remember leetcode 239 (Sliding Window Maximum), https://github.com/hellocomrade/happycoding/blob/master/leetcode/SlidingWindowMaximum.cpp
 
@@ -112,11 +116,22 @@ public:
 		return ans;
 	}
 	int longestSubarray_multiset(vector<int>& nums, int limit) {
-		int ans = 1;
+		int ans = 1, len = (int)nums.size();
+		multiset<int> mset;
+		for (int i = 0, l = 0; i < len; ++i) {
+			mset.insert(nums[i]);
+			while (mset.size() > 0 && *mset.rbegin() - *mset.begin() > limit)
+				mset.erase(mset.find(nums[l++]));
+			ans = std::max(ans, i - l + 1);
+		}
+		return ans;
+	}
+	int longestSubarray_multiset_naive(vector<int>& nums, int limit) {
+		int ans = 1, len = (int)nums.size();
 		multiset<pair<int, int>> mset;
-		for (int i = 0, l = 0, prev_l = 0; i < nums.size(); ++i) {
+		for (int i = 0, l = 0, prev_l = 0; i < len; ++i) {
 			mset.insert(std::make_pair(nums[i], i));
-			while (mset.size() > 0 && std::abs(mset.rbegin()->first - mset.begin()->first) > limit) {
+			while (mset.size() > 0 && mset.rbegin()->first - mset.begin()->first > limit) {
 				prev_l = l;
 				if (mset.rbegin()->second < mset.begin()->second)
 					l = mset.rbegin()->second + 1, mset.erase(--mset.end());
