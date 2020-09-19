@@ -64,8 +64,8 @@ public:
 		vector<vector<int>> memo(rcnt, vector<int>(ccnt, 0));
 		function<int(int, int, int)> fn = [&](int i, int j, int val) {
 			if (0 > i || 0 > j || i == rcnt || j == ccnt || matrix[i][j] <= val) return 0;
-			if (0 < memo[i][j]) return memo[i][j];
-			memo[i][j] = 1 + std::max({ fn(i + 1, j, matrix[i][j]), fn(i - 1, j, matrix[i][j]), fn(i, j - 1, matrix[i][j]), fn(i, j + 1, matrix[i][j]) });
+			if (0 == memo[i][j])
+				memo[i][j] = 1 + std::max({ fn(i + 1, j, matrix[i][j]), fn(i - 1, j, matrix[i][j]), fn(i, j - 1, matrix[i][j]), fn(i, j + 1, matrix[i][j]) });
 			return memo[i][j];
 		};
 		for (int i = 0; i < rcnt; ++i)
@@ -81,8 +81,8 @@ public:
 		vector<vector<int>> memo(rcnt, vector<int>(ccnt, 0));
 		function<int(int, int, int)> fn = [&](int i, int j, int val) {
 			if (0 > i || 0 > j || i == rcnt || j == ccnt || matrix[i][j] <= val) return 0;
-			if (0 < memo[i][j]) return memo[i][j];
-			memo[i][j] = 1 + std::max({ fn(i + 1, j, matrix[i][j]), fn(i - 1, j, matrix[i][j]), fn(i, j - 1, matrix[i][j]), fn(i, j + 1, matrix[i][j]) });
+			if (0 == memo[i][j])
+				memo[i][j] = 1 + std::max({ fn(i + 1, j, matrix[i][j]), fn(i - 1, j, matrix[i][j]), fn(i, j - 1, matrix[i][j]), fn(i, j + 1, matrix[i][j]) });
 			return memo[i][j];
 		};
 		for (int i = 0; i < rcnt; ++i)
