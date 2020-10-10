@@ -9,70 +9,46 @@ using namespace std;
 //https://leetcode.com/problems/basic-calculator-ii/
 /*
 227. Basic Calculator II
-
 Implement a basic calculator to evaluate a simple expression string.
-
 The expression string contains only non-negative integers, +, -, *, / operators and empty spaces .
 The integer division should truncate toward zero.
-
 Example 1:
-
 Input: "3+2*2"
-
 Output: 7
-
 Example 2:
-
 Input: " 3/2 "
-
 Output: 1
-
 Example 3:
-
 Input: " 3+5 / 2 "
-
 Output: 5
-
 Note:
-
 - You may assume that the given expression is always valid.
 - Do not use the eval built-in library function.
-
 Observations:
-
 Again, I paid the price for being stick with Shunting Yard algorithm. No RPN is generated, tried to get
 immiedate results as fast as I could. But still get a pretty long function...
-
 Stack for operators is not really necessary for this case and subtraction operation needs to be converted to
 negation on current immediate calculation result and then pop '-' and push '+' instead (convert subtraction to addition).
-
 Why this is necessary? For example: "18 + 17-25*7/3-45", if no above operation, the result of 25*7/3 will be
 substracted by 45 first then substracted against (18 + 17). The '-' in the middle is lost in this context.
 That explains why '-' has to be converted to '+' by negating the operand then replacing '-' with '+' on the stack.
 see calculate1.
-
 Based upon calculate1, the hypothesis is that operand stack will never has more than 3 elements, operator stack
 will has no more than 2 elements. Therefore, stack might be replaced by regular variables, which will
 potentially boost the performance by removing push/pop operations to none, See calculate00. This is actually a varation and
 local optimization against stack implementation in calculate1. The stack operations are still there, just
 replaced by shifting values among variables. Note, substraction should be converted to addition operation, which
 involves negating on the number and replacing the operator.
-
 In fact, there is a much elegant solution that doesn't consider stack at all. Of course, it would be hard to extend
 it to a more generic calculator case. But, it's good for this case. In this algorithm, exactly two variables are needed
 for storing operands and one variable is needed for storing current operator. The idea is:
-
 If current operator is '+' or '-', it can be safely said that the left operand (prev_opd) can be added to the final result.
 Then move right operand as left operand. If the operator is '-', the left operand (previous right operand) should be negated.
-
 If the operator is '*' or '-', accumulate the result on the left operand.
-
 ' ' really creates trouble for this implementation. I had to filter them out before taking number token and operator
 token...
-
 The key of the implementation in calculate is to make sure once a number is extracted, the switch/case calculation, swap
 on prev_opd must happen! This is guarded by remvoing any ' ' before extracting a number or a sign.
-
 calculate0 is the same idea using a slightly different implementation. It always puts switch/case at beginning to guarantee
 swich/case is executed if a full number is extracted.
 */
@@ -176,6 +152,41 @@ public:
 		while (false == operators.empty()) operands.push(cal());
 		return operands.top();
 	}
+	int calculate20201010(string s) {
+		char the_operator = '+';
+		int len = (int)s.length(), i = 0, left_operand = 0, right_operand = 0, ret = 0, ans = 0;
+		auto _intoken = [&s](int& l, const int r) -> int {
+			int ret = 0;
+			while (l < r && ' ' == s[l]) ++l;
+			while (l < r) {
+				if (s[l] >= '0' && s[l] <= '9') ret = ret * 10 + (int)(s[l++] - '0');
+				else break;
+			}
+			return ret;
+		};
+		auto _symobltoken = [&s](int& l, const int r) -> char {
+			while (l < r && ' ' == s[l]) ++l;
+			if (l < r)
+				return s[l++];
+			return -1;
+		};
+		while (i < len) {
+			right_operand = _intoken(i, len);
+			switch (the_operator) {
+			case '+': case '-':
+				ans += left_operand;
+				left_operand = ('+' == the_operator ? 1 : -1) * right_operand;
+				break;
+			case '*': case '/':
+				left_operand = ('*' == the_operator) ? left_operand * right_operand : left_operand / right_operand;
+				break;
+			default:
+				break;
+			}
+			the_operator = _symobltoken(i, len);
+		}
+		return ans + left_operand;
+	}
 };
 void TestBasicCalculator2() {
 	SolutionBasicCalculator2 so;
@@ -191,7 +202,6 @@ void TestBasicCalculator2() {
 }
 /*
 Test Cases:
-
 "3+2*2"
 " 3/2 "
 " 3+5 / 2 "
@@ -200,9 +210,7 @@ Test Cases:
 "1 + 2 - 3 * 2"
 "18 + 17-25*7/3"
 "18 + 17-25*7/3-45+12/6-7+8+4/106*2 + 3 * 7 /7 "
-
 Outputs:
-
 7
 1
 5
