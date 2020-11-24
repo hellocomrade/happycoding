@@ -82,9 +82,9 @@ public:
 };
 class Foo1 {
 private:
-	std::atomic<int> order = 1;
+	std::atomic<int> order;
 public:
-	Foo1() {
+	Foo1(): order(1) {
 
 	}
 
