@@ -62,8 +62,6 @@ A smarter way to do this, if only needs one mutex is run numbers (for loop) inde
 
 
 One more thing to point out is: unique_lock will automatically lock on the mutex unless std::defer is given. It will also automatically unlock the mutex while it's out of the scope.
-Because of this, in a for loop, unique_lock has to be declared during each iteration since condition_variable only takes unique_lock. Of course, one may use std::defer to get around.
-
 */
 class ZeroEvenOdd {
 private:
