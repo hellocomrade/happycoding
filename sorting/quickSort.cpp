@@ -2,13 +2,14 @@
 #include <cstdlib>
 #include <ctime>
 #include <vector>
+#include <functional>
 #include <iostream>
 
 using namespace std;
 
 /*
 Insert sort takes O(N^2) time and works efficiently in small amount of datasets.
-The loop start from 1, and the inner loop always check the index from 0 to i-1 and comparing their value 
+The loop start from 1, and the inner loop always check the index from 0 to i-1 and comparing their value
 with A[i]. If, say, value at j=i - k is greater than A[i], move its value to i-k+1. The inner loop ends
 if A[j-1] is no greater than A[i]. Then we put A[i]'s value at index j, whose original value, since it's
 bigger than A[i], was moved to j+1. So we can safely put A[i]'s value at index j.
@@ -50,6 +51,10 @@ Using do while can free us from this complication, at least to me, I think it's 
 
 Why we have l <= high in the first while condition but no such check for h in the second while condition?
 There is no way for h to be less than low because 'A[h] > p' implies that h will stop at low (p=A[low])
+
+***Update on 03/19/2021***
+
+Add new partitioning schema from Nico Lomuto, published in <Beautiful Code> by Jon Bentley
 */
 #define COMBINED
 const int SORT_BOUNDARY = 6;
@@ -89,6 +94,24 @@ void QuickSort(vector<T> &A, int low, int high)
 	quickSort(A, low, high);
 	insertSort(A);
 }
+/*
+Copy from Beautiful Code Jon Bentley
+*/
+template<typename T>
+void quickSort_BC(vector<T>& arr) {
+	function<void(int, int)> sort = [&](int l, int r) {
+		if (l >= r) return;
+		int m = l;
+		std::swap(arr[l], arr[l + rand() % (r - l + 1)]);
+		for (int i = l + 1; i <= r; ++i)
+			if (arr[i] < arr[l])
+				std::swap(arr[++m], arr[i]);
+		std::swap(arr[l], arr[m]);
+		sort(l, m - 1);
+		sort(m + 1, r);
+	};
+	sort(0, arr.size() - 1);
+}
 void printSortingResult(const vector<int> &A)
 {
 	for (int i : A)
@@ -106,6 +129,8 @@ void testQuickSort()
 	vector<int> vec1({ 8, 7, 5, 10, 2, 3, 6 });
 	quickSort(vec1, 0, vec1.size() - 1);
 	printSortingResult(vec1);
+
+	quickSort_BC(vec1);
 
 	vector<int> vec2({ 1, 2, 3, 4 });
 	quickSort(vec2, 0, vec2.size() - 1);
