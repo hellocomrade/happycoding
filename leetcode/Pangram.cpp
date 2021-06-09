@@ -38,7 +38,7 @@ class SolutionPangram {
 public:
 	bool checkIfPangram(string sentence) {
 		std::bitset<26> memo;
-		std::for_each(sentence.begin(), sentence.end(), [&memo](const char& c) { if ( memo.set((int)c - 97); });
+		std::for_each(sentence.begin(), sentence.end(), [&memo](const char& c) { memo.set((int)c - 97); });
 		return memo.all();
 	}
 };
