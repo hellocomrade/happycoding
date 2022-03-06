@@ -100,6 +100,8 @@ class H2O {
 		}
 	}
 }
+
+H2O_Java was then added to mimic the above Java code with naive semaphore and barrier implementation in C++
 */
 class H2O {
 private:
@@ -131,6 +133,74 @@ public:
 		if (h == 2)
 			h = o = 0;
 		cv.notify_all();
+	}
+};
+
+class H2O_Java {
+	class Semaphore {
+		int permits;
+		int used;
+		mutex mtx;
+		condition_variable cv;
+	public:
+		Semaphore(int permits) : permits(permits), used(0) {
+		}
+		void acquire() {
+			unique_lock<mutex> lck(mtx);
+			cv.wait(lck, [this]() -> bool { return used < permits; });
+			++used;
+		}
+		void release() {
+			unique_lock<mutex> lck(mtx);
+			--used;
+			cv.notify_all();
+		}
+	};
+	class CyclicBarrier {
+		int parties;
+		int count;
+		int generation;
+		mutex mtx;
+		condition_variable cv;
+	public:
+		CyclicBarrier(int parties) : parties(parties), count(0), generation(0) {
+		}
+		void await() {
+			unique_lock<mutex> lck(mtx);
+			++count;
+			if (count < parties) {
+				int g = generation;
+				cv.wait(lck, [this, &g]() -> bool { return g < generation; });
+			}
+			else if (count == parties) {
+				count = 0;
+				++generation;
+				cv.notify_all();
+			}
+		}
+	};
+	Semaphore hSem;
+	Semaphore oSem;
+	CyclicBarrier barrier;
+public:
+	H2O_Java() : hSem(2), oSem(1), barrier(3) {
+
+	}
+
+	void hydrogen(function<void()> releaseHydrogen) {
+		hSem.acquire();
+		// releaseHydrogen() outputs "H". Do not change or remove this line.
+		releaseHydrogen();
+		barrier.await();
+		hSem.release();
+	}
+
+	void oxygen(function<void()> releaseOxygen) {
+		oSem.acquire();
+		// releaseOxygen() outputs "O". Do not change or remove this line.
+		releaseOxygen();
+		barrier.await();
+		oSem.release();
 	}
 };
 
