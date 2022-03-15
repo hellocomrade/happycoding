@@ -110,7 +110,7 @@ private:
 	mutex mtx;
 	condition_variable cv;
 public:
-	H2O() : h(0), o(0) {
+	H2O() : h(0), o(0), mtx(), cv() {
 
 	}
 
@@ -143,7 +143,7 @@ class H2O_Java {
 		mutex mtx;
 		condition_variable cv;
 	public:
-		Semaphore(int permits) : permits(permits), used(0) {
+		Semaphore(int permits) : permits(permits), used(0), mtx(), cv() {
 		}
 		void acquire() {
 			unique_lock<mutex> lck(mtx);
@@ -163,7 +163,7 @@ class H2O_Java {
 		mutex mtx;
 		condition_variable cv;
 	public:
-		CyclicBarrier(int parties) : parties(parties), count(0), generation(0) {
+		CyclicBarrier(int parties) : parties(parties), count(0), generation(0), mtx(), cv() {
 		}
 		void await() {
 			unique_lock<mutex> lck(mtx);
